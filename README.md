@@ -7,20 +7,21 @@ Este repositório contém os componentes principais do projeto GAPD, incluindo a
 A estrutura de pastas atual do projeto é a seguinte:
 
 ```
-GAPD
-├── apps                # Aplicações principais do projeto
-│   ├── ADheatmap       # Aplicação de heatmap
-│   ├── frota           # Aplicação de gerenciamento de frotas
-│   └── sjudas          # Aplicação de análise de batidas
-├── laboratorio         # Scripts experimentais e protótipos
-│   ├── config          # Arquivos de configuração
-│   ├── dash            # Dashboards e relatórios
-│   ├── data            # Dados brutos e processados
-│   ├── docs            # Documentação adicional
-│   └── notebooks       # Notebooks Jupyter para análise
-├── GAPD.code-workspace # Arquivo de configuração do workspace do VSCode
-├── README.md           # Documentação principal do repositório
-└── requirements.txt    # Dependências do projeto
+GAPD                              # Repositório principal do projeto
+├── apps                          # Aplicações principais do projeto
+│   ├── ADheatmap                 # Aplicação para geração de heatmaps
+│   ├── frota                     # Gerenciamento de frotas e relatórios
+│   ├── sjudas                    # Análise de batidas e relatórios
+├── laboratorio                   # Scripts experimentais e protótipos
+│   ├── config                    # Arquivos de configuração para o projeto
+│   ├── dash                      # Dashboards e relatórios interativos
+│   ├── data                      # Dados brutos e processados
+│   ├── docs                      # Documentação complementar
+│   ├── macrosVBA                 # Scripts VBA para automação
+│   ├── notebooks                 # Notebooks Jupyter para análises e protótipos
+├── README.md                     # Documentação principal do repositório
+├── requirements.txt              # Lista de dependências do projeto
+├── requirements.txt.bak          # Backup do arquivo de dependências
 ```
 
 ## Configuração do ambiente
