@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.pytest_cache/
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs e backups
+logs/
+*.log
+backups/
+
+# Node
+node_modules/

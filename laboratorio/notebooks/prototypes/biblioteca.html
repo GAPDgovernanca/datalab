@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Estrutura de Arquivos</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 20px;
+            background: #f5f5f5;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .tree-container {
+            white-space: pre;
+            font-family: monospace;
+        }
+
+        .tree-item {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .tree-content {
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        .tree-content.expanded {
+            max-height: 100000px;
+        }
+
+        .tree-line {
+            display: flex;
+            align-items: center;
+            padding: 2px 0;
+        }
+
+        .tree-line:hover {
+            background: #f0f0f0;
+        }
+
+        .toggle {
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 8px 16px;
+            margin-right: 8px;
+            border: none;
+            border-radius: 4px;
+            background: #0066cc;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0052a3;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Visualizador de Estrutura de Arquivos</h1>
+        </div>
+
+        <div class="controls">
+            <input type="file" id="fileInput" accept=".txt">
+            <input type="text" id="searchInput" class="search-box" placeholder="Buscar...">
+            <button onclick="expandAll()">Expandir Tudo</button>
+            <button onclick="collapseAll()">Recolher Tudo</button>
+        </div>
+
+        <div id="treeView" class="tree-container"></div>
+    </div>
+
+    <script>
+        class TreeNode {
+            constructor(line = '', indent = 0) {
+                this.line = line;
+                this.indent = indent;
+                this.children = [];
+                this.isFolder = !line.includes('.');
+                this.isExpanded = false;
+            }
+        }
+
+        function parseLine(line) {
+            const indent = line.search(/[├└]/);
+            if (indent === -1) return null;
+            const text = line.replace(/^[│ ]*[├└]── /, '').trim();
+            return { text, indent: Math.floor(indent / 4) };
+        }
+
+        function parseTree(text) {
+            const lines = text.split('\n');
+            const root = new TreeNode('root', -1);
+            const stack = [root];
+
+            lines.forEach(line => {
+                if (!line.trim() || line.trim() === '.') return;
+
+                const parsed = parseLine(line);
+                if (!parsed) return;
+
+                const { text, indent } = parsed;
+                const node = new TreeNode(text, indent);
+
+                while (stack.length > indent + 1) {
+                    stack.pop();
+                }
+
+                stack[stack.length - 1].children.push(node);
+                if (node.isFolder) {
+                    stack.push(node);
+                }
+            });
+
+            return root;
+        }
+
+        function createTreeElement(node, prefix = '') {
+            const container = document.createElement('div');
+            container.className = 'tree-item';
+
+            if (node.line !== 'root') {
+                const line = document.createElement('div');
+                line.className = 'tree-line';
+
+                if (node.isFolder) {
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toggle';
+                    toggle.textContent = '+';
+                    line.appendChild(toggle);
+                }
+
+                line.appendChild(document.createTextNode(prefix + node.line));
+                container.appendChild(line);
+
+                if (node.isFolder) {
+                    const content = document.createElement('div');
+                    content.className = 'tree-content';
+
+                    const newPrefix = prefix.replace('├──', '│   ')
+                                         .replace('└──', '    ');
+
+                    node.children.forEach((child, index) => {
+                        const isLast = index === node.children.length - 1;
+                        const childPrefix = isLast ? newPrefix + '└── ' : newPrefix + '├── ';
+                        content.appendChild(createTreeElement(child, childPrefix));
+                    });
+
+                    container.appendChild(content);
+
+                    line.addEventListener('click', () => {
+                        const toggle = line.querySelector('.toggle');
+                        const content = container.querySelector('.tree-content');
+                        node.isExpanded = !node.isExpanded;
+                        toggle.textContent = node.isExpanded ? '-' : '+';
+                        content.classList.toggle('expanded', node.isExpanded);
+                    });
+                }
+            } else {
+                node.children.forEach((child, index) => {
+                    const isLast = index === node.children.length - 1;
+                    const childPrefix = isLast ? '└── ' : '├── ';
+                    container.appendChild(createTreeElement(child, childPrefix));
+                });
+            }
+
+            return container;
+        }
+
+        function expandAll() {
+            const allFolders = document.querySelectorAll('.tree-item');
+            allFolders.forEach(folder => {
+                const toggle = folder.querySelector('.toggle');
+                const content = folder.querySelector('.tree-content');
+                if (toggle && content) {
+                    toggle.textContent = '-';
+                    content.classList.add('expanded');
+                }
+            });
+        }
+
+        function collapseAll() {
+            const allFolders = document.querySelectorAll('.tree-item');
+            allFolders.forEach(folder => {
+                const toggle = folder.querySelector('.toggle');
+                const content = folder.querySelector('.tree-content');
+                if (toggle && content) {
+                    toggle.textContent = '+';
+                    content.classList.remove('expanded');
+                }
+            });
+        }
+
+        function search(query) {
+            const allItems = document.querySelectorAll('.tree-line');
+            const searchText = query.toLowerCase();
+
+            allItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                const matches = text.includes(searchText);
+                item.classList.toggle('highlight', matches);
+
+                if (matches && searchText) {
+                    let parent = item.parentElement;
+                    while (parent && parent.classList.contains('tree-item')) {
+                        const content = parent.querySelector('.tree-content');
+                        const toggle = parent.querySelector('.toggle');
+                        if (content) {
+                            content.classList.add('expanded');
+                        }
+                        if (toggle) {
+                            toggle.textContent = '-';
+                        }
+                        parent = parent.parentElement.parentElement;
+                    }
+                }
+            });
+        }
+
+        // Event Listeners
+        document.getElementById('fileInput').addEventListener('change', event => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const text = e.target.result;
+                    const root = parseTree(text);
+                    const treeView = document.getElementById('treeView');
+                    treeView.innerHTML = '';
+                    treeView.appendChild(createTreeElement(root));
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', event => {
+            search(event.target.value);
+        });
+    </script>
+</body>
+</html>

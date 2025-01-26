@@ -1,0 +1,12 @@
+file_path: 'responses.csv'
+stacked_chart_variables:
+  - 'PISOTEIO'
+  - 'DANOS'
+  - 'FOCO'
+violin_plot_columns:
+  - 'PISOTEIO'
+  - 'DANOS'
+  - 'FOCO'
+output_folder: './saida'
+unidade: 'Canada'
+periodo: '0105-1505'

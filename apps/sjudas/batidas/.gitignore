@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ambiente Virtual (local ao projeto)
+.venv/
+venv/
+env/
+ENV/
+**/venv/
+
+# Virtualenvwrapper (opcional se você mover ambientes para dentro do projeto)
+.virtualenvs/
+
+# Arquivos de ambiente
+.env
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Específico do projeto (se houver um ambiente virtual local)
+# Exemplo: se você tiver um ambiente virtual em uma pasta específica do projeto, adicione-a aqui
+# applications/sjudas/app_batidas/.venv/

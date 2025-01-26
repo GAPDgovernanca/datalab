@@ -1,0 +1,50 @@
+combustivel:
+  Combustíveis (l) Diferença: "Diferença entre o combustível planejado e consumido (litros)."
+  Combustíveis (l) Orçado: "Quantidade de combustível planejada (litros)."
+  Combustíveis (l) Realizado: "Quantidade de combustível consumida (litros)."
+  VU Combustível Diferença: "Diferença entre os valores unitários planejados e realizados."
+  VU Combustível Orçado: "Valor unitário planejado para o combustível."
+  VU Combustível Realizado: "Valor unitário realizado para o combustível."
+
+custo_por_unidade:
+  Custo por Km ou hora Diferença: "Diferença entre os custos planejados e realizados por unidade de uso."
+  Custo por Km ou hora Orçado: "Valor planejado por unidade de uso."
+  Custo por Km ou hora Realizado: "Valor efetivo por unidade de uso."
+
+custos_totais:
+  Total Diferença: "Diferença entre o total orçado e o realizado."
+  Total Orçado: "Valor total planejado."
+  Total Realizado: "Valor total efetivamente gasto."
+
+identificacao:
+  Classe: "Categoria do equipamento."
+  Equipamento: "Número de identificação do equipamento."
+  Medidor: "Unidade de medição para o uso (ex.: KM, H, IND)."
+  Modelo/Versão: "Modelo e versão do equipamento."
+  Usuário: "Nome da fazenda ou local onde o equipamento está alocado."
+
+outros_insumos:
+  Filtros Diferença: "Diferença entre os filtros planejados e realizados."
+  Filtros Orçado: "Quantidade planejada de filtros."
+  Filtros Realizado: "Quantidade efetivamente utilizada de filtros."  # Remove espaço extra
+  Graxas Diferença: "Diferença entre as graxas planejadas e realizadas."
+  Graxas Orçado: "Quantidade planejada de graxas."
+  Graxas Realizado: "Quantidade efetivamente utilizada de graxas."
+  Lubrificantes Diferença: "Diferença entre os lubrificantes planejados e realizados."
+  Lubrificantes Orçado: "Quantidade planejada de lubrificantes."
+  Lubrificantes Realizado: "Quantidade efetivamente utilizada de lubrificantes."
+
+pecas_servicos_pneus:
+  Peças, Serviços e Pneus Diferença: "Diferença entre o planejado e o realizado."
+  Peças, Serviços e Pneus Orçado: "Valor planejado para peças, serviços e pneus."
+  Peças, Serviços e Pneus Realizado: "Valor realizado para peças, serviços e pneus."
+
+reforma:
+  Reforma Diferença: "Diferença entre o valor planejado e o realizado para reformas."
+  Reforma Orçada: "Valor planejado para reformas."
+  Reforma Realizada: "Valor efetivamente gasto em reformas."
+
+uso:
+  Uso (km ou hora) Diferença: "Diferença entre o uso estimado e realizado."
+  Uso (km ou hora) Estimado: "Valor planejado para o uso do equipamento."
+  Uso (km ou hora) Realizado: "Valor efetivamente utilizado do equipamento."

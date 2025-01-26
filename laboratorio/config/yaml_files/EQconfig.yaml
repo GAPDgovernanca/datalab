@@ -1,0 +1,58 @@
+questions:
+  - "Eu consigo identificar diferentes emoções a partir de sinais físicos no meu corpo?"
+  - "Eu consigo relaxar quando estou sob pressão?"
+  - "Eu consigo me preparar e me motivar para uma tarefa quando preciso?"
+  - "Eu sei como meu comportamento afeta os outros?"
+  - "Eu consigo resolver conflitos com outras pessoas de forma eficaz?"
+  - "Eu consigo me acalmar rapidamente quando estou irritada?"
+  - "Eu percebo quando estou começando a ficar irritada?"
+  - "Eu consigo me recuperar rápido após algo dar errado?"
+  - "Eu consigo perceber quando os outros estão chateados?"
+  - "Eu consigo fazer com que as pessoas entrem em acordo?"
+  - "Eu sei quais sentidos (visão, audição, etc.) estou usando no momento?"
+  - "Eu consigo usar conversas internas para mudar meu humor?"
+  - "Eu consigo me motivar para fazer tarefas chatas?"
+  - "Eu ajudo os outros a controlarem suas emoções?"
+  - "Eu faço os outros se sentirem bem?"
+  - "Eu percebo quando meu humor muda?"
+  - "Eu consigo ficar calmo quando alguém está com raiva de mim?"
+  - "Eu consigo parar ou mudar um hábito ruim?"
+  - "Eu mostro empatia pelos outros?"
+  - "Eu dou conselhos e apoio emocional quando necessário?"
+  - "Eu percebo quando estou me defendendo demais?"
+  - "Eu sei quando estou pensando de forma negativa e consigo parar isso?"
+  - "Eu sigo minhas palavras com ações?"
+  - "Eu me envolvo em conversas profundas com outras pessoas?"
+  - "Eu consigo refletir os sentimentos das pessoas de volta para elas?"
+
+components:
+  self_awareness:
+    - 1
+    - 6
+    - 11
+    - 16
+    - 21
+  managing_emotions:
+    - 2
+    - 7
+    - 12
+    - 17
+    - 22
+  motivating_yourself:
+    - 3
+    - 8
+    - 13
+    - 18
+    - 23
+  empathy:
+    - 4
+    - 9
+    - 14
+    - 19
+    - 24
+  social_skill:
+    - 5
+    - 10
+    - 15
+    - 20
+    - 25

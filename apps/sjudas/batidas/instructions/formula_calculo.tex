@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\title{Formula Atualizada para Calculo de Media Ponderada}
+\author{Sistema de Analise de Dados de Batidas}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Formula de Calculo}
+
+Para calcular a media ponderada das diferencas percentuais previstas e realizadas, utilizamos a seguinte formula:
+
+\begin{equation}
+    \text{Media Ponderada} = \frac{\sum_{i=1}^{n} \left( |D_i| \times P_i \times Q_i \times F_i \right)}{\sum_{i=1}^{n} Q_i}
+\end{equation}
+
+Onde:
+
+\begin{itemize}
+    \item $D_i$: Diferenca percentual (valor absoluto) entre o realizado e o previsto para o item $i$.
+    \item $P_i$: Peso relativo atribuido ao tipo de alimento $i$.
+    \item $Q_i$: Quantidade prevista para o item $i$.
+    \item $F_i$: Fator de suavizacao aplicado para reduzir a influencia de desvios extremos, calculado como:
+    \begin{equation}
+        F_i = \frac{1}{1 + \frac{|N_i|}{f_s}}
+    \end{equation}
+    \item $N_i$: Desvio normalizado do item $i$, calculado como:
+    \begin{equation}
+        N_i = \frac{D_i - \bar{D}}{\max(\sigma_D, s_{min})} \times p_d
+    \end{equation}
+    \item $f_s$: Fator de suavizacao configuravel (valor padrao = 3.0).
+    \item $\bar{D}$: Media dos desvios percentuais para o lote correspondente.
+    \item $\sigma_D$: Desvio padrao dos desvios percentuais para o lote correspondente.
+    \item $s_{min}$: Valor minimo para o desvio padrao, usado para evitar divisao por zero (valor padrao = 0.5).
+    \item $p_d$: Peso aplicado ao desvio normalizado, configuravel para ajustar a intensidade da suavizacao (valor padrao = 0.3).
+\end{itemize}
+
+\section*{Explicacao dos Componentes}
+
+A media ponderada visa calcular uma representacao mais justa das diferencas percentuais, ajustando os valores de acordo com os pesos relativos e aplicando fatores de suavizacao para evitar que desvios extremos distorcam o resultado.
+
+O fator de suavizacao $F_i$ reduz a influencia de valores atipicos, enquanto o desvio normalizado $N_i$ permite que a analise seja sensivel, mas controlada, aos desvios entre o previsto e o realizado.
+
+\end{document}

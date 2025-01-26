@@ -1,0 +1,5 @@
+credentials_file: 'weighty-arcadia-424011-s6-e83a9a42c5c9.json'  # Caminho para o arquivo JSON das credenciais da conta de serviço
+sheet_id: '1H-jdGeRTTj1vongidNJSsthWCTZXqYUylVo6xpMw0sI'  # ID da sua planilha Google Sheets
+range_name: 'Colheita!A1:Z1000'  # Intervalo de células que você deseja ler
+output_json_file: 'Canada - vistoria - safra 23_24.json'  # Caminho para o arquivo JSON de saída
+date_column: 'Submitted At'  # Coluna de data que deve ser convertida de UTC para BRT
