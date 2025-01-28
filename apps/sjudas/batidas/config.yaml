@@ -19,7 +19,7 @@ excel_columns:
   realizado_dup: "REALIZADO (KG).1" # Coluna duplicada de quantidade realizada
   diferenca_percentual: "DIFERENÇA (%)" # Coluna com a diferença percentual entre o previsto e o realizado
   operator: "OPERADOR" # Coluna com o operador responsável
-  motorista: "MOTORISTA" # Coluna com o motorista (se aplicável)
+  motorista: "MOTORISTA" # Coluna com o motorista
 
 # ----------------------------------------------------------------------
 # CONFIGURAÇÃO DOS PARÂMETROS DE ANÁLISE
@@ -108,7 +108,7 @@ ui:
   top_deviation_header: "maiores desvios"
   top_deviation_columns:
     alimento: "Alimento"
-    desvio_absoluto: "Desvio Absoluto (Ton)"
+    desvio_absoluto: "Desvio (Ton)"
   downloads_header: "downloads"
   download_statistics_label: "estatísticas (CSV)"
   download_histogram_label: "histograma (PNG)"

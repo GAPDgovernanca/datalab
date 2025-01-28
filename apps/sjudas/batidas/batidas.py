@@ -119,18 +119,27 @@ def load_and_process_data(uploaded_file):
         return None
 
 
-def get_top_five_deviation_foods(df, config):
+def get_top_five_deviation_foods(df, config, start_date=None, end_date=None):
     """
     Retorna os alimentos com maiores desvios absolutos totais, ajustando para toneladas.
 
     Parâmetros:
     - df (DataFrame): Dados de entrada.
     - config (dict): Configurações do programa.
+    - start_date (datetime): Data inicial do período (opcional).
+    - end_date (datetime): Data final do período (opcional).
 
     Retorna:
     - DataFrame: Com os alimentos com maiores desvios em toneladas, limitado pelo arquivo de configuração.
     """
     try:
+        # Filtrar por período, se fornecido
+        if start_date and end_date:
+            df = df[
+                (df[config["excel_columns"]["date"]] >= pd.to_datetime(start_date))
+                & (df[config["excel_columns"]["date"]] <= pd.to_datetime(end_date))
+            ]
+
         # Obtendo as colunas de configuração
         previsto_dup = config["excel_columns"]["previsto_dup"]
         realizado_dup = config["excel_columns"]["realizado_dup"]
@@ -171,9 +180,9 @@ def get_top_five_deviation_foods(df, config):
         )
 
         # Ordenar pelos maiores desvios absolutos e pegar o número de registros configurado
-        top_desvios = desvios_totais[
-            [column_names["alimento"], column_names["desvio_absoluto"]]
-        ]
+        top_desvios = desvios_totais[[
+            column_names["alimento"], column_names["desvio_absoluto"]]]
+
         top_desvios = top_desvios.sort_values(
             by=column_names["desvio_absoluto"], ascending=False
         ).head(top_limit)
@@ -457,16 +466,17 @@ def create_dependent_multiselect(
     return selected
 
 
-def show_filter_status(operadores, alimentos, dietas, start_date, end_date):
+def show_filter_status(operadores, alimentos, dietas, motoristas, start_date, end_date):
     """
-    Mostra o status atual dos filtros aplicados incluindo o período
+    Mostra o status atual dos filtros aplicados incluindo o período.
 
     Args:
-        operadores (list): Lista de operadores selecionados
-        alimentos (list): Lista de alimentos selecionados
-        dietas (list): Lista de dietas selecionadas
-        start_date (datetime.date): Data inicial
-        end_date (datetime.date): Data final
+        operadores (list): Lista de operadores selecionados.
+        alimentos (list): Lista de alimentos selecionados.
+        dietas (list): Lista de dietas selecionadas.
+        motoristas (list): Lista de motoristas selecionados.
+        start_date (datetime.date): Data inicial.
+        end_date (datetime.date): Data final.
     """
     st.sidebar.markdown("### Filtros Ativos")
 
@@ -478,8 +488,15 @@ def show_filter_status(operadores, alimentos, dietas, start_date, end_date):
             f"**Período:** {start_date.strftime('%d/%m/%Y')} a {end_date.strftime('%d/%m/%Y')}"
         )
 
-    filtros = {"Operadores": operadores, "Alimentos": alimentos, "Dietas": dietas}
+    # Adicionar os filtros ao dicionário
+    filtros = {
+        "Dietas": dietas,
+        "Alimentos": alimentos,
+        "Operadores": operadores,
+        "Motoristas": motoristas,
+    }
 
+    # Exibir filtros na sidebar
     for nome, valores in filtros.items():
         if valores and "Todos" not in valores:
             st.sidebar.write(f"**{nome}:** {', '.join(valores)}")
@@ -545,50 +562,79 @@ def validate_selections(df_filtered, df_original, start_date, end_date):
 
 def flexible_date_selection(df, date_column):
     """
-    Permite ao usuário selecionar uma única data ou um intervalo de datas.
+    Permite ao usuário selecionar uma única data ou um intervalo de datas com validação robusta.
 
     Args:
     df (DataFrame): DataFrame contendo os dados.
     date_column (str): Nome da coluna de data no DataFrame.
 
     Returns:
-    tuple: (start_date, end_date)
+    tuple: (start_date, end_date) ou (None, None) se a seleção estiver incompleta
     """
-    min_date = df[date_column].min().date()
-    max_date = df[date_column].max().date()
+    try:
+        min_date = df[date_column].min().date()
+        max_date = df[date_column].max().date()
 
-    selection_type = st.radio(
-        "Selecione o tipo de filtro de data:", ["Data única", "Intervalo de datas"]
-    )
-
-    if selection_type == "Data única":
-        selected_date = st.date_input(
-            "Selecione a data:", min_value=min_date, max_value=max_date, value=min_date
-        )
-        start_date = end_date = selected_date
-    else:
-        start_date, end_date = st.date_input(
-            "Selecione o intervalo de datas:",
-            [min_date, max_date],
-            min_value=min_date,
-            max_value=max_date,
+        selection_type = st.radio(
+            "Selecione o tipo de filtro de data:",
+            ["Data única", "Intervalo de datas"],
+            key="date_selection_type"
         )
 
-        # Ajusta end_date para incluir todo o último dia
-        end_date = end_date + timedelta(days=1) - timedelta(seconds=1)
+        if selection_type == "Data única":
+            selected_date = st.date_input(
+                "Selecione a data:",
+                min_value=min_date,
+                max_value=max_date,
+                value=min_date,
+                key="single_date_input"
+            )
+            if selected_date:
+                return selected_date, selected_date
+            return None, None
 
-    return start_date, end_date
+        else:  # Intervalo de datas
+            try:
+                dates = st.date_input(
+                    "Selecione o intervalo de datas:",
+                    value=(min_date, max_date),
+                    min_value=min_date,
+                    max_value=max_date,
+                    key="date_range_input"
+                )
+                
+                # Verificar se dates é uma tupla com dois valores
+                if isinstance(dates, tuple) and len(dates) == 2:
+                    start_date, end_date = dates
+                    # Validar se as datas são válidas e estão na ordem correta
+                    if start_date and end_date and start_date <= end_date:
+                        return start_date, end_date
+                    else:
+                        st.warning("Por favor, selecione um intervalo de datas válido.")
+                        return None, None
+                else:
+                    st.info("Por favor, complete a seleção do intervalo de datas.")
+                    return None, None
+
+            except ValueError as e:
+                st.warning("Por favor, selecione um intervalo de datas válido.")
+                return None, None
+
+    except Exception as e:
+        st.error(f"Erro ao processar seleção de datas: {str(e)}")
+        return None, None
 
 
-def filter_data(df, operadores, alimentos, dietas, start_date, end_date):
+def filter_data(df, operadores, alimentos, dietas, motoristas, start_date, end_date):
     """
-    Filtra os dados com base nos operadores, alimentos, dietas e intervalo de datas fornecidos.
+    Filtra os dados com base nos operadores, alimentos, dietas, motoristas e intervalo de datas fornecidos.
 
     Args:
     df (DataFrame): DataFrame contendo os dados brutos.
     operadores (list): Lista de operadores selecionados para filtrar os dados.
     alimentos (list): Lista de alimentos selecionados para filtrar os dados.
     dietas (list): Lista de dietas selecionadas para filtrar os dados.
+    motoristas (list): Lista de motoristas selecionados para filtrar os dados.
     start_date (datetime.date): Data de início do filtro de datas.
     end_date (datetime.date): Data de término do filtro de datas.
 
@@ -620,6 +666,10 @@ def filter_data(df, operadores, alimentos, dietas, start_date, end_date):
     # Filtrar por dietas
     if "Todos" not in dietas:
         df = df[df[config["excel_columns"]["nome"]].isin(dietas)]
+
+    # Filtrar por motoristas
+    if "Todos" not in motoristas:
+        df = df[df[config["excel_columns"]["motorista"]].isin(motoristas)]
 
     return df
 
@@ -1029,28 +1079,31 @@ def main():
             if add_reset_filters_button():
                 st.rerun()
 
-            # Seleção de datas (agora é o primeiro filtro)
-            min_date = df[config["excel_columns"]["date"]].min().date()
-            max_date = df[config["excel_columns"]["date"]].max().date()
+            # Seleção de datas com validação robusta
             start_date, end_date = flexible_date_selection(
                 df, config["excel_columns"]["date"]
             )
 
-            # Inicializa dicionário de filtros
+            # Verifica se a seleção de datas está completa antes de prosseguir
+            if start_date is None or end_date is None:
+                st.info("Aguardando seleção válida do período...")
+                return
+
+            # Só inicializa o dicionário de filtros se as datas forem válidas
             filters_dict = {}
 
-            # 1. Filtro de Operadores (agora considera o período)
-            operadores_selecionados = create_dependent_multiselect(
+            # 1. Filtro de Dietas
+            dietas_selecionadas = create_dependent_multiselect(
                 df,
-                config["excel_columns"]["operator"],
-                config["ui"]["multiselect"]["operator_label"],
+                config["excel_columns"]["nome"],
+                config["ui"]["multiselect"]["diet_label"],
                 start_date,
                 end_date,
-                key="operators",
+                key="diets",
             )
-            filters_dict[config["excel_columns"]["operator"]] = operadores_selecionados
+            filters_dict[config["excel_columns"]["nome"]] = dietas_selecionadas
 
-            # 2. Filtro de Alimentos - dependente do período e operadores
+            # 2. Filtro de Alimentos
             alimentos_selecionados = create_dependent_multiselect(
                 df,
                 config["excel_columns"]["alimento"],
@@ -1062,23 +1115,36 @@ def main():
             )
             filters_dict[config["excel_columns"]["alimento"]] = alimentos_selecionados
 
-            # 3. Filtro de Dietas - dependente do período, operadores e alimentos
-            dietas_selecionadas = create_dependent_multiselect(
+            # 3. Filtro de Operadores
+            operadores_selecionados = create_dependent_multiselect(
                 df,
-                config["excel_columns"]["nome"],
-                config["ui"]["multiselect"]["diet_label"],
+                config["excel_columns"]["operator"],
+                config["ui"]["multiselect"]["operator_label"],
                 start_date,
                 end_date,
                 previous_filters=filters_dict,
-                key="diets",
+                key="operators",
             )
-            filters_dict[config["excel_columns"]["nome"]] = dietas_selecionadas
+            filters_dict[config["excel_columns"]["operator"]] = operadores_selecionados
+
+            # 4. Filtro de Motoristas
+            motoristas_selecionados = create_dependent_multiselect(
+                df,
+                config["excel_columns"]["motorista"],
+                "Selecione os Motoristas:",
+                start_date,
+                end_date,
+                previous_filters=filters_dict,
+                key="drivers",
+            )
+            filters_dict[config["excel_columns"]["motorista"]] = motoristas_selecionados
 
             # Mostrar status dos filtros na sidebar
             show_filter_status(
                 operadores_selecionados,
                 alimentos_selecionados,
                 dietas_selecionadas,
+                motoristas_selecionados,
                 start_date,
                 end_date,
             )
@@ -1089,6 +1155,7 @@ def main():
                 operadores_selecionados,
                 alimentos_selecionados,
                 dietas_selecionadas,
+                motoristas_selecionados,
                 start_date,
                 end_date,
             )
@@ -1161,7 +1228,7 @@ def main():
                             "maiores desvios",
                         )
                     )
-                    top_deviation_foods = get_top_five_deviation_foods(df, config)
+                    top_deviation_foods = get_top_five_deviation_foods(df_filtered, config, start_date, end_date)
                     if top_deviation_foods is not None:
                         st.dataframe(top_deviation_foods.reset_index(drop=True))
 
