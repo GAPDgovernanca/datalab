@@ -4,15 +4,21 @@
 **TARGET_ENTITY:** FEEDBACK_DATA_STRUCTURED  
 
 ### **DIRECTIVE_SEQUENCE**  
-1. **DATA_INGESTION_MODULE**  
-   - **SOURCE:** `EXTERNAL_TABLE_CSV/JSON`  
-   - **FIELDS:**  
-     - `competency_text: STRING`  
-     - `self_assessment: FLOAT[1-5]`  
-     - `received_ratings: ARRAY[FLOAT[1-5]]` (EXCLUDE_NULL)  
-   - **VALIDATE_DATA_STRUCTURE:**  
-     - `CHECK_ALIGNMENT(competency_text ↔ rating_sets)`  
-     - `FLAG_MISSING_VALUES(threshold=0.2, ACTION=EXCLUDE_ROW)`  
+1. **DATA_PROCESSING_MODULE**  
+   - **SOURCE:** `INPUT_DATA_BOUNDED(<results></results>)`
+   - **DATA_STRUCTURE:**  
+     - `competency_id: STRING` (POST_TAG=##)
+     - `self_assessment: FLOAT[1-5]` (LIKERT_SCALE)
+     - `received_ratings: ARRAY[FLOAT[1-5]]` (MULTI_SOURCE)
+   - **VALIDATION_PIPELINE:**  
+     - `CHECK_ALIGNMENT(competency_id ↔ rating_sets)`
+     - `VALIDATE_COLUMNS(MIN=3, STRUCTURE=[id, self, peers+])`
+     - `FLAG_MISSING_VALUES(threshold=0.2, ACTION=EXCLUDE_ROW)`
+     - `NORMALIZE_DATA(validated_data) → normalized_data`
+   - **SOURCE_MAPPING:**
+     - `COLUMN[3+] → ARRAY[subordinate, peer, superior]`
+   - **ERROR_HANDLING:**
+     - `ON_ERROR: RETURN_STATUS_AND_LOG`
 
 2. **QUANTITATIVE_PROCESSOR**  
    - **SUBSET_GROUPS:**  
