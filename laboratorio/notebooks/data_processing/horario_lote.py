@@ -9,7 +9,7 @@ import re
 @st.cache_data
 def carregar_dados():
     # Carregar o arquivo
-    df = pd.read_csv("horarios_periodo.csv", encoding="utf-8", delimiter=";")
+    df = pd.read_csv("horarios.csv", encoding="utf-8", delimiter=";")
     df.columns = df.columns.str.strip()
 
     # Converter datas e horários
@@ -17,8 +17,8 @@ def carregar_dados():
     df["HORA_INICIAL"] = pd.to_datetime(df["HORA_INICIAL"], format="%H:%M:%S")
     df["HORA_FINAL"] = pd.to_datetime(df["HORA_FINAL"], format="%H:%M:%S")
 
-    # Agrupar por lote e data
-    df_daily = df.groupby(["LOTE", "DATA_CONSUMO"]).agg(
+    # Agrupar por lote, curral e data
+    df_daily = df.groupby(["LOTE", "CURRAL", "DATA_CONSUMO"]).agg(
         PRIMEIRO_TRATO=("HORA_INICIAL", "min"),
         ULTIMO_TRATO=("HORA_FINAL", "max")
     ).reset_index()
@@ -80,7 +80,6 @@ if isinstance(date_range, tuple) or isinstance(date_range, list):  # Verifica se
 else:
     data_inicio = data_fim = date_range  # Se for um único valor, aplica para início e fim
 
-
 # Filtro de lotes (ordenado alfanumericamente)
 st.sidebar.write("Selecione os Lotes:")
 lotes_selecionados = st.sidebar.multiselect(
@@ -93,9 +92,9 @@ lotes_selecionados = st.sidebar.multiselect(
 # =========================================================
 # 4) Processar dados filtrados
 # =========================================================
-# Converter para pandas datetime
-data_inicio = pd.to_datetime(data_inicio)
-data_fim = pd.to_datetime(data_fim)
+# Garantir que data_inicio e data_fim estejam no mesmo formato que DATA_CONSUMO
+data_inicio = pd.to_datetime(data_inicio).tz_localize(None)
+data_fim = pd.to_datetime(data_fim).tz_localize(None)
 
 # Filtrar dados
 df_filtrado = df_daily[
@@ -118,11 +117,15 @@ else:
         color="LOTE_ABREV",
         line_shape="spline",  # Suavizar linhas
         title="Duração dos Tratos no Período Selecionado",
-        hover_data={"DURACAO": ":.2f"}  # Duração com duas casas decimais
+        hover_data={
+            "DURACAO": ":.2f",  # Duração com duas casas decimais
+            "CURRAL": True,     # Adiciona o CURRAL ao tooltip
+            "DATA_CONSUMO": "|%d/%m/%Y"  # Formato da data
+        }
     )
-    fig.update_xaxes(tickformat="%d/%m")
+    fig.update_xaxes(tickformat="%d/%m")  # Exibe datas no formato DD/MM
 
-    # Adicionar faixa 8-10h
+    # Adicionar faixa visual de 8h-10h no gráfico
     fig.add_shape(
         type="rect",
         xref="paper", yref="y",
@@ -133,7 +136,7 @@ else:
         line_width=0
     )
 
-    # Configurar layout para ocupar o máximo de espaço
+    # Configurar layout do gráfico
     fig.update_layout(
         yaxis_title="Duração (horas)",
         hovermode="x unified",
@@ -141,5 +144,5 @@ else:
         margin=dict(l=10, r=10, t=50, b=10)  # Margens reduzidas
     )
 
-    # Exibir o gráfico
-    st.plotly_chart(fig, use_container_width=True)  # Expande o gráfico na tela
+    # Exibir o gráfico no Streamlit
+    st.plotly_chart(fig, use_container_width=True)

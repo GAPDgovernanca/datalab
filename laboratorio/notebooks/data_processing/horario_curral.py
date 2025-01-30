@@ -9,7 +9,7 @@ import re
 @st.cache_data
 def carregar_dados():
     # Carregar o arquivo
-    df = pd.read_csv("horarios_periodo.csv", encoding="utf-8", delimiter=";")
+    df = pd.read_csv("horarios.csv", encoding="utf-8", delimiter=";")
     df.columns = df.columns.str.strip()
 
     # Converter datas e horários

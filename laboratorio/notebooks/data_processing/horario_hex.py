@@ -5,7 +5,7 @@ import numpy as np
 import scipy.stats as stats
 
 # Nome do arquivo CSV
-arquivo_dados = "horarios.csv"
+arquivo_dados = "horario_hex.csv"
 
 # 1. Carregar os dados corretamente
 df = pd.read_csv(arquivo_dados, encoding="utf-8", delimiter=";")
@@ -15,8 +15,8 @@ df.columns = df.columns.str.strip()  # Remover espaços extras nos nomes das col
 df["HORA_INICIAL"] = pd.to_datetime(df["HORA_INICIAL"], format="%H:%M:%S")
 df["HORA_FINAL"] = pd.to_datetime(df["HORA_FINAL"], format="%H:%M:%S")
 
-# 3. Calcular a diferença entre o primeiro e o último trato para cada curral
-df_diff = df.groupby("CURRAL").agg(
+# 3. Calcular a diferença entre o primeiro e o último trato para cada LOTE
+df_diff = df.groupby("LOTE").agg(
     HORARIO_INICIO=("HORA_INICIAL", "first"),
     HORARIO_FINAL=("HORA_FINAL", "last")
 ).reset_index()
