@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Integrado - Programa de Mentoria</title>
+    <style>
+        /* AQUI VIRÃO TODOS OS ESTILOS */
+        :root {
+            --primary: #0088FE;
+            --success: #00C49F;
+            --warning: #FFBB28;
+            --danger: #FF8042;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-700: #374151;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--gray-500);
+            font-weight: 500;
+            border-radius: 6px;
+        }
+
+        .nav-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .dashboard-section {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .chart-container {
+            height: 300px; /* Ajustar para auto para permitir que o gráfico se expanda conforme necessário */
+            width: 100%;  /* Definir a largura para ocupar todo o espaço disponível */
+            max-width: 600px; /* Limitar a largura máxima para garantir boa aparência */
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto; /* Centralizar o gráfico */
+        }
+
+        .chart-legend {
+            font-size: 12px; /* Reduz o tamanho da fonte da legenda */
+            text-align: center; /* Centralizar a legenda */
+            margin-top: 10px; /* Espaço entre o gráfico e a legenda */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .nav-tab {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .metric {
+        position: relative;
+        padding: 10px;
+        }
+
+        .metric-header {
+            margin-bottom: 15px;
+        }
+
+        .metric-header h3 {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .metric-target {
+            font-size: 12px;
+            color: var(--gray-500);
+            margin-left: 8px;
+        }
+
+        .metric-chart {
+            height: 20px !important;
+        }
+
+        .summary-list {
+        list-style: none;
+        padding: 0;
+        }
+
+        .summary-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            font-size: 14px;
+        }
+
+        .summary-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+
+        .filters-container {
+        margin-bottom: 20px;
+        background: var(--gray-100);
+        padding: 15px;
+        border-radius: 8px;
+        }
+
+        .filter-group {
+            margin-bottom: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: var(--gray-200);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .results-counter {
+            text-align: right;
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .correlation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+        }
+
+        .correlation-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .correlation-insight {
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--gray-100);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .insight-card {
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+        }
+
+        .insight-card.primary { background: var(--primary); }
+        .insight-card.success { background: var(--success); }
+
+        .insight-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .correlation-grid,
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .insight-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stacked-bar-chart {
+            margin-top: 20px; /* Adicionar espaço superior para separar do título */
+        }
+
+        .bar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px; /* Aumentar o espaçamento entre as barras */
+        }
+
+        .bar-label {
+            width: 100px; /* Definir largura para os labels */
+            font-size: 14px;
+            color: var(--gray-700);
+        }
+
+        .bar {
+            display: flex;
+            height: 40px; /* Aumentar a altura das barras */
+            width: 80%; /* Definir a largura das barras */
+            border-radius: 5px; /* Bordas arredondadas para uma aparência mais suave */
+            overflow: hidden; /* Para garantir que cada seção da barra se ajuste ao container */
+        }
+
+        .bar-segment {
+            text-align: center;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px; /* Diminuir a fonte para caber nas seções pequenas */
+            transition: all 0.3s ease;
+        }
+
+        .bar-segment:hover {
+            filter: brightness(1.2); /* Um pequeno destaque ao passar o mouse */
+        }
+
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <!-- AQUI VIRÁ TODO O CONTEÚDO -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="overview">Visão Geral</button>
+            <button class="nav-tab" data-tab="testimonials">Depoimentos</button>
+            <button class="nav-tab" data-tab="correlations">Correlações</button>
+        </nav>
+    
+        <div id="overview" class="dashboard-section active">
+            <!-- Conteúdo da Visão Geral virá aqui -->
+            <div class="grid">
+                <!-- KPIs -->
+                <div class="card metric">
+                    <div class="metric-header">
+                        <h3>Encontros Realizados</h3>
+                        <span class="metric-value" style="color: var(--primary)">85%</span>
+                        <span class="metric-target">Meta: 90%</span>
+                    </div>
+                    <canvas class="metric-chart" height="20"></canvas>
+                </div>
+        
+                <div class="card metric">
+                    <div class="metric-header">
+                        <h3>Metas Atingidas</h3>
+                        <span class="metric-value" style="color: var(--success)">78%</span>
+                        <span class="metric-target">Meta: 85%</span>
+                    </div>
+                    <canvas class="metric-chart" height="20"></canvas>
+                </div>
+        
+                <div class="card metric">
+                    <div class="metric-header">
+                        <h3>Satisfação Geral</h3>
+                        <span class="metric-value" style="color: var(--warning)">92%</span>
+                        <span class="metric-target">Meta: 80%</span>
+                    </div>
+                    <canvas class="metric-chart" height="20"></canvas>
+                </div>
+        
+                <div class="card metric">
+                    <div class="metric-header">
+                        <h3>Retenção</h3>
+                        <span class="metric-value" style="color: var(--danger)">95%</span>
+                        <span class="metric-target">Meta: 90%</span>
+                    </div>
+                    <canvas class="metric-chart" height="20"></canvas>
+                </div>
+            </div>
+
+            <!-- Gráficos Principais -->
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Progresso dos Mentorados</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Satisfação com o Programa</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="satisfactionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumo -->
+            <div class="grid">
+                <div class="card summary">
+                    <div class="card-header">
+                        <h3 class="card-title">Pontos Fortes</h3>
+                    </div>
+                    <ul class="summary-list">
+                        <li>100% dos mentorados com progresso conforme ou acima</li>
+                        <li>92% de satisfação geral com o programa</li>
+                        <li>Alta taxa de engajamento nas atividades</li>
+                    </ul>
+                </div>
+
+                <div class="card summary">
+                    <div class="card-header">
+                        <h3 class="card-title">Áreas de Atenção</h3>
+                    </div>
+                    <ul class="summary-list">
+                        <li>Comunicação entre mentor e mentorado</li>
+                        <li>Frequência dos encontros de acompanhamento</li>
+                        <li>Desenvolvimento de autonomia técnica</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="testimonials" class="dashboard-section">
+            <!-- Conteúdo dos Depoimentos virá aqui -->
+             <!-- Filtros -->
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label>Filtrar por Participante</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="todos">Todos</button>
+                        <button class="filter-btn" data-filter="mentorado">Mentorados</button>
+                        <button class="filter-btn" data-filter="mentor">Mentores</button>
+                        <button class="filter-btn" data-filter="mentor_senior">Mentor Senior</button>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Filtrar por Tema</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="todos">Todos</button>
+                        <button class="filter-btn" data-filter="ponto_forte">Pontos Fortes</button>
+                        <button class="filter-btn" data-filter="melhoria">Melhorias</button>
+                        <button class="filter-btn" data-filter="sugestao">Sugestões</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de Depoimentos -->
+            <div class="testimonials-grid" id="testimonials-container">
+                <!-- Os depoimentos serão inseridos aqui via JavaScript -->
+            </div>
+
+            <!-- Contador de Resultados -->
+            <div class="results-counter">
+                <span id="results-count">0</span> depoimento(s) encontrado(s)
+            </div>
+        </div>
+    
+        <div id="correlations" class="dashboard-section">
+            <!-- Correlações Principais -->
+            <div class="correlation-grid">
+                <!-- Progresso x Engajamento -->
+                <div class="correlation-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Progresso x Engajamento</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="progressEngagementChart"></canvas>
+                    </div>
+                    <div class="correlation-insight">
+                        <strong>Insight:</strong> 75% dos mentorados com alto engajamento apresentam progresso acima do esperado
+                    </div>
+                </div>
+
+                <!-- Satisfação x Clareza -->
+                <div class="correlation-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Satisfação x Clareza de Papel</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="satisfactionClarityChart"></canvas>
+                    </div>
+                    <div class="correlation-insight">
+                        <strong>Insight:</strong> 66% dos participantes com alta clareza do papel relatam satisfação com o programa
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Detalhados -->
+            <div class="insights-container">
+                <div class="insights-grid">
+                    <div class="insight-card primary">
+                        <h4>Engajamento → Progresso</h4>
+                        <div class="insight-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">75%</span>
+                                <span class="stat-label">Alto Progresso</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">3x</span>
+                                <span class="stat-label">Mais chances de superar expectativas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-card success">
+                        <h4>Feedback → Desenvolvimento</h4>
+                        <div class="insight-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">85%</span>
+                                <span class="stat-label">Percebem evolução</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">60%</span>
+                                <span class="stat-label">Notam mudanças nos colegas</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Dados dos depoimentos
+        const depoimentos = [
+            {
+                id: 1,
+                tipo: 'mentorado',
+                tema: 'ponto_forte',
+                texto: "Fiquei muito surpreso por ter sido escolhido, porque eu nunca tinha trabalhado como mecânico. Agradeço por terem acreditado em mim...",
+                contexto: "Avaliação Geral"
+            },
+            {
+                id: 2,
+                tipo: 'mentorado',
+                tema: 'ponto_forte',
+                texto: "Estou gostando muito e acho muito positivo da parte da empresa proporcionar momentos assim com os funcionários para desenvolver uma equipe cada vez mais preparada",
+                contexto: "Impacto do Programa"
+            },
+            {
+                id: 3,
+                tipo: 'mentor',
+                tema: 'ponto_forte',
+                texto: "Sempre me orienta da melhor forma para eu entender melhor e ter um ótimo resultado final",
+                contexto: "Qualidade da Mentoria"
+            },
+            {
+                id: 4,
+                tipo: 'mentor_senior',
+                tema: 'sugestao',
+                texto: "É importante estabelecer uma comunicação diária com o mentor",
+                contexto: "Recomendação"
+            }
+        ];
+
+        const progressData = [
+            { label: 'Conforme', value: 3 },
+            { label: 'Acima', value: 2 },
+            { label: 'Muito acima', value: 1 }
+        ];
+
+        const progressEngagementData = [
+            { 
+                label: 'Alto',
+                values: { positivo: 75, neutro: 15, negativo: 10 }
+            },
+            {
+                label: 'Médio',
+                values: { positivo: 45, neutro: 35, negativo: 20 }
+            }
+        ];
+
+        const satisfactionClarityData = [
+            {
+                label: 'Alta Clareza',
+                values: { satisfeito: 66, neutro: 24, insatisfeito: 10 }
+            },
+            {
+                label: 'Média Clareza',
+                values: { satisfeito: 33, neutro: 45, insatisfeito: 22 }
+            }
+        ];
+
+        const satisfactionData = [
+            { label: 'Muito Satisfeito', value: 5 },
+            { label: 'Satisfeito', value: 6 },
+            { label: 'Neutro', value: 2 }
+        ];
+
+        // Inicialização única
+        document.addEventListener('DOMContentLoaded', () => {
+            initNavigation();
+            initTestimonials();
+            initAllCharts();
+
+            // Configurar resize listener com debounce correto
+            window.addEventListener('resize', debounce(() => {
+                initAllCharts();
+            }, 250));
+        });
+
+        // Função de debounce
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Função unificada de inicialização de gráficos
+        function initAllCharts() {
+            // Destruir gráficos existentes se houver
+            Chart.helpers.each(Chart.instances, (instance) => {
+                instance.destroy();
+            });
+
+            // Inicializar gráficos de pizza
+            initializeChart('progressChart', 'pie', {
+                labels: progressData.map(d => d.label),
+                datasets: [{
+                    data: progressData.map(d => d.value),
+                    backgroundColor: ['#0088FE', '#00C49F', '#FFBB28']
+                }]
+            });
+
+            initializeChart('satisfactionChart', 'pie', {
+                labels: satisfactionData.map(d => d.label),
+                datasets: [{
+                    data: satisfactionData.map(d => d.value),
+                    backgroundColor: ['#0088FE', '#00C49F', '#FFBB28']
+                }]
+            });
+
+            // Inicializar gráficos de correlação
+            initializeChart('progressEngagementChart', 'bar', {
+                labels: ['Alto', 'Médio'],
+                datasets: [
+                    {
+                        label: 'Positivo',
+                        data: [75, 45],
+                        backgroundColor: '#0088FE',
+                    },
+                    {
+                        label: 'Neutro',
+                        data: [15, 35],
+                        backgroundColor: '#00C49F',
+                    },
+                    {
+                        label: 'Negativo',
+                        data: [10, 20],
+                        backgroundColor: '#FFBB28',
+                    }
+                ]
+            }, {
+                indexAxis: 'y',
+                stacked: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Porcentagem (%)'
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Níveis de Engajamento'
+                        }
+                    }
+                }
+            });
+
+            initializeChart('satisfactionClarityChart', 'bar', {
+                labels: ['Alta Clareza', 'Média Clareza'],
+                datasets: [
+                    {
+                        label: 'Satisfeito',
+                        data: [66, 33],
+                        backgroundColor: '#0088FE',
+                    },
+                    {
+                        label: 'Neutro',
+                        data: [24, 45],
+                        backgroundColor: '#00C49F',
+                    },
+                    {
+                        label: 'Insatisfeito',
+                        data: [10, 22],
+                        backgroundColor: '#FFBB28',
+                    }
+                ]
+            }, {
+                indexAxis: 'y',
+                stacked: true,
+                scales: {
+                    x: {
+                        stacked: true,
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Porcentagem (%)'
+                        }
+                    },
+                    y: {
+                        stacked: true,
+                        title: {
+                            display: true,
+                            text: 'Níveis de Clareza'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Função auxiliar para inicializar gráficos
+        function initializeChart(canvasId, type, data, additionalOptions = {}) {
+            const ctx = document.getElementById(canvasId)?.getContext('2d');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: type,
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        ...additionalOptions
+                    }
+                });
+            }
+        }
+
+        // Função de Navegação
+        function initNavigation() {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.dashboard-section').forEach(s => s.classList.remove('active'));
+                    tab.classList.add('active');
+                    const targetId = tab.dataset.tab;
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+        }
+
+        // Inicialização dos Depoimentos
+        function initTestimonials() {
+            setupTestimonialStyles();
+            renderDepoimentos();
+            initTestimonialFilters();
+        }
+
+        // Configuração dos Estilos dos Depoimentos
+        function setupTestimonialStyles() {
+            const styleSheet = document.styleSheets[0];
+            const rules = [
+                `.testimonial-card {
+                    background: white;
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                }`,
+                `.testimonial-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 10px;
+                }`,
+                `.testimonial-badge {
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    color: white;
+                }`,
+                `.badge-mentorado { background: var(--primary); }`,
+                `.badge-mentor { background: var(--success); }`,
+                `.badge-mentor_senior { background: var(--warning); }`
+            ];
+
+            rules.forEach(rule => {
+                styleSheet.insertRule(rule, styleSheet.cssRules.length);
+            });
+        }
+
+        // Funções de Renderização dos Depoimentos
+        function renderDepoimentos(filteredData = depoimentos) {
+            const container = document.getElementById('testimonials-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            filteredData.forEach(depoimento => {
+                const card = document.createElement('div');
+                card.className = 'testimonial-card';
+                card.innerHTML = `
+                    <div class="testimonial-header">
+                        <span class="testimonial-badge badge-${depoimento.tipo}">
+                            ${depoimento.tipo.replace('_', ' ').charAt(0).toUpperCase() + 
+                            depoimento.tipo.slice(1)}
+                        </span>
+                        <span class="testimonial-context">${depoimento.contexto}</span>
+                    </div>
+                    <p class="testimonial-content">${depoimento.texto}</p>
+                `;
+                container.appendChild(card);
+            });
+            
+            const countElement = document.getElementById('results-count');
+            if (countElement) {
+                countElement.textContent = filteredData.length;
+            }
+        }
+
+        // Função de Inicialização dos Filtros de Depoimentos
+        function initTestimonialFilters() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Atualizar estado ativo dos botões
+                    const group = btn.closest('.filter-group');
+                    if (!group) return;
+
+                    group.querySelectorAll('.filter-btn').forEach(b => 
+                        b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    // Obter filtros ativos
+                    const tipoButton = document.querySelector('.filter-group:first-child .filter-btn.active');
+                    const temaButton = document.querySelector('.filter-group:last-child .filter-btn.active');
+
+                    if (!tipoButton || !temaButton) return;
+
+                    const tipoFilter = tipoButton.dataset.filter;
+                    const temaFilter = temaButton.dataset.filter;
+
+                    // Aplicar filtros
+                    const filteredData = depoimentos.filter(d => {
+                        const matchTipo = tipoFilter === 'todos' || d.tipo === tipoFilter;
+                        const matchTema = temaFilter === 'todos' || d.tema === temaFilter;
+                        return matchTipo && matchTema;
+                    });
+
+                    renderDepoimentos(filteredData);
+                });
+            });
+        }
+
+    </script>
+
+</body>
+</html>
