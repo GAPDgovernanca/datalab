@@ -1,4 +1,0 @@
-# requirements.txt
-sqlalchemy>=2.0.27
-pandas>=2.2.0
-openpyxl>=3.1.2
