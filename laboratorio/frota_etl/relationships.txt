@@ -1,0 +1,6 @@
+Table Name	Column Name	Referenced Table	Referenced Column
+fato_uso	id_equipamento	dim_equipamento	id_equipamento
+fato_custo	id_equipamento	dim_equipamento	id_equipamento
+fato_combustivel	id_equipamento	dim_equipamento	id_equipamento
+fato_manutencao	id_equipamento	dim_equipamento	id_equipamento
+fato_reforma	id_equipamento	dim_equipamento	id_equipamento
