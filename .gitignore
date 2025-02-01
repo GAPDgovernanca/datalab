@@ -9,6 +9,7 @@ venv/
 # Sistema
 .DS_Store
 Thumbs.db
+.vscode/
 
 # Logs e backups
 logs/
@@ -17,3 +18,4 @@ backups/
 
 # Node
 node_modules/
+
