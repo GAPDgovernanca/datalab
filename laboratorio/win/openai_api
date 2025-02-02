@@ -1,0 +1,1 @@
+echo $Env:OPENAI_API_KEY
