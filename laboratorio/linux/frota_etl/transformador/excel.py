@@ -19,7 +19,7 @@ class ProcessadorExcel:
         self.arquivo = Path(arquivo)
         self.logger = logger
         self.data_processamento = datetime.now()
-        self.data_referencia = datetime(2025, 4, 1)
+        self.data_referencia = datetime(2024, 4, 1)
     
     def executar(self) -> Tuple[Dict, List[Dict]]:
         """
