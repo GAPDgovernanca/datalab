@@ -101,9 +101,9 @@ class ProcessadorExcel:
         ]].rename(columns={
             'Equipamento': 'id_equipamento',
             'Medidor': 'tipo_medidor',
-            'Uso (km ou hora) Estimado': 'valor_estimado',
-            'Uso (km ou hora) Realizado': 'valor_realizado',
-            'Uso (km ou hora) Diferença': 'valor_diferenca'
+            'Uso (km ou hora) Estimado': 'uso_estimado',
+            'Uso (km ou hora) Realizado': 'uso_realizado',
+            'Uso (km ou hora) Diferença': 'uso_diferenca'
         })
         .assign(
             data_referencia=self.data_referencia.strftime("%Y-%m-%d"),
@@ -153,15 +153,15 @@ class ProcessadorExcel:
             'Combustíveis Diferença'
         ]].rename(columns={
             'Equipamento': 'id_equipamento',
-            'Combustíveis (l) Orçado': 'litros_estimado',
-            'Combustíveis (l) Realizado': 'litros_realizado',
-            'Combustíveis (l) Diferença': 'litros_diferenca',
-            'VU Combustível Orçado': 'valor_unitario_estimado',
-            'VU Combustível Realizado': 'valor_unitario_realizado',
-            'VU Combustível Diferença': 'valor_unitario_diferenca',
-            'Combustíveis Orçado': 'total_estimado',
-            'Combustíveis Realizado': 'total_realizado',
-            'Combustíveis Diferença': 'total_diferenca'
+            'Combustíveis (l) Orçado': 'comb_litros_estimado',
+            'Combustíveis (l) Realizado': 'comb_litros_realizado',
+            'Combustíveis (l) Diferença': 'comb_litros_diferenca',
+            'VU Combustível Orçado': 'comb_valor_unitario_estimado',
+            'VU Combustível Realizado': 'comb_valor_unitario_realizado',
+            'VU Combustível Diferença': 'comb_valor_unitario_diferenca',
+            'Combustíveis Orçado': 'comb_total_estimado',
+            'Combustíveis Realizado': 'comb_total_realizado',
+            'Combustíveis Diferença': 'comb_total_diferenca'
         })
         .assign(
             data_referencia=self.data_referencia.strftime("%Y-%m-%d"),
@@ -217,9 +217,9 @@ class ProcessadorExcel:
             'Reforma Diferença'
         ]].rename(columns={
             'Equipamento': 'id_equipamento',
-            'Reforma Orçada': 'valor_estimado',
-            'Reforma Realizada': 'valor_realizado',
-            'Reforma Diferença': 'valor_diferenca'
+            'Reforma Orçada': 'reforma_estimado',
+            'Reforma Realizada': 'reforma_realizado',
+            'Reforma Diferença': 'reforma_diferenca'
         })
         .assign(
             data_referencia=self.data_referencia.strftime("%Y-%m-%d"),

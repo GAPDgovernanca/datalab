@@ -7,6 +7,7 @@ from groq import Groq
 from streamlit.components.v1 import html
 import plotly.express as px
 from datetime import datetime
+import re
 
 # Configuração do layout do Streamlit
 st.set_page_config(layout="wide")
@@ -118,6 +119,12 @@ def get_date_defaults():
             SELECT data_referencia, data_processamento FROM fato_custo
             UNION ALL
             SELECT data_referencia, data_processamento FROM fato_combustivel
+            UNION ALL
+            SELECT data_referencia, data_processamento FROM fato_manutencao
+            UNION ALL
+            SELECT data_referencia, data_processamento FROM fato_reforma
+            UNION ALL
+            SELECT data_referencia, data_processamento FROM fato_uso
         )
     """
     try:
@@ -170,20 +177,30 @@ def get_latest_processing_date():
         return "unknown_date"
 
 def calculate_proportion_factor(latest_reference_date, latest_date):
-    """Calcula o fator de proporção com base no período disponível dos dados."""
+    """
+    Calcula o fator de proporção com base no período disponível dos dados.
+
+    Parâmetros:
+    - latest_reference_date (str): Data de referência inicial no formato 'YYYY-MM-DD'.
+    - latest_date (str): Data final do período de análise no formato 'YYYY-MM-DD'.
+
+    Retorna:
+    - float: Fator de proporção ajustado (entre 0 e 1).
+    """
     try:
         ref_date = datetime.strptime(latest_reference_date, "%Y-%m-%d")
         last_date = datetime.strptime(latest_date, "%Y-%m-%d")
         
-        # Calcula meses decorridos entre a data de referência e a data mais recente
+        # Calcula os meses decorridos entre a data de referência e a data mais recente
         months_elapsed = (last_date.year - ref_date.year) * 12 + (last_date.month - ref_date.month)
 
-        # Garante que o fator não ultrapasse 1 (12 meses)
-        proportion_factor = months_elapsed / 12 if months_elapsed > 0 else 1
+        # Ajusta o fator para ficar no intervalo de 0 a 1 (máximo de 12 meses)
+        proportion_factor = min(months_elapsed / 12, 1.0) if months_elapsed > 0 else 1.0
+
         return round(proportion_factor, 4)  # Retorna com 4 casas decimais para precisão
     except Exception as e:
-        st.error(f"Erro ao calcular fator de proporção: {e}")
-        return 1  # Fallback padrão para evitar erros
+        print(f"Erro ao calcular fator de proporção: {e}")
+        return 1.0  # Fallback para evitar erros
 
 # Função para processar perguntas usando GROQ AI
 
@@ -195,69 +212,76 @@ def query_groq(data_json, question, model_name="deepseek-r1-distill-llama-70b"):
         proportion_factor = calculate_proportion_factor(latest_reference_date, latest_date)
 
         prompt = f"""
-        You are an expert in **agricultural fleet management**, specializing in **financial analysis, operational efficiency calculations, and cost assessments of machinery and equipment**.
+        Você é um especialista em gestão de frota agrícola, com foco em análise financeira e cálculos de eficiência operacional.
 
-        Your primary objective is to provide **concise, highly analytical, and data-driven responses**, ensuring clarity and strategic value.
+        Regras para Representação Numérica:
 
-        ### **Temporal Definitions for Data Interpretation**
-        - All **budgeted (forecasted) values** correspond to the entire **harvest season**, spanning **April of one year to April of the next year**:
-        
-          - Budgeted annual sum: **B_annual = Σ B_t** (from {latest_reference_date} to {latest_date})
+        - Acima de 1.000: arredondar para a centena mais próxima (12.345 → 12.300)
+        - Abaixo de 1.000: arredondar para a dezena mais próxima (545 → 550)
+        - Manter consistência em tabelas
+        - Evitar casas decimais desnecessárias
 
-        - All **actual (realized) values** correspond to **partial execution**, covering only **April to {latest_date}** of the same year:
+        Estrutura da Resposta:
 
-          - Actual partial sum: **A_partial = Σ A_t** (from April_{latest_reference_date} to {latest_date})
+        1. Iniciar com a principal conclusão
+        2. Apresentar cálculos de suporte
+        3. Utilizar indicadores (🟢, 🔴, ⚠️) para destaque
+        4. Usar tabelas para múltiplos pontos de dados
 
-        - **Important:** To correctly compare budgeted vs. actual values, adjust for the time proportion:
+        5. Definições Temporais:
 
-          - **B_scaled = B_annual × Proportion Factor**, where **Proportion Factor = {proportion_factor}**
+            - **Valores Estimados (B_anual)**: Representa a soma total estimada para um ciclo completo de safra (abril a abril).
+            - **Valores Estimados Ajustados (B_escalado)**: Todo valor estimado deve ser ajustado proporcionalmente ao período analisado ({latest_reference_date} até {latest_date}), aplicando o fator de proporção:  
+                B_escalado = B_anual * {proportion_factor}
+                Esse ajuste é **obrigatório** para garantir comparabilidade.
+            - **Uso Estimado na tabela fato_uso**: O campo **uso_estimado** deve ser ajustado proporcionalmente ao período analisado ({latest_reference_date} até {latest_date}), aplicando o fator de proporção:  
+                B_escalado = B_anual * {proportion_factor}
+                Esse ajuste é **obrigatório** para garantir comparabilidade.
+            - **Valores Reais (A_realizado)**: Representa os valores efetivamente registrados entre abril e {latest_date}. **Os valores realizados devem ser usados diretamente, sem qualquer ajuste ou modificação.**
 
-        ### **Mathematical Guidelines for Your Response**
-        1. **Always present explicit calculations and numerical insights** when applicable.
-        2. Compare **budgeted vs. actual values**, applying the correct proportionality factor to ensure accurate comparisons:
-           
-           - **Absolute Difference**: Δ = A_partial - B_scaled
-           - **Percentage Deviation**: Δ% = ((A_partial - B_scaled) / B_scaled) * 100%
+        6. Cálculos Principais:
 
-        3. Be **direct and objective**, optimizing the **Information Density (I) relative to response length (L):**
+            - **Diferença Absoluta**:  
+            Delta = A_realizado - B_escalado  
 
-           - Maximize: I / L
+            - **Desvio Percentual**:  
+            Delta% = ((A_realizado - B_escalado) / B_escalado) * 100  
 
-        4. When presenting multiple variables (x₁, x₂, …, xₙ), structure them in **tabular format** for clarity:
+            - **Taxa de Utilização**:  
+            U = Uso_Realizado / Uso_Estimado  
+            Se Uso_Estimado = 0, então U = 0.0  
+            - U > 1.0 → Superutilização 🟢  
+            - U < 1.0 → Subutilização 🔴  
 
-           ```
-           | Variable | Value |
-           |----------|-------|
-           | x₁       | 12.4  |
-           | x₂       | 8.7   |
-           ```
+        7. Tabelas do Banco de Dados:
 
-        5. If probabilistic inference is required, model your responses using **Bayesian probability**:
+        - **dim_equipamento (Equipamentos)**  
+        - id_equipamento, modelo, usuário, classe, data_criação  
 
-           - **P(y | x) = (P(x | y) * P(y)) / P(x)**
+        - **fato_uso (Uso)**  
+        - id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referência  
 
-        6. Always include **key fleet performance metrics**, such as:
+        - **fato_custo (Custo)**  
+        - id_equipamento, custo_hora_estimado/realizado, total_estimado/realizado, data_referência  
 
-        - **Utilization Rate (U)**:  
-            - **Formula:**  
-            U = Uso_Realizado / Uso_Orcado
-            - **Where:**
-            - **Uso_Realizado** → Horas efetivas de uso do equipamento.
-            - **Uso_Orcado** → Horas planejadas para o equipamento no período.
-            - **Important Notes:**
-            - Se `Uso_Orcado = 0`, defina `U = 0.0` (para evitar erro de divisão).
-            - Valores acima de `1.0` indicam **superutilização** (o equipamento foi utilizado além do planejado).
-            - Valores abaixo de `1.0` indicam **subutilização** (o equipamento foi utilizado menos do que o planejado).
+        - **fato_combustivel (Combustível)**  
+        - id_equipamento, comb_litros_estimado/realizado, comb_valor_unitario_estimado/realizado, comb_total_estimado/realizado  
 
-        - **Example Calculation:**
-            ```
-            Uso_Orcado = 114 horas  
-            Uso_Realizado = 316.12 horas  
-            Taxa de Utilização (U) = 316.12 / 114 = 2.77
-            ```
-            **Interpretation:** O equipamento foi operado **177.3% a mais que o previsto** (277.3% do total planejado).
+        - **fato_manutencao (Manutenção)**  
+        - id_equipamento, lubrificantes, filtros, graxas, peças_serviços (estimado/realizado para cada)  
 
-        7. Always write your response in pt-br.
+        - **fato_reforma (Reforma)**  
+        - id_equipamento, reforma_estimado, reforma_realizado, data_referência  
+
+        8. Relacionamentos:
+
+        - Todas as tabelas fato se conectam à **dim_equipamento** via **id_equipamento**
+
+        9. Diretrizes:
+
+        - Escrever em português brasileiro
+        - Focar em insights baseados em dados
+        - Maximizar a densidade informacional
 
         **Dataset Provided:**
         ```json
@@ -279,11 +303,15 @@ def query_groq(data_json, question, model_name="deepseek-r1-distill-llama-70b"):
         )
         response = chat_completion.choices[0].message.content
 
-        # Removendo tokens desnecessários da resposta
-        import re
-        cleaned_response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+        # Removendo tokens desnecessários da resposta (somente se necessário)
+        if "<think>" in response and "</think>" in response:
+            cleaned_response = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+        else:
+            cleaned_response = response
 
+        # Ajuste para garantir que a resposta sempre comece com um relatório de conclusões sem cabeçalhos
         return cleaned_response
+
     except Exception as e:
         st.error(f"Erro ao comunicar com a API GROQ: {e}")
         return "Erro ao processar a consulta."
@@ -353,7 +381,7 @@ def get_additional_data(filtros):
         return {}
 
     additional_data = {}
-    tables_to_include = ["fato_combustivel", "fato_manutencao", "fato_reforma"]
+    tables_to_include = ["fato_combustivel", "fato_manutencao", "fato_reforma", "fato_uso"]
 
     for table in tables_to_include:
         query = f"""
@@ -405,21 +433,49 @@ def apply_flags(df):
         df['Sinalizador'] = df.apply(flag_diferenca, axis=1)
     return df
 
-def calcular_multiplicadores(df):
+def calcular_multiplicadores(df, proportion_factor):
     """
-    Calcula os multiplicadores de uso e consumo
+    Calcula os multiplicadores apenas se os dados necessários estiverem disponíveis.
     """
-    # Taxa de Utilização (Uso Realizado / Uso Estimado)
-    df['Taxa Utilização Multiplicador'] = df.apply(
-    lambda row: row['custo_hora_realizado'] / row['custo_hora_estimado']
-    if row['custo_hora_estimado'] != 0 else 0.0,
-    axis=1
-    )
-
-    # Consumo (similar ao original, mas usando nossos dados de custo)
-    df['Consumo Multiplicador'] = df['total_realizado'] / df['total_estimado']
-    
-    return df
+    try:
+        # Create a connection to get uso data
+        conn = get_db_connection()
+        if conn:
+            # Get uso data for the same equipments in df
+            uso_query = """
+                SELECT id_equipamento, uso_estimado, uso_realizado 
+                FROM fato_uso 
+                WHERE id_equipamento IN ({})
+            """.format(','.join(map(str, df['id_equipamento'].unique())))
+            
+            uso_df = pd.read_sql_query(uso_query, conn)
+            conn.close()
+            
+            # Merge uso data with main df
+            df = df.merge(uso_df, left_on='id_equipamento', right_on='id_equipamento', how='left')
+        
+        # Calculate only if we have the required columns
+        if 'uso_estimado' in df.columns and 'uso_realizado' in df.columns:
+            df['uso_estimado_ajustado'] = df['uso_estimado'] * proportion_factor
+            df['Taxa Utilização Multiplicador'] = df.apply(
+                lambda row: row['uso_realizado'] / row['uso_estimado_ajustado']
+                if row['uso_estimado_ajustado'] != 0 else 0.0,
+                axis=1
+            )
+        
+        if 'Total Orçado' in df.columns and 'Total Realizado' in df.columns:
+            df['total_estimado_ajustado'] = df['Total Orçado'] * proportion_factor
+            df['Consumo Multiplicador'] = df.apply(
+                lambda row: row['Total Realizado'] / row['total_estimado_ajustado']
+                if row['total_estimado_ajustado'] != 0 else 0.0,
+                axis=1
+            )
+        
+        return df
+        
+    except Exception as e:
+        print(f"Erro ao calcular multiplicadores: {e}")
+        return df
 
 # Título principal
 st.markdown('<h1 class="centered-title">Frota - Dashboard Operacional</h1>', unsafe_allow_html=True)
@@ -455,10 +511,12 @@ additional_data = get_additional_data(filtros)
 if df.empty:
     st.warning("Nenhum dado encontrado para os filtros aplicados. Verifique os parâmetros.")
 
-# Aplicar sinalizadores visuais
-if not df.empty:
-    df = apply_flags(df)
-    df = calcular_multiplicadores(df)
+# Obter as datas de referência ANTES de calcular o fator de proporção
+latest_reference_date = get_latest_reference_date()
+latest_date = get_latest_processing_date()
+
+# Calcular o fator de proporção
+proportion_factor = calculate_proportion_factor(latest_reference_date, latest_date)
 
 # Exibir métricas
 st.markdown('<div class="card-container">', unsafe_allow_html=True)
@@ -539,6 +597,12 @@ if not df.empty:
 
 st.subheader("Dados filtrados")
 if not df.empty:
+    df = apply_flags(df)
+    # Aplicar sinalizadores visuais e calcular multiplicadores com o proportion_factor correto
+    df = calcular_multiplicadores(df, proportion_factor)
+
+
+
     df = df.rename(columns={
         'usuario': 'Fazenda',
         'classe': 'Classe',
@@ -549,7 +613,7 @@ if not df.empty:
         'total_estimado': 'Total Orçado',
         'total_realizado': 'Total Realizado',
         'total_diferenca': 'Total Dif',
-        'Sinalizador': '='
+
     })
 
     # Inverter sinais na apresentação final (se necessário)
@@ -557,7 +621,7 @@ if not df.empty:
     df['Total Dif'] = df['Total Dif']
 
     df = df[['Fazenda', 'Classe', 'Equip', 'Custo Orçado', 'Custo Realizado', 'Custo Dif', 
-             'Total Orçado', 'Total Realizado', 'Total Dif', '=']]
+             'Total Orçado', 'Total Realizado', 'Total Dif', 'Sinalizador']]
 
     # Formatar os valores monetários e ajustar o estilo da tabela
     df.update(df.select_dtypes(include=['float', 'int']).round(0))
@@ -590,7 +654,7 @@ if st.button("Perguntar ao GROQ"):
     if user_question:
         combined_data = {"filtered_data": df.to_dict(orient='records'), "additional_data": additional_data}
         answer = query_groq(combined_data, user_question)
-        st.subheader("Resposta da IA")
+        st.subheader("")
         st.markdown(answer, unsafe_allow_html=False)
 
 
