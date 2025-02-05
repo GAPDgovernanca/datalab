@@ -421,8 +421,7 @@ def get_filter_options_dependent(
                 df_filtered = df_filtered[df_filtered[col].isin(values)]
 
     # Obtém valores únicos e ordenados
-    unique_values = sorted(df_filtered[column_name].unique().tolist())
-
+    unique_values = sorted(df_filtered[column_name].fillna('').astype(str).unique().tolist())
     return ["Todos"] + unique_values
 
 
