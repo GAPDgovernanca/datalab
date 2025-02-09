@@ -1,10 +1,9 @@
-Attribute VB_Name = "Module1"
 ' =================================================================
 ' Macro: ReordenarColunasComConversaovCGPT
-' Objetivo: Reorganizar colunas, converter dados e inserir linhas em branco após seções
+' Objetivo: Reorganizar colunas, converter dados e inserir linhas em branco apÃ³s seÃ§Ãµes
 ' =================================================================
 Sub ReordenarColunasComConversaovCGPT()
-    ' Declaração de variáveis
+    ' DeclaraÃ§Ã£o de variÃ¡veis
     Dim wsOrigem As Worksheet, wsDestino As Worksheet
     Dim dict As Object
     Dim ultimaLinha As Long, ultimaColuna As Long
@@ -14,27 +13,27 @@ Sub ReordenarColunasComConversaovCGPT()
     Dim linhasParaExcluir As Variant, cel As Range
     Dim larguraEmPontos As Double
     
-    ' Configuração inicial
+    ' ConfiguraÃ§Ã£o inicial
     Application.ScreenUpdating = False
     Set dict = CreateObject("Scripting.Dictionary")
     
-    ' Configuração do dicionário de conversão
+    ' ConfiguraÃ§Ã£o do dicionÃ¡rio de conversÃ£o
     dict.CompareMode = vbTextCompare
     dict("Nunca acontece") = 1
     dict("Quase nunca acontece") = 2
     dict("Ocorre de vez em quando") = 3
-    dict("Acontece com frequência") = 4
+    dict("Acontece com frequÃªncia") = 4
     dict("Acontece o tempo todo") = 5
-    dict("Não sei avaliar") = "null"
+    dict("NÃ£o sei avaliar") = "null"
     
     ' Campos que permanecem como texto
     keepAsText = "Response Type,Start Date (UTC),Stage Date (UTC),Submit Date (UTC),Network ID,Tags," & _
-                 "Coisas para manter,Coisas para melhorar,sua relação com"
+                 "Coisas para manter,Coisas para melhorar,sua relaÃ§Ã£o com"
     
     ' Define planilha de origem
     Set wsOrigem = ThisWorkbook.ActiveSheet
     
-    ' Determina dimensões da planilha
+    ' Determina dimensÃµes da planilha
     ultimaLinha = wsOrigem.Cells(wsOrigem.Rows.Count, 1).End(xlUp).Row
     ultimaColuna = wsOrigem.Cells(1, wsOrigem.Columns.Count).End(xlToLeft).Column
     
@@ -45,8 +44,8 @@ Sub ReordenarColunasComConversaovCGPT()
     ' Copia coluna de perguntas
     wsOrigem.Range(wsOrigem.Cells(1, 1), wsOrigem.Cells(ultimaLinha, 1)).Copy Destination:=wsDestino.Range("A1")
     
-    ' Reorganiza colunas por tipo de relação
-    tiposRelacao = Array("autoavaliação", "liderado", "colega gestor", "diretor")
+    ' Reorganiza colunas por tipo de relaÃ§Ã£o
+    tiposRelacao = Array("autoavaliaÃ§Ã£o", "liderado", "colega gestor", "diretor")
     novaColunaIndex = 2
     
     For Each tipo In tiposRelacao
@@ -90,10 +89,10 @@ Sub ReordenarColunasComConversaovCGPT()
         End If
     Next rowIndex
     
-    ' Insere linhas em branco após seções
+    ' Insere linhas em branco apÃ³s seÃ§Ãµes
     InsertBlankLinesAfterSections wsDestino
     
-    ' Formatação final
+    ' FormataÃ§Ã£o final
     With wsDestino.Range("A1").CurrentRegion
         .Columns.AutoFit
         .Font.Name = "Courier New"
@@ -109,18 +108,18 @@ Sub ReordenarColunasComConversaovCGPT()
         wsDestino.Columns(col).ColumnWidth = larguraEmPontos
     Next col
     
-    ' ============== INSERÇÃO 2: FONTE PARA TODAS AS CÉLULAS ==============
+    ' ============== INSERÃ‡ÃƒO 2: FONTE PARA TODAS AS CÃ‰LULAS ==============
     wsDestino.Cells.Font.Name = "Courier New"
     ' ======================================================================
     
-    ' Finalização
+    ' FinalizaÃ§Ã£o
     Application.ScreenUpdating = True
-    MsgBox "Processo concluído: Dados reorganizados, convertidos e linhas em branco inseridas.", vbInformation
+    MsgBox "Processo concluÃ­do: Dados reorganizados, convertidos e linhas em branco inseridas.", vbInformation
 End Sub
 
 ' =================================================================
-' Função: InsertBlankLinesAfterSections
-' Objetivo: Insere uma linha em branco após cada seção identificada
+' FunÃ§Ã£o: InsertBlankLinesAfterSections
+' Objetivo: Insere uma linha em branco apÃ³s cada seÃ§Ã£o identificada
 ' =================================================================
 Sub InsertBlankLinesAfterSections(ws As Worksheet)
     Dim lastRow As Long, currentRow As Long
@@ -133,13 +132,14 @@ Sub InsertBlankLinesAfterSections(ws As Worksheet)
     
     For currentRow = lastRow To 1 Step -1
         For Each Header In sectionHeaders
-            If InStr(1, ws.Cells(currentRow, 1).Value, Header, vbTextCompare) > 0 Then
+            'AlteraÃ§Ã£o: Removido vbTextCompare para garantir correspondÃªncia exata e preservar acentuaÃ§Ã£o
+            If InStr(1, ws.Cells(currentRow, 1).Value, Header) > 0 Then
                 If Not headerProcessed Then
-                    ' Insere linha e copia o cabeçalho (linha 1)
+                    ' Insere linha e copia o cabeÃ§alho (linha 1)
                     ws.Rows(currentRow + 1).Insert
                     ws.Rows(1).Copy Destination:=ws.Rows(currentRow + 1)
                     
-                    ' ============== CUSTOMIZAÇÃO ADICIONAL (COR DE FUNDO) ==============
+                    ' ============== CUSTOMIZAÃ‡ÃƒO ADICIONAL (COR DE FUNDO) ==============
                     ws.Rows(currentRow + 1).Interior.Color = RGB(200, 200, 200) ' Cinza claro
                     ' ===================================================================
                     
@@ -156,19 +156,17 @@ Sub InsertBlankLinesAfterSections(ws As Worksheet)
 End Sub
 
 ' =================================================================
-' Função: IsHeader
-' Objetivo: Verifica se uma célula contém um cabeçalho de seção
+' FunÃ§Ã£o: IsHeader
+' Objetivo: Verifica se uma cÃ©lula contÃ©m um cabeÃ§alho de seÃ§Ã£o
 ' =================================================================
 Function IsHeader(cellValue As String, headers As Variant) As Boolean
     Dim Header As Variant
     For Each Header In headers
-        If InStr(1, cellValue, Header, vbTextCompare) > 0 Then
+       'AlteraÃ§Ã£o: Removido vbTextCompare para garantir correspondÃªncia exata e preservar acentuaÃ§Ã£o
+        If InStr(1, cellValue, Header) > 0 Then
             IsHeader = True
             Exit Function
         End If
     Next Header
     IsHeader = False
 End Function
-
-
-
