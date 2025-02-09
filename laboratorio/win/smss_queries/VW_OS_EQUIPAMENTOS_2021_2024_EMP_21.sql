@@ -1,0 +1,26 @@
+SELECT 
+    OS.[COD_OS],
+    OS.[COD_EQUIPAMENTO],
+    EQ.[COD_MODELO],
+    EQ.[COD_VERSAO],
+    MV.[DSC_MODELO],  -- Adicionando a descrição do modelo do equipamento
+    EQ.[EQP_ANO_FABRIC],
+    EQ.[EQP_PLACA],
+    EQ.[EQP_STATUS],
+    EQ.[EQP_VALOR],
+    EQ.[EQP_VIDAUTI],
+    EQ.[EQP_RENAVAM],
+    OS.[OS_DT_ENTRADA],
+    OS.[OS_DT_SAIDA],
+    OS.[OS_STATUS],
+    OS.[OS_OBSERVACAO],
+    OS.[COD_EMPR]
+FROM [GATEC_MEC].[dbo].[GA_OFI_OS] AS OS
+INNER JOIN [GATEC_MEC].[dbo].[GA_EQP_EQUIPAMENTO] AS EQ
+    ON OS.[COD_EQUIPAMENTO] = EQ.[COD_EQUIPAMENTO]
+INNER JOIN [GATEC_MEC].[dbo].[GA_EQP_MODELO_VERSAO] AS MV
+    ON EQ.[COD_MODELO] = MV.[COD_MODELO] 
+    AND EQ.[COD_VERSAO] = MV.[COD_VERSAO]  -- Garantindo que a versão do modelo seja a correta
+WHERE OS.[COD_EMPR] = 21
+AND YEAR(OS.[OS_DT_ENTRADA]) BETWEEN 2021 AND 2024  -- Filtra OS dos anos de 2021 até 2024
+ORDER BY OS.[OS_DT_ENTRADA];
