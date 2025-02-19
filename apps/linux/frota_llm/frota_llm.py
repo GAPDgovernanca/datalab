@@ -69,25 +69,25 @@ st.markdown("""
         border: 1px solid #34495e;
     }
     .down-green {
-                color: #50C878 !important;
-        }
-        .stTextArea textarea {
-            min-height: 100px;
-            max-height: 500px;
-            resize: vertical;
-            overflow: auto;
-            line-height: 1.5;
-            padding: 8px;
-            font-size: 16px;
-            font-family: Arial, sans-serif;
-        }
-        textarea {
-            height: auto !important;
-            min-height: 100px !important;
-            transition: height 0.1s ease-in-out;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+        color: #50C878 !important;
+    }
+    .stTextArea textarea {
+        min-height: 100px;
+        max-height: 500px;
+        resize: vertical;
+        overflow: auto;
+        line-height: 1.5;
+        padding: 8px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+    textarea {
+        height: auto !important;
+        min-height: 100px !important;
+        transition: height 0.1s ease-in-out;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 # Configuração da API GROQ
 api_key = os.getenv("GROQ_API_KEY")
@@ -151,79 +151,70 @@ def query_groq(data_json, question, model_name="deepseek-r1-distill-llama-70b"):
 
         ### Regras para Representação Numérica
 
-        - **Acima de 1.000**: arredondar para a centena mais próxima (ex.: 12.345 → 12.300).  
-        - **Abaixo de 1.000**: arredondar para a dezena mais próxima (ex.: 545 → 550).  
-        - Manter consistência em tabelas.  
+        - Acima de 1.000: arredondar para a centena mais próxima (ex.: 12.345 → 12.300).
+        - Abaixo de 1.000: arredondar para a dezena mais próxima (ex.: 545 → 550).
+        - Manter consistência em tabelas.
         - Evitar casas decimais desnecessárias.
 
         ---
 
         ### Estrutura da Resposta
 
-        1. **Conclusão Principal**  
-        - Expor diretamente o ponto-chave da análise.
-
-        2. **Cálculos de Suporte**  
-        - Apresentar os números que fundamentam a conclusão.
-
-        3. **Tabelas**  
-        - Organizar múltiplos dados de forma clara e estruturada.
+        1. Conclusão Principal
+        2. Cálculos de Suporte
+        3. Tabelas
 
         ---
 
         ### Cálculos Principais
 
-        - **Diferença Absoluta**  
-        \(\Delta = (Valor\_Realizado) - (Valor\_Orcado)\)
+        - Diferença Absoluta
+          Δ = (Valor_Realizado) - (Valor_Orcado)
 
-        - **Desvio Percentual**  
-        \(\Delta\% = \bigl((Valor\_Realizado) - (Valor\_Orcado)\bigr) \,\big/\, (Valor\_Orcado) \times 100\)
+        - Desvio Percentual
+          Δ% = ((Valor_Realizado) - (Valor_Orcado)) / (Valor_Orcado) x 100
 
-        - **Taxa de Utilização**  
-        \[
-            U = \frac(\text(Uso\_Realizado))(\text(Uso\_Estimado))
-            \quad\text((se Uso\_Estimado = 0, então ) U = 0.0)
-        \]  
-        - \( U > 1.0 \) → Superutilização (🔴)  
-        - \( U < 1.0 \) → Subutilização (🟢)
+        - Taxa de Utilização
+          U = Uso_Realizado / Uso_Estimado  (se Uso_Estimado = 0, então U = 0.0)
+          U > 1.0 → Superutilização (🔴)
+          U < 1.0 → Subutilização (🟢)
 
         ---
 
         ### Tabelas do Banco de Dados
 
-        - **dim\_equipamento (Equipamentos)**  
-        `id_equipamento, modelo, usuário, classe, data_criação`
+        - dim_equipamento (Equipamentos)
+          id_equipamento, modelo, usuário, classe, data_criação
 
-        - **fato\_uso (Uso)**  
-        `id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referência`
+        - fato_uso (Uso)
+          id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referência
 
-        - **fato\_custo (Custo)**  
-        `id_equipamento, custo_hora_estimado, custo_hora_realizado, total_estimado, total_realizado, data_referência`
+        - fato_custo (Custo)
+          id_equipamento, custo_hora_estimado, custo_hora_realizado, total_estimado, total_realizado, data_referência
 
-        - **fato\_combustivel (Combustível)**  
-        `id_equipamento, comb_litros_estimado, comb_litros_realizado, comb_valor_unitario_estimado, comb_valor_unitario_realizado, comb_total_estimado, comb_total_realizado`
+        - fato_combustivel (Combustível)
+          id_equipamento, comb_litros_estimado, comb_litros_realizado, comb_valor_unitario_estimado, comb_valor_unitario_realizado, comb_total_estimado, comb_total_realizado
 
-        - **fato\_manutencao (Manutenção)**  
-        `id_equipamento, lubrificantes, filtros, graxas, peças_serviços (estimado/realizado)`
+        - fato_manutencao (Manutenção)
+          id_equipamento, lubrificantes, filtros, graxas, peças_serviços (estimado/realizado)
 
-        - **fato\_reforma (Reforma)**  
-        `id_equipamento, reforma_estimado, reforma_realizado, data_referência`
+        - fato_reforma (Reforma)
+          id_equipamento, reforma_estimado, reforma_realizado, data_referência
 
         ---
 
         ### Relacionamentos
 
-        - Todas as tabelas de fato se conectam à **dim\_equipamento** via **id_equipamento**.
+        - Todas as tabelas de fato se conectam à dim_equipamento via id_equipamento.
 
         ---
 
         ### Diretrizes
 
-        - **Linguagem**: escrever em português brasileiro.
-        - **Formatação de fontes**: nunca formate fontes em negrito ou itálico, sob pena de confundir o usuário.
-        - **Foco**: fornecer insights objetivos, com alta densidade informacional, baseados diretamente nos valores do banco.  
-        - **Não aplicar ajustes de datas**: comparações e cálculos devem ser realizados com os valores brutos, sem qualquer ajuste temporal.
-
+        - Linguagem: português brasileiro.
+        - Não formatar fontes em negrito ou itálico.
+        - Fornecer insights objetivos, baseados diretamente nos valores do banco.
+        - Não aplicar ajustes de datas.
 
         **Dataset Provided:**
         ```json
@@ -286,17 +277,17 @@ def get_filtered_data(filtros):
 
     query = """
         SELECT fc.id_equipamento, 
-            fc.custo_hora_estimado, 
-            fc.custo_hora_realizado, 
-            -fc.custo_hora_diferenca AS custo_hora_diferenca, 
-            fc.total_estimado, 
-            fc.total_realizado, 
-            -fc.total_diferenca AS total_diferenca, 
-            de.classe, 
-            de.usuario
+               fc.custo_hora_estimado, 
+               fc.custo_hora_realizado, 
+               -fc.custo_hora_diferenca AS custo_hora_diferenca, 
+               fc.total_estimado, 
+               fc.total_realizado, 
+               -fc.total_diferenca AS total_diferenca, 
+               de.classe, 
+               de.usuario
         FROM fato_custo AS fc
         INNER JOIN dim_equipamento AS de
-        ON fc.id_equipamento = de.id_equipamento
+            ON fc.id_equipamento = de.id_equipamento
     """
 
     filters = build_filters(filtros)
@@ -328,7 +319,7 @@ def get_additional_data(filtros):
             SELECT t.*
             FROM {table} AS t
             INNER JOIN dim_equipamento AS de
-            ON t.id_equipamento = de.id_equipamento
+                ON t.id_equipamento = de.id_equipamento
             WHERE t.id_equipamento IN (SELECT id_equipamento FROM dim_equipamento)
         """
         filters = build_filters(filtros, alias='t')
@@ -357,16 +348,24 @@ def get_unique_values(column_name):
         st.error(f"Erro ao carregar valores únicos para {column_name}: {e}")
         return []
 
-# Função para aplicar sinalizadores visuais
+# FUNÇÃO COM O AJUSTE SOLICITADO
 def apply_flags(df):
     def flag_diferenca(row):
-        percentual = (row['total_diferenca'] / row['total_estimado'] * 100) if row['total_estimado'] != 0 else 0
-        
-        if percentual > 10:
-            return '🟢'
-        elif percentual < -10:
-            return '🔴'
+        # Caso especial: não havia orçamento (0), mas houve custo realizado > 0
+        if row['total_estimado'] == 0 and row['total_realizado'] > 0:
+            return '🔶'  # <-- Sinalizador para "uso sem orçamento"
+
+        # Se houve orçamento, aplica a lógica normal:
+        if row['total_estimado'] != 0:
+            percentual = (row['total_diferenca'] / row['total_estimado'] * 100)
+            if percentual > 10:
+                return '🟢'
+            elif percentual < -10:
+                return '🔴'
+            else:
+                return '⚪'
         else:
+            # Se total_estimado == 0 e total_realizado == 0, mantém branco
             return '⚪'
 
     if 'total_diferenca' in df.columns:
@@ -448,7 +447,8 @@ with col1:
     st.markdown(f'<div class="custom-card"><h3>Total de Registros</h3><p>{len(df):,}</p></div>', unsafe_allow_html=True)
 
 with col2:
-    st.markdown(f'<div class="custom-card"><h3>Total Estimado</h3><p>R$ {df["total_estimado"].sum() if "total_estimado" in df.columns else 0:,.0f}</p></div>', unsafe_allow_html=True)
+    total_estimado_soma = df["total_estimado"].sum() if "total_estimado" in df.columns else 0
+    st.markdown(f'<div class="custom-card"><h3>Total Estimado</h3><p>R$ {total_estimado_soma:,.0f}</p></div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
@@ -511,9 +511,11 @@ if not df.empty:
 
 st.subheader("Dados filtrados")
 if not df.empty:
+    # Aplica os sinalizadores (já com o ajuste)
     df = apply_flags(df)
     df = calcular_multiplicadores(df)
     
+    # Renomeia colunas para exibição
     df = df.rename(columns={
         'usuario': 'Fazenda',
         'classe': 'Classe',
@@ -526,13 +528,13 @@ if not df.empty:
         'total_diferenca': 'Total Dif',
     })
 
-    df['Custo Dif'] = df['Custo Dif']
-    df['Total Dif'] = df['Total Dif']
-
+    # Ajusta as colunas para exibição
     df = df[['Fazenda', 'Classe', 'Equip', 'Custo Orçado', 'Custo Realizado', 'Custo Dif', 
              'Total Orçado', 'Total Realizado', 'Total Dif', 'Sinalizador']]
 
+    # Arredonda valores numéricos
     df.update(df.select_dtypes(include=['float', 'int']).round(0))
+    
     styled_df = df.style.format({
         'Custo Orçado': 'R$ {:,.0f}',
         'Custo Realizado': 'R$ {:,.0f}',
