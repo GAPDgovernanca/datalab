@@ -90,7 +90,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Configuração da API GROQ
-api_key = os.getenv("GROQ_API_KEY")
+api_key = st.secrets["GROQ_API_KEY"]  # Chave lida do secrets
 client = Groq(api_key=api_key)
 
 # Função para conectar ao banco SQLite
