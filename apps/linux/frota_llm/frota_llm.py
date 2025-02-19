@@ -93,10 +93,11 @@ st.markdown("""
 api_key = st.secrets["GROQ_API_KEY"]  # Chave lida do secrets
 client = Groq(api_key=api_key)
 
-# Função para conectar ao banco SQLite
+# Função para conectar ao banco SQLite (agora com caminho ajustado)
 def get_db_connection():
     try:
-        conn = sqlite3.connect("./frota.db")
+        db_path = os.path.join(os.path.dirname(__file__), "frota.db")
+        conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         return conn
     except sqlite3.Error as e:
@@ -190,7 +191,7 @@ def query_groq(data_json, question, model_name="deepseek-r1-distill-llama-70b"):
           id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referência
 
         - fato_custo (Custo)
-          id_equipamento, custo_hora_estimado, custo_hora_realizado, total_estimado, total_realizado, data_referência
+          id_equipamento, custo_hora_estimado, custo_hora_realizado, total_estimado, total_realizado, data_referencia
 
         - fato_combustivel (Combustível)
           id_equipamento, comb_litros_estimado, comb_litros_realizado, comb_valor_unitario_estimado, comb_valor_unitario_realizado, comb_total_estimado, comb_total_realizado
