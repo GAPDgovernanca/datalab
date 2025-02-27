@@ -180,10 +180,10 @@ class WorkbenchApp:
         for parent, child, column in relationships:
             net.add_edge(parent, child, label=f"{column} (1:N)")
 
-        net.write_html("der_interativo.html")
+        net.write_html("der_seletor.html")
         import webbrowser
-        webbrowser.open("der_interativo.html")
-        messagebox.showinfo("Diagrama Gerado", "Diagrama interativo salvo como 'der_interativo.html'. Abra no navegador.")
+        webbrowser.open("der_seletor.html")
+        messagebox.showinfo("Diagrama Gerado", "Diagrama interativo salvo como 'der_seletor.html'. Abra no navegador.")
 
 if __name__ == "__main__":
     root = tk.Tk()
