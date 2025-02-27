@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Visualização Interativa das Gregas de Opções – Matplotlib Interativo
+Visualização Interativa das Gregas de Opções e Variação do Preço da Opção – Matplotlib Interativo
 
 Requisitos:
     - Python 3.13
@@ -12,7 +12,9 @@ Funcionalidades:
           σ (Volatilidade) e r (Taxa de juros)
     • Escolha do tipo de opção: call ou put
     • Seleção da grega a ser visualizada (Delta, Gamma, Theta, Vega, Rho)
-    • Gráfico 2D dinâmico que se atualiza conforme os parâmetros
+    • Gráfico 2D dinâmico dividido em dois frames:
+         - Parte superior: exibe a grega selecionada
+         - Parte inferior: exibe a variação do preço da opção
     • Botão para gerar um gráfico 3D da grega selecionada
 """
 
@@ -80,7 +82,7 @@ class OptionCalculator:
         else:
             return -self.K * self.T * np.exp(-self.r*self.T) * norm.cdf(-d2)
 
-# --- Função para atualizar o gráfico 2D conforme os controles ---
+# --- Função para atualizar os gráficos 2D conforme os controles ---
 def update(val):
     S0 = slider_S.val
     K = slider_K.val
@@ -91,10 +93,12 @@ def update(val):
     greek = radio_greek.value_selected
 
     calc = OptionCalculator(S0, K, T, sigma, r, opt_type)
-    S_vals = np.linspace(0.5*S0, 1.5*S0, 200)
+    S_vals = np.linspace(0.5 * S0, 1.5 * S0, 200)
     greek_vals = []
+    price_vals = []
     for S in S_vals:
         calc.S = S
+        # Cálculo da grega selecionada
         if greek == 'Delta':
             greek_vals.append(calc.delta())
         elif greek == 'Gamma':
@@ -105,10 +109,21 @@ def update(val):
             greek_vals.append(calc.vega())
         elif greek == 'Rho':
             greek_vals.append(calc.rho())
-    line_2d.set_xdata(S_vals)
-    line_2d.set_ydata(greek_vals)
-    ax_2d.relim()
-    ax_2d.autoscale_view()
+        # Cálculo do preço da opção
+        price_vals.append(calc.price())
+    
+    # Atualiza o gráfico de gregas (frame superior)
+    line_greek.set_xdata(S_vals)
+    line_greek.set_ydata(greek_vals)
+    ax_greek.relim()
+    ax_greek.autoscale_view()
+    
+    # Atualiza o gráfico de preço da opção (frame inferior)
+    line_price.set_xdata(S_vals)
+    line_price.set_ydata(price_vals)
+    ax_price.relim()
+    ax_price.autoscale_view()
+    
     fig_2d.canvas.draw_idle()
 
 # --- Função para gerar o gráfico 3D (em nova janela) ---
@@ -123,24 +138,24 @@ def plot3d(event):
     greek = radio_greek.value_selected
 
     calc = OptionCalculator(S0, K, T0, sigma, r, opt_type)
-    S_vals = np.linspace(0.5*S0, 1.5*S0, 50)
+    S_vals = np.linspace(0.5 * S0, 1.5 * S0, 50)
     T_vals = np.linspace(0.01, T0, 50)
     S_grid, T_grid = np.meshgrid(S_vals, T_vals)
     Z = np.zeros_like(S_grid)
     for i in range(S_grid.shape[0]):
         for j in range(S_grid.shape[1]):
-            calc.S = S_grid[i,j]
-            calc.T = T_grid[i,j]
+            calc.S = S_grid[i, j]
+            calc.T = T_grid[i, j]
             if greek == 'Delta':
-                Z[i,j] = calc.delta()
+                Z[i, j] = calc.delta()
             elif greek == 'Gamma':
-                Z[i,j] = calc.gamma()
+                Z[i, j] = calc.gamma()
             elif greek == 'Theta':
-                Z[i,j] = calc.theta()
+                Z[i, j] = calc.theta()
             elif greek == 'Vega':
-                Z[i,j] = calc.vega()
+                Z[i, j] = calc.vega()
             elif greek == 'Rho':
-                Z[i,j] = calc.rho()
+                Z[i, j] = calc.rho()
     fig3d = plt.figure()
     ax3d = fig3d.add_subplot(111, projection='3d')
     surf = ax3d.plot_surface(S_grid, T_grid, Z, cmap=cm.viridis, edgecolor='none')
@@ -152,8 +167,9 @@ def plot3d(event):
     plt.show()
 
 # --- Criação da interface interativa com Matplotlib ---
-fig_2d, ax_2d = plt.subplots()
-plt.subplots_adjust(left=0.25, bottom=0.35)
+# Cria uma figura com dois subplots verticais (frame superior para gregas, inferior para preço da opção)
+fig_2d, (ax_greek, ax_price) = plt.subplots(2, 1, sharex=True)
+plt.subplots_adjust(left=0.25, bottom=0.35, hspace=0.5)
 S0_init = 100
 K_init = 100
 T_init = 1
@@ -161,12 +177,17 @@ sigma_init = 0.2
 r_init = 0.05
 
 calc_init = OptionCalculator(S0_init, K_init, T_init, sigma_init, r_init, 'call')
-S_vals_init = np.linspace(0.5*S0_init, 1.5*S0_init, 200)
-# Por padrão, plotamos o Delta
-line_2d, = ax_2d.plot(S_vals_init, [calc_init.delta() for _ in S_vals_init], lw=2)
-ax_2d.set_xlabel("Preço do Ativo (S)")
-ax_2d.set_ylabel("Valor da Grega")
-ax_2d.set_title("Gráfico 2D (por padrão: Delta)")
+S_vals_init = np.linspace(0.5 * S0_init, 1.5 * S0_init, 200)
+# Por padrão, plotamos o Delta no gráfico de gregas
+line_greek, = ax_greek.plot(S_vals_init, [calc_init.delta() for _ in S_vals_init], lw=2)
+ax_greek.set_ylabel("Valor da Grega")
+ax_greek.set_title("Gráfico 2D: Grega (por padrão: Delta)")
+
+# Gráfico de preço da opção (frame inferior)
+line_price, = ax_price.plot(S_vals_init, [calc_init.price() for _ in S_vals_init], lw=2, color='red')
+ax_price.set_xlabel("Preço do Ativo (S)")
+ax_price.set_ylabel("Preço da Opção")
+ax_price.set_title("Gráfico 2D: Variação do Preço da Opção")
 
 # Cria e posiciona os sliders para os parâmetros
 axcolor = 'lightgoldenrodyellow'
