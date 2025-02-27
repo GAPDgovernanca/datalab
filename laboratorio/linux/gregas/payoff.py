@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 """
 Visualização Interativa Avançada das Gregas de Opções - Modelo Black-Scholes (Layout Reformulado)
+Com adição de curvas de payoff no vencimento
 
 Requisitos:
     - Python 3.x
     - Bibliotecas: numpy, matplotlib, scipy, seaborn
 
 Modificações:
-    • Área dos gráficos (gregas, preço e painel informativo) à esquerda
+    • Área dos gráficos (gregas, preço, payoff e painel informativo) à esquerda
     • Painel de controles (sliders, radio buttons, check buttons e botões) em uma sidebar à direita
     • Margens e espaçamentos ajustados para um layout mais limpo
     • Tipografia e cores uniformes para um visual profissional
+    • Adicionada visualização de curvas de payoff no vencimento
 """
 
 import math
@@ -100,6 +102,31 @@ class OptionCalculator:
         elif greek_name == 'Rho':
             return self.rho()
         return 0
+    
+    def payoff_at_expiry(self, S_at_expiry):
+        """Calcula o payoff no vencimento"""
+        if self.option_type == 'call':
+            return np.maximum(S_at_expiry - self.K, 0)
+        else:
+            return np.maximum(self.K - S_at_expiry, 0)
+    
+    def profit_at_expiry(self, S_at_expiry):
+        """Calcula o lucro/prejuízo no vencimento considerando o prêmio pago"""
+        # Armazena o valor atual de S
+        original_S = self.S
+        
+        # Calcula o prêmio atual da opção (preço pago)
+        self.S = original_S
+        premium = self.price()
+        
+        # Calcula o payoff no vencimento
+        payoff = self.payoff_at_expiry(S_at_expiry)
+        
+        # Retorna S ao valor original
+        self.S = original_S
+        
+        # Retorna o lucro/prejuízo (payoff - prêmio)
+        return payoff - premium
 
 # --- Função para definir cor de cada grega ---
 def get_greek_color(greek_name):
@@ -120,6 +147,30 @@ comparison_mode_active = False
 checkbox_status = [False, False, False, False, False]
 greek_options = ['Delta', 'Gamma', 'Theta', 'Vega', 'Rho']
 
+# Variável para controlar a visibilidade do gráfico de payoff
+payoff_visible = True
+
+# Função para alternar a visibilidade do gráfico de payoff
+def toggle_payoff_visibility(event):
+    global payoff_visible
+    payoff_visible = not payoff_visible
+    ax_payoff.set_visible(payoff_visible)
+    
+    # Reorganiza o layout dinamicamente quando o payoff é ocultado/mostrado
+    if payoff_visible:
+        # Layout com payoff visível
+        ax_greek.set_position([0.05, 0.68, 0.58, 0.25])
+        ax_price.set_position([0.05, 0.41, 0.58, 0.22])
+        ax_payoff.set_position([0.05, 0.18, 0.58, 0.18])
+        ax_info.set_position([0.05, 0.01, 0.58, 0.13])
+    else:
+        # Layout sem payoff (expande os outros gráficos)
+        ax_greek.set_position([0.05, 0.68, 0.58, 0.28])
+        ax_price.set_position([0.05, 0.38, 0.58, 0.28])
+        ax_info.set_position([0.05, 0.01, 0.58, 0.33])
+    
+    fig_main.canvas.draw_idle()
+
 # --- Função para atualizar os gráficos ---
 def update(val=None):
     S0 = slider_S.val
@@ -133,6 +184,7 @@ def update(val=None):
     # Limpa áreas de gráficos
     ax_greek.clear()
     ax_price.clear()
+    ax_payoff.clear()  # Limpa o gráfico de payoff
 
     # Inicializa calculadora
     calc = OptionCalculator(S0, K, T, sigma, r, opt_type)
@@ -216,34 +268,138 @@ def update(val=None):
                       fontsize=9,
                       bbox=dict(boxstyle="round,pad=0.3", fc="white", alpha=0.8),
                       arrowprops=dict(arrowstyle="->", color=HIGHLIGHT_COLOR))
+    
+    # NOVO: Gráfico de Payoff no Vencimento
+    ax_payoff.set_title(f"Payoff no Vencimento ({opt_type.upper()})", fontsize=12, fontweight='bold', color=TEXT_COLOR)
+    ax_payoff.set_xlabel("Preço do Ativo no Vencimento", fontsize=10, color=TEXT_COLOR)
+    ax_payoff.set_ylabel("Resultado (Payoff)", fontsize=10, color=TEXT_COLOR)
+    ax_payoff.grid(True, alpha=0.3)
+    
+    # Calcula payoff e profit para cada valor de S no vencimento
+    payoff_vals = calc.payoff_at_expiry(S_vals)
+    profit_vals = calc.profit_at_expiry(S_vals)
+    
+    # Plota payoff bruto (linha tracejada)
+    ax_payoff.plot(S_vals, payoff_vals, lw=2, color='blue', linestyle='--', label='Payoff')
+    
+    # Plota lucro/prejuízo líquido (considerando o prêmio pago)
+    ax_payoff.plot(S_vals, profit_vals, lw=2.5, color='green', label='Lucro/Prejuízo')
+    
+    # Adiciona linha horizontal no zero (break-even)
+    ax_payoff.axhline(y=0, color='black', linestyle='-', alpha=0.5, label='Break-even')
+    
+    # Adiciona linha vertical no strike price
+    ax_payoff.axvline(x=K, color='red', linestyle='--', alpha=0.6, label='Strike (K)')
+    
+    # Adiciona sombreamento para áreas de lucro e prejuízo
+    profit_x = []
+    profit_y = []
+    loss_x = []
+    loss_y = []
+    
+    for i, profit in enumerate(profit_vals):
+        if profit > 0:
+            profit_x.append(S_vals[i])
+            profit_y.append(profit)
+        else:
+            loss_x.append(S_vals[i])
+            loss_y.append(profit)
+    
+    if profit_x:
+        ax_payoff.fill_between(profit_x, 0, profit_y, alpha=0.2, color='green', label='Lucro')
+    if loss_x:
+        ax_payoff.fill_between(loss_x, 0, loss_y, alpha=0.2, color='red', label='Prejuízo')
+    
+    # Calcula e marca pontos de break-even (onde o lucro = 0)
+    # Para simplificar, calculamos uma aproximação linear entre pontos adjacentes
+    for i in range(len(profit_vals) - 1):
+        if (profit_vals[i] <= 0 and profit_vals[i+1] >= 0) or (profit_vals[i] >= 0 and profit_vals[i+1] <= 0):
+            # Interpolação linear para encontrar o ponto de break-even
+            ratio = abs(profit_vals[i]) / (abs(profit_vals[i]) + abs(profit_vals[i+1]))
+            breakeven_x = S_vals[i] + ratio * (S_vals[i+1] - S_vals[i])
+            ax_payoff.axvline(x=breakeven_x, color='black', linestyle=':', alpha=0.7)
+            ax_payoff.text(breakeven_x, max(profit_vals)/10, f'BE: {breakeven_x:.2f}', 
+                          color='black', fontsize=8, ha='center', va='bottom',
+                          bbox=dict(boxstyle="round,pad=0.2", fc="white", alpha=0.7))
+    
+    # Calcula e mostra o valor máximo de lucro ou prejuízo possível
+    max_profit = max(profit_vals) if any(p > 0 for p in profit_vals) else 0
+    max_loss = min(profit_vals) if any(p < 0 for p in profit_vals) else 0
+    
+    if max_profit > 0:
+        max_profit_idx = np.argmax(profit_vals)
+        ax_payoff.annotate(f'Lucro Máx: {max_profit:.2f}',
+                        xy=(S_vals[max_profit_idx], max_profit),
+                        xytext=(0, 15),
+                        textcoords='offset points',
+                        fontsize=8,
+                        ha='center',
+                        bbox=dict(boxstyle="round,pad=0.2", fc="green", alpha=0.7, ec="darkgreen"),
+                        arrowprops=dict(arrowstyle="->", color='green'))
+    
+    if max_loss < 0:
+        max_loss_idx = np.argmin(profit_vals)
+        ax_payoff.annotate(f'Prejuízo Máx: {max_loss:.2f}',
+                        xy=(S_vals[max_loss_idx], max_loss),
+                        xytext=(0, -15),
+                        textcoords='offset points',
+                        fontsize=8,
+                        ha='center',
+                        bbox=dict(boxstyle="round,pad=0.2", fc="red", alpha=0.7, ec="darkred"),
+                        arrowprops=dict(arrowstyle="->", color='red'))
+    
+    # Adiciona legenda
+    ax_payoff.legend(loc='best', frameon=True, fancybox=True, framealpha=0.9, fontsize=8)
+    
+    # Mostra o preço atual no gráfico de payoff
+    ax_payoff.axvline(x=S0, color='gray', linestyle='--', alpha=0.6)
+    ax_payoff.text(S0, max(payoff_vals)/2, f'S atual: {S0:.1f}', color='gray', 
+                  fontsize=8, ha='left', va='bottom',
+                  bbox=dict(boxstyle="round,pad=0.2", fc="white", alpha=0.7))
 
     update_info_panel(S0, K, T, sigma, r, opt_type, calc)
     ax_greek.relim()
     ax_greek.autoscale_view()
     ax_price.relim()
     ax_price.autoscale_view()
+    ax_payoff.relim()
+    ax_payoff.autoscale_view()
     fig_main.canvas.draw_idle()
 
 # --- Atualiza o painel de informações ---
 def update_info_panel(S0, K, T, sigma, r, opt_type, calc):
+    # Calcula alguns valores adicionais para o painel informativo
+    current_price = calc.price()
+    payoff_at_strike = calc.payoff_at_expiry(K)
+    profit_at_strike = calc.profit_at_expiry(K)
+    
+    # Calcula o break-even aproximado
+    if opt_type == 'call':
+        breakeven_approx = K + current_price
+    else:
+        breakeven_approx = K - current_price
+        
     info_text = [
         f"Modelo: Black-Scholes",
         f"Tipo: {opt_type.upper()}",
         f"S = {S0:.2f} | K = {K:.2f} | Moneyness: {S0/K:.2f}",
         f"T = {T:.2f} anos | σ = {sigma:.2%} | r = {r:.2%}",
-        f"Preço: {calc.price():.4f}",
+        f"Preço: {current_price:.4f}",
         f"Delta: {calc.delta():.4f}",
         f"Gamma: {calc.gamma():.4f}",
         f"Theta: {calc.theta():.4f}/dia",
         f"Vega: {calc.vega()*100:.4f} (para 1% de Δσ)",
-        f"Rho: {calc.rho()*100:.4f} (para 1% de Δr)"
+        f"Rho: {calc.rho()*100:.4f} (para 1% de Δr)",
+        f"Break-even aprox.: {breakeven_approx:.2f}",
+        f"Payoff no strike: {payoff_at_strike:.2f}",
+        f"Lucro no strike: {profit_at_strike:.2f}"
     ]
     ax_info.clear()
     ax_info.axis('off')
     y_pos = 0.95
     for line in info_text:
         ax_info.text(0.05, y_pos, line, fontsize=9, transform=ax_info.transAxes, color=TEXT_COLOR)
-        y_pos -= 0.1
+        y_pos -= 0.08  # Espaçamento maior para acomodar informações adicionais
 
 # --- Funções dos botões ---
 def reset_params(event):
@@ -354,14 +510,15 @@ def plot3d(event):
     plt.subplots_adjust(top=0.9, wspace=0.2)
     plt.show()
 
-# --- Layout Principal: Área de Gráficos e Painel Informativo (à esquerda) ---
-fig_main = plt.figure(figsize=(12,9))
-fig_main.canvas.manager.set_window_title('Visualizador Avançado de Black-Scholes')
+# --- Layout Principal com o novo gráfico de payoff ---
+fig_main = plt.figure(figsize=(12,10))  # Aumentamos um pouco a altura para acomodar o novo gráfico
+fig_main.canvas.manager.set_window_title('Visualizador Avançado de Black-Scholes com Payoff')
 
 # Define os eixos com posições manuais para um layout limpo
-ax_greek = fig_main.add_axes([0.05, 0.55, 0.58, 0.35])
-ax_price = fig_main.add_axes([0.05, 0.30, 0.58, 0.20])
-ax_info  = fig_main.add_axes([0.05, 0.05, 0.58, 0.20])
+ax_greek = fig_main.add_axes([0.05, 0.68, 0.58, 0.25])  # Reduzimos um pouco para acomodar payoff
+ax_price = fig_main.add_axes([0.05, 0.41, 0.58, 0.22])  # Ajustamos a posição
+ax_payoff = fig_main.add_axes([0.05, 0.18, 0.58, 0.18])  # Novo gráfico para payoff
+ax_info  = fig_main.add_axes([0.05, 0.01, 0.58, 0.13])  # Reduzimos e ajustamos a posição
 
 # --- Painel de Controles (Sidebar à direita) ---
 axcolor = 'lightgray'
@@ -417,8 +574,13 @@ ax_button3d = plt.axes([0.86, 0.25, 0.07, 0.04])
 button_3d = Button(ax_button3d, 'Plot 3D', color=axcolor, hovercolor='0.975')
 button_3d.on_clicked(plot3d)
 
+# Adiciona botão para mostrar/esconder gráfico de payoff
+ax_toggle_payoff = plt.axes([0.70, 0.20, 0.23, 0.04])
+button_toggle_payoff = Button(ax_toggle_payoff, 'Mostrar/Ocultar Payoff', color=axcolor, hovercolor='0.975')
+button_toggle_payoff.on_clicked(toggle_payoff_visibility)
+
 # Título principal centralizado
-fig_main.suptitle('Visualizador Avançado de Black-Scholes: Análise de Gregas e Preços', fontsize=16, fontweight='bold', color=TEXT_COLOR)
+fig_main.suptitle('Visualizador Avançado de Black-Scholes: Análise de Gregas, Preços e Payoff', fontsize=16, fontweight='bold', color=TEXT_COLOR)
 
 # Conecta o manipulador de eventos de teclado para atalhos
 def on_key(event):
@@ -428,6 +590,9 @@ def on_key(event):
         plot3d(None)
     elif event.key == 's':
         save_figure(None)
+    elif event.key == 'p':
+        # Novo atalho para alternar entre visualizar o gráfico de payoff ou escondê-lo
+        toggle_payoff_visibility(None)
     elif event.key == 'right':
         slider_S.set_val(min(150, slider_S.val + 1))
     elif event.key == 'left':
