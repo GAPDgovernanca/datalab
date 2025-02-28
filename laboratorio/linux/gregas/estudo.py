@@ -487,22 +487,26 @@ def plot3d(event):
     perspective = radio_perspective.value_selected
     is_buyer = (perspective == 'Comprador')
     
+    # Obtém o parâmetro selecionado para visualização 3D
+    selected_param = radio_param3d.value_selected
+    
     calc = OptionCalculator(S0, K, T0, sigma, r, opt_type)
     S_vals = np.linspace(0.5 * S0, 1.5 * S0, 50)
-    if greek in ['Delta', 'Gamma']:
-        param_name = 'Tempo até Expiração (T)'  # Modificado
-        param_vals = np.linspace(0.01, max(2.0, T0*1.5), 50)  # Range para T
+    
+    # Determina qual parâmetro variar com base na seleção do usuário
+    if selected_param == 'Volatilidade (σ)':
+        param_name = 'Volatilidade (σ)'
+        param_vals = np.linspace(max(0.05, sigma/2), min(1.0, sigma*2), 50)
         Z = np.zeros((len(param_vals), len(S_vals)))
         for i, param_val in enumerate(param_vals):
             for j, S_val in enumerate(S_vals):
                 calc.S = S_val
-                calc.T = param_val  # Modificado: agora variamos T, não sigma
+                calc.sigma = param_val
                 greek_val = calc.get_greek_value(greek)
-                # Inversão para vendedor permanece igual
                 if not is_buyer and greek != 'Gamma':
                     greek_val = -greek_val
                 Z[i, j] = greek_val
-    elif greek in ['Theta', 'Vega']:
+    elif selected_param == 'Tempo (T)':
         param_name = 'Tempo até Expiração (T)'
         param_vals = np.linspace(0.01, max(2.0, T0*1.5), 50)
         Z = np.zeros((len(param_vals), len(S_vals)))
@@ -511,11 +515,10 @@ def plot3d(event):
                 calc.S = S_val
                 calc.T = param_val
                 greek_val = calc.get_greek_value(greek)
-                # Inverter valor para o vendedor, exceto Gamma
                 if not is_buyer and greek != 'Gamma':
                     greek_val = -greek_val
                 Z[i, j] = greek_val
-    else:
+    else:  # Taxa de Juros (r)
         param_name = 'Taxa de Juros (r)'
         param_vals = np.linspace(0.01, 0.15, 50)
         Z = np.zeros((len(param_vals), len(S_vals)))
@@ -524,7 +527,6 @@ def plot3d(event):
                 calc.S = S_val
                 calc.r = param_val
                 greek_val = calc.get_greek_value(greek)
-                # Inverter valor para o vendedor, exceto Gamma
                 if not is_buyer and greek != 'Gamma':
                     greek_val = -greek_val
                 Z[i, j] = greek_val
@@ -546,6 +548,8 @@ def plot3d(event):
     ax_contour.set_title(f"Mapa de Calor de {greek} - {perspective}", fontsize=11, fontweight='bold')
     ax_contour.set_xlabel("(S)", fontsize=9)
     ax_contour.set_ylabel(param_name, fontsize=9)
+    
+    # Adiciona linhas de referência para o valor atual do parâmetro
     if param_name == 'Volatilidade (σ)':
         ax_contour.axhline(y=sigma, color='red', linestyle='--', alpha=0.7)
         ax_contour.text(S_vals[0], sigma, f'σ={sigma:.2f}', color='red', fontsize=8, ha='left', va='bottom')
@@ -555,6 +559,7 @@ def plot3d(event):
     else:
         ax_contour.axhline(y=r, color='red', linestyle='--', alpha=0.7)
         ax_contour.text(S_vals[0], r, f'r={r:.2f}', color='red', fontsize=8, ha='left', va='bottom')
+    
     ax_contour.axvline(x=S0, color='white', linestyle='--', alpha=0.7)
     ax_contour.axvline(x=K, color='black', linestyle='--', alpha=0.7)
     cbar = fig3d.colorbar(contour, ax=ax_contour, shrink=0.5, aspect=15)
@@ -621,6 +626,13 @@ rax_perspective = plt.axes([0.70, 0.30, 0.25, 0.07], facecolor=axcolor)
 radio_perspective = RadioButtons(rax_perspective, ('Comprador', 'Vendedor'), activecolor=HIGHLIGHT_COLOR)
 radio_perspective.on_clicked(update)
 for text in radio_perspective.labels:
+    text.set_fontsize(8)
+
+# Radio buttons para parâmetro de visualização 3D
+rax_param3d = plt.axes([0.70, 0.23, 0.25, 0.05], facecolor=axcolor)
+radio_param3d = RadioButtons(rax_param3d, ['Volatilidade (σ)', 'Tempo (T)', 'Taxa (r)'], activecolor=HIGHLIGHT_COLOR)
+radio_param3d.set_active(1)  # Tempo como padrão inicial
+for text in radio_param3d.labels:
     text.set_fontsize(8)
 
 '''
