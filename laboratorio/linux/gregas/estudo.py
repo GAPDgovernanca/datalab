@@ -436,10 +436,24 @@ def update_info_panel(S0, K, T, sigma, r, opt_type, calc, is_buyer=True):
     ]
     ax_info.clear()
     ax_info.axis('off')
-    y_pos = 0.95
-    for line in info_text:
-        ax_info.text(0.05, y_pos, line, fontsize=9, transform=ax_info.transAxes, color=TEXT_COLOR)
-        y_pos -= 0.08  # Espaçamento maior para acomodar informações adicionais
+
+    # Dividir a lista em duas colunas
+    n = len(info_text)
+    mid = (n + 1) // 2  # arredonda para cima no caso de número ímpar
+    left_texts = info_text[:mid]
+    right_texts = info_text[mid:]
+
+    # Exibe a coluna da esquerda
+    y_left = 0.95
+    for line in left_texts:
+        ax_info.text(0.05, y_left, line, fontsize=8, transform=ax_info.transAxes, color=TEXT_COLOR)
+        y_left -= 0.08
+
+    # Exibe a coluna da direita
+    y_right = 0.95
+    for line in right_texts:
+        ax_info.text(0.55, y_right, line, fontsize=8, transform=ax_info.transAxes, color=TEXT_COLOR)
+        y_right -= 0.08
 
     # --- Funções dos botões ---
 def reset_params(event):
