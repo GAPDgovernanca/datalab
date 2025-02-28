@@ -490,15 +490,15 @@ def plot3d(event):
     calc = OptionCalculator(S0, K, T0, sigma, r, opt_type)
     S_vals = np.linspace(0.5 * S0, 1.5 * S0, 50)
     if greek in ['Delta', 'Gamma']:
-        param_name = 'Volatilidade (σ)'
-        param_vals = np.linspace(max(0.05, sigma/2), min(1.0, sigma*2), 50)
+        param_name = 'Tempo até Expiração (T)'  # Modificado
+        param_vals = np.linspace(0.01, max(2.0, T0*1.5), 50)  # Range para T
         Z = np.zeros((len(param_vals), len(S_vals)))
         for i, param_val in enumerate(param_vals):
             for j, S_val in enumerate(S_vals):
                 calc.S = S_val
-                calc.sigma = param_val
+                calc.T = param_val  # Modificado: agora variamos T, não sigma
                 greek_val = calc.get_greek_value(greek)
-                # Inverter valor para o vendedor, exceto Gamma
+                # Inversão para vendedor permanece igual
                 if not is_buyer and greek != 'Gamma':
                     greek_val = -greek_val
                 Z[i, j] = greek_val
