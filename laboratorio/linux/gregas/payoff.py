@@ -227,7 +227,7 @@ def update(val=None):
 
     # Gráfico de preço da opção
     ax_price.set_title(f"Preço da Opção ({opt_type.upper()})", fontsize=12, fontweight='bold', color=TEXT_COLOR)
-    ax_price.set_xlabel("Preço do Ativo (S)", fontsize=10, color=TEXT_COLOR)
+    ax_price.set_xlabel("", fontsize=10, color=TEXT_COLOR)
     ax_price.set_ylabel("Preço da Opção", fontsize=10, color=TEXT_COLOR)
     ax_price.grid(True, alpha=0.3)
 
@@ -271,7 +271,7 @@ def update(val=None):
     
     # NOVO: Gráfico de Payoff no Vencimento
     ax_payoff.set_title(f"Payoff no Vencimento ({opt_type.upper()})", fontsize=12, fontweight='bold', color=TEXT_COLOR)
-    ax_payoff.set_xlabel("Preço do Ativo no Vencimento", fontsize=10, color=TEXT_COLOR)
+    ax_payoff.set_xlabel("(S)", fontsize=10, color=TEXT_COLOR)
     ax_payoff.set_ylabel("Resultado (Payoff)", fontsize=10, color=TEXT_COLOR)
     ax_payoff.grid(True, alpha=0.3)
     
@@ -478,14 +478,14 @@ def plot3d(event):
     surf = ax3d.plot_surface(S_grid, Param_grid, Z, cmap=cm.viridis, edgecolor='none', alpha=0.8)
     ax3d.plot_surface(S_grid, Param_grid, np.zeros_like(Z), color='gray', alpha=0.2)
     ax3d.set_title(f"Superfície 3D de {greek} ({opt_type.upper()})", fontsize=11, fontweight='bold')
-    ax3d.set_xlabel("Preço do Ativo (S)", fontsize=9)
+    ax3d.set_xlabel("(S)", fontsize=9)
     ax3d.set_ylabel(param_name, fontsize=9)
     ax3d.set_zlabel(greek, fontsize=9)
     ax_contour = fig3d.add_subplot(gs3d[1])
     contour = ax_contour.contourf(S_grid, Param_grid, Z, 20, cmap=cm.viridis)
     ax_contour.contour(S_grid, Param_grid, Z, 10, colors='white', linewidths=0.5, alpha=0.7)
     ax_contour.set_title(f"Mapa de Calor de {greek}", fontsize=11, fontweight='bold')
-    ax_contour.set_xlabel("Preço do Ativo (S)", fontsize=9)
+    ax_contour.set_xlabel("(S)", fontsize=9)
     ax_contour.set_ylabel(param_name, fontsize=9)
     if param_name == 'Volatilidade (σ)':
         ax_contour.axhline(y=sigma, color='red', linestyle='--', alpha=0.7)
