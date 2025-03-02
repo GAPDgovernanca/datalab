@@ -311,7 +311,14 @@ def main():
 
     # Fetching the current price for the selected index
     nifty_price = fetch_data(selected_index)
-    nifty_price = float(nifty_price) if nifty_price is not None else None
+    if nifty_price is not None:
+        # Se for uma Series (com um único elemento), use .iloc[0] para extrair o valor
+        if hasattr(nifty_price, "iloc"):
+            nifty_price = float(nifty_price.iloc[0])
+        else:
+            nifty_price = float(nifty_price)
+    else:
+        nifty_price = None
     if nifty_price:
         # Fetch available expirations and strike prices
         strike_prices_data = get_option_strike_prices(selected_index)
