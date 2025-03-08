@@ -142,7 +142,7 @@ def get_date_defaults():
         return None, None
 
 # Função para processar perguntas usando GROQ AI
-def query_groq(data_json, question, model_name="deepseek-r1-distill-llama-70b"):
+def query_groq(data_json, question, model_name="gemma2-9b-it"):
     try:
         # Montar prompt sem cálculos de proporcionalidade, pois o DB já está configurado corretamente.
         prompt = f"""
