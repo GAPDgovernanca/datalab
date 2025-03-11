@@ -1,6 +1,0 @@
-input_csv_file: 'responses.csv'
-output_json_file: 'responses.json'
-date_columns:
-  - 'Start Date (UTC)'
-  - 'Stage Date (UTC)'
-  - 'Submit Date (UTC)'
