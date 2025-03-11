@@ -117,7 +117,7 @@ class WorkbenchApp:
             net.add_edge(parent, child, label=f"{column} (1:N)")
 
         html_content = net.generate_html()
-        with open("der_geral_lista.html", "w", encoding='utf-8') as f:
+        with open("mec_der_geral_lista.html", "w", encoding='utf-8') as f:
             script_position = html_content.find('</body>')
             if script_position != -1:
                 html_content = html_content[:script_position] + """
@@ -274,8 +274,8 @@ class WorkbenchApp:
             
             f.write(html_content)
 
-        webbrowser.open("der_geral_lista.html")
-        messagebox.showinfo("Diagrama Gerado", "Diagrama interativo salvo como 'der_geral_lista.html'.")
+        webbrowser.open("mec_der_geral_lista.html")
+        messagebox.showinfo("Diagrama Gerado", "Diagrama interativo salvo como 'mec_der_geral_lista.html'.")
 
 if __name__ == "__main__":
     root = tk.Tk()
