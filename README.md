@@ -24,7 +24,7 @@ GAPD/
 │   ├── sjudas - dash do relatorio de batidas - trendline.md
 │   ├── summarize texts.md
 │   └── virtualenvwrapper.md
-├── GPT_base_de_conhecimento_devolutiva/
+├── 4_gpt/
 │   ├── CORE-COMP-REF.md
 │   ├── GPT - AD devolutiva - config.md
 │   ├── GPT - Governança.md
