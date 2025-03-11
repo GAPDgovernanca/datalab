@@ -1,71 +1,60 @@
-# GAPD - Data Analysis Project
+# GAPD
 
-Este repositório contém os componentes principais do projeto GAPD, incluindo aplicações de análise de dados, notebooks, scripts de automação e documentação.
-
-## Estrutura de Pastas
-
-A estrutura de pastas atual do projeto é a seguinte:
+## Estrutura do Repositório
 
 ```
-GAPD                              # Repositório principal do projeto
-├── apps                          # Aplicações principais do projeto
-│   ├── ADheatmap                 # Aplicação para geração de heatmaps
-│   ├── frota                     # Gerenciamento de frotas e relatórios
-│   ├── sjudas                    # Análise de batidas e relatórios
-├── laboratorio                   # Scripts experimentais e protótipos
-│   ├── config                    # Arquivos de configuração para o projeto
-│   ├── dash                      # Dashboards e relatórios interativos
-│   ├── data                      # Dados brutos e processados
-│   ├── docs                      # Documentação complementar
-│   ├── macrosVBA                 # Scripts VBA para automação
-│   ├── notebooks                 # Notebooks Jupyter para análises e protótipos
-├── README.md                     # Documentação principal do repositório
-├── requirements.txt              # Lista de dependências do projeto
-├── requirements.txt.bak          # Backup do arquivo de dependências
+GAPD/
+├── 1_apps/
+│   ├── linux/
+│   └── win/
+├── 2_labs/
+│   ├── linux/
+│   ├── win/
+│   └── gerenciamento do fluxo de versionamento
+├── 3_prompts/
+│   ├── 20241102 - dash do raizes do futuro.md
+│   ├── language mimic prompt.md
+│   ├── memory prompt.md
+│   ├── processamento das respostas do questionario de lideranca.md
+│   ├── prompt de analise - dados de frotas.md
+│   ├── prompt para analise de programa em python.md
+│   ├── sjudas - dash da avaliacao do 5S - tabela de notas - versao 1.md
+│   ├── sjudas - dash da avaliacao do 5S - tabela de notas - versao 2.md
+│   ├── sjudas - dash da avaliacao do 5S.md
+│   ├── sjudas - dash do relatorio de batidas - trendline.md
+│   ├── summarize texts.md
+│   └── virtualenvwrapper.md
+├── GPT_base_de_conhecimento_devolutiva/
+│   ├── CORE-COMP-REF.md
+│   ├── GPT - AD devolutiva - config.md
+│   ├── GPT - Governança.md
+│   ├── IDP-GEN.md
+│   ├── IMFA-SUMM.md
+│   ├── IMFA-TECH.md
+│   ├── knowledge - Objetivo Geral do Projeto.md
+│   └── knowledge - Roles and Responsibilities.md
+├── README.md
+└── requirements.txt
 ```
 
-## Configuração do ambiente
+## Descrição
 
-1. Certifique-se de ter o Python 3.8+ instalado.
+GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para processamento automatizado de dados e geração de dashboards.
 
-2. Crie um ambiente virtual usando o `virtualenvwrapper` e o comando `workon`:
-   
-   ```bash
-   mkvirtualenv nome_do_ambiente
-   workon nome_do_ambiente
-   ```
+## Componentes Principais
 
-3. Instale as dependências do projeto:
-   
-   ```bash
-   pip install -r requirements.txt
-   ```
+- **1_apps**: Aplicações para sistemas Linux e Windows
+- **2_labs**: Laboratórios de desenvolvimento para diferentes sistemas operacionais
+- **3_prompts**: Coleção de prompts para análise de dados, geração de dashboards e outras tarefas
+- **GPT_base_de_conhecimento_devolutiva**: Base de conhecimento para GPT com foco em devolutivas
+- **lib**: Bibliotecas e dependências do projeto
 
-## Como contribuir
+## Requisitos
 
-1. Faça um fork do repositório.
+Para instalar as dependências necessárias:
 
-2. Crie uma branch para suas mudanças:
-   
-   ```bash
-   git checkout -b minha-nova-feature
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-3. Faça o commit das suas alterações:
-   
-   ```bash
-   git commit -m "Descrição da nova feature"
-   ```
-
-4. Envie suas alterações:
-   
-   ```bash
-   git push origin minha-nova-feature
-   ```
-
-5. Crie um Pull Request no repositório principal.
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT.
-# Testing credentials storage - successful
+Última atualização: 11 de março de 2025
