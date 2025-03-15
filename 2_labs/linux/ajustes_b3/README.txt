@@ -62,4 +62,3 @@ Ele irá gerar o arquivo `ajustes_b3.csv` com os dados extraídos da B3.
 
 ## Autor
 Desenvolvido para coleta automática de dados financeiros na B3.
-
