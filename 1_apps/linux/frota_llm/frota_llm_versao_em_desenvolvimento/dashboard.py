@@ -129,4 +129,4 @@ if st.button("Perguntar"):
         answer = query_groq(combined_data, user_question)
         st.markdown(answer)
     else:
-        st.warning("Por favor, insira sua pergunta.")
+        st.warning("Por favor, qual sua pergunta?")
