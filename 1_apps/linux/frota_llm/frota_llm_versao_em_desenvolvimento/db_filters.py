@@ -34,17 +34,24 @@ def calcular_multiplicadores(df: pd.DataFrame) -> pd.DataFrame:
     )
     return df
 
-def apply_flags(df: pd.DataFrame) -> pd.DataFrame:
+def apply_flags(df):
     def flag_diferenca(row):
-        # Caso especial: sem orçamento, mas com custo realizado
+        # Caso especial: não havia orçamento (0), mas houve custo realizado > 0
         if row['total_estimado'] == 0 and row['total_realizado'] > 0:
-            return '🔶'
+            return '🔶'  # Uso sem orçamento
+
         if row['total_estimado'] != 0:
             percentual = (row['total_realizado'] - row['total_estimado']) / row['total_estimado'] * 100
-            if percentual > 10:
-                return '🟢'
-            elif percentual < -10:
-                return '🔴'
-        return '⚪'
+            
+            # NOVA LÓGICA INVERTIDA:
+            # - Se estiver MUITO abaixo do estimado (< -10%), sinalizar como grave (vermelho)
+            # - Se estiver MUITO acima do estimado (> +10%), sinalizar como ok (verde)
+            if percentual < -10:
+                return '🔴'  # Grave, pois total_realizado está bem abaixo do estimado
+            elif percentual > 10:
+                return '🟢'  # Bom, pois total_realizado está bem acima do estimado
+            
+        return '⚪'  # Neutro, dentro da faixa de -10% a +10%
+    
     df['Sinalizador'] = df.apply(flag_diferenca, axis=1)
     return df
