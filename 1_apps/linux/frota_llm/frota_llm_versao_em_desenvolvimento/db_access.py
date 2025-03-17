@@ -1,4 +1,3 @@
-# db_access.py
 import sqlite3
 import os
 import pandas as pd

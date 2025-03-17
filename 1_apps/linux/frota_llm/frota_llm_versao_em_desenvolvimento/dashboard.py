@@ -1,4 +1,3 @@
-# dashboard.py
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -9,6 +8,7 @@ from db_access import (
     get_unique_values
 )
 from llm_session import query_groq
+from db_filters import apply_flags, calcular_multiplicadores  # Funções para sinalizadores e multiplicadores
 
 # Configuração da página
 st.set_page_config(layout="wide")
@@ -118,6 +118,52 @@ if not df.empty:
 
     st.plotly_chart(fig, use_container_width=True)
 
+    # Exibição da tabela exatamente igual ao do programa original
+    st.subheader("Dados filtrados")
+    if not df.empty:
+        # Aplica os sinalizadores (já com o ajuste)
+        df = apply_flags(df)
+        df = calcular_multiplicadores(df)
+        
+        # Renomeia colunas para exibição
+        df = df.rename(columns={
+            'usuario': 'Fazenda',
+            'classe': 'Classe',
+            'id_equipamento': 'Equip',
+            'custo_hora_estimado': 'Custo Orçado',
+            'custo_hora_realizado': 'Custo Realizado',
+            'custo_hora_diferenca': 'Custo Dif',
+            'total_estimado': 'Total Orçado',
+            'total_realizado': 'Total Realizado',
+            'total_diferenca': 'Total Dif',
+        })
+
+        # Ajusta a ordem das colunas para exibição
+        df = df[['Fazenda', 'Classe', 'Equip', 'Custo Orçado', 'Custo Realizado', 'Custo Dif', 
+                'Total Orçado', 'Total Realizado', 'Total Dif', 'Sinalizador']]
+
+        # Arredonda os valores numéricos para facilitar a visualização
+        df.update(df.select_dtypes(include=['float', 'int']).round(0))
+        
+        # Formata a tabela com estilos personalizados
+        styled_df = df.style.format({
+            'Custo Orçado': 'R$ {:,.0f}',
+            'Custo Realizado': 'R$ {:,.0f}',
+            'Custo Dif': 'R$ {:,.0f}',
+            'Total Orçado': 'R$ {:,.0f}',
+            'Total Realizado': 'R$ {:,.0f}',
+            'Total Dif': 'R$ {:,.0f}'
+        }).set_table_styles([
+            {'selector': 'table', 'props': [('table-layout', 'fixed'), ('width', '150%')]},
+            {'selector': 'th, td', 'props': [('text-align', 'center'), ('padding', '10px')]},
+            {'selector': 'th:nth-child(1), td:nth-child(1)', 'props': [('width', '150px')]},
+            {'selector': 'th:nth-child(2), td:nth-child(2)', 'props': [('width', '120px')]},
+            {'selector': 'th:nth-child(3), td:nth-child(3)', 'props': [('width', '100px')]},
+            {'selector': 'th:nth-child(n+4), td:nth-child(n+4)', 'props': [('width', '300px')]},
+            {'selector': 'th:last-child, td:last-child', 'props': [('width', '60px')]}
+        ])
+
+        st.dataframe(styled_df)
 
 # Área para perguntas à LLM
 st.subheader("Perguntas sobre os dados")
