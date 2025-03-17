@@ -166,13 +166,14 @@ if not df.empty:
         legend_title_text='Indicadores',
         yaxis_title="Multiplicador (Realizado/Planejado)",
         hovermode="x unified",
-        bargap=0.5,          # Remove o espaço entre grupos de barras
-        bargroupgap=0.0,     # Remove o espaço entre as barras dentro do mesmo grupo
-        margin=dict(l=0, r=0, t=30, b=0)  # Ajusta margens do gráfico (opcional)
+        bargap=0.0,          # Remove o espaço entre os grupos de barras
+        bargroupgap=0.0,     # Remove o espaço entre as barras dentro do grupo
+        margin=dict(l=0, r=0, t=30, b=0)  # Ajusta as margens para aproveitar melhor a área
     )
 
-    # Aplicar escala logarítmica no eixo Y
+    # Mantém a escala logarítmica no eixo Y
     fig.update_yaxes(type="log")
+
 
     # Linha horizontal tracejada em y=1 (referência ao planejado)
     fig.add_hline(
