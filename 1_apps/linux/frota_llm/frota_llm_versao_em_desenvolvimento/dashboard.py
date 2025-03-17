@@ -167,7 +167,7 @@ if not df.empty:
         legend_title_text='Indicadores',
         yaxis_title="Multiplicador (Realizado/Planejado)",
         hovermode="x unified",
-        bargap=0.0,
+        bargap=0.3,
         bargroupgap=0.0,
         margin=dict(l=0, r=0, t=30, b=0)
     )
