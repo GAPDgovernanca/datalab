@@ -165,7 +165,10 @@ if not df.empty:
         xaxis_type='category',
         legend_title_text='Indicadores',
         yaxis_title="Multiplicador (Realizado/Planejado)",
-        hovermode="x unified"
+        hovermode="x unified",
+        bargap=0.0,          # Remove o espaço entre grupos de barras
+        bargroupgap=0.0,     # Remove o espaço entre as barras dentro do mesmo grupo
+        margin=dict(l=0, r=0, t=30, b=0)  # Ajusta margens do gráfico (opcional)
     )
 
     # Aplicar escala logarítmica no eixo Y
