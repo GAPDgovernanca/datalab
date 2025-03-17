@@ -146,6 +146,7 @@ if not df.empty:
     })
 
     # Criação do gráfico com as atualizações
+    # ...
     fig = px.bar(
         plot_data.melt(id_vars='Equipamento', var_name='Métrica'),
         x='Equipamento',
@@ -166,41 +167,35 @@ if not df.empty:
         legend_title_text='Indicadores',
         yaxis_title="Multiplicador (Realizado/Planejado)",
         hovermode="x unified",
-        bargap=0.0,          # Remove o espaço entre os grupos de barras
-        bargroupgap=0.0,     # Remove o espaço entre as barras dentro do grupo
-        margin=dict(l=0, r=0, t=30, b=0)  # Ajusta as margens para aproveitar melhor a área
+        bargap=0.0,
+        bargroupgap=0.0,
+        margin=dict(l=0, r=0, t=30, b=0)
     )
 
     # Mantém a escala logarítmica no eixo Y
     fig.update_yaxes(type="log")
 
+    # Ajusta o eixo X para abranger todas as categorias de -0.5 até (n-0.5)
+    categories = plot_data["Equipamento"].unique()
+    num_cats = len(categories)
+    fig.update_xaxes(
+        categoryorder='array',
+        categoryarray=categories,
+        range=[-0.5, num_cats - 0.5]
+    )
 
-    # Linha horizontal tracejada em y=1 (referência ao planejado)
+    # Linha horizontal tracejada em y=1 (Planejado)
     fig.add_hline(
-        y=1, 
-        line_dash="dot", 
+        y=1,
+        line_dash="dot",
         line_color="red",
-        annotation_text="Planejado (1.0)", 
+        annotation_text="Planejado (1.0)",
         annotation_position="bottom right"
     )
 
-    # Linha vertical tracejada vermelha em um equipamento específico (exemplo: equipamento "25")
-    fig.add_shape(
-        type="line",
-        xref="x",     # Referência ao eixo X categórico
-        yref="paper", # Para que a linha cubra toda a altura do gráfico
-        x0="25",      # Altere "25" para a categoria desejada
-        x1="25",
-        y0=0,
-        y1=1,
-        line=dict(
-            color="red",
-            width=2,
-            dash="dot"  # Estilo tracejado
-        )
-    )
-
     st.plotly_chart(fig, use_container_width=True)
+    # ...
+
 
     # Exibição da tabela exatamente igual ao programa original
     st.subheader("Dados filtrados")
