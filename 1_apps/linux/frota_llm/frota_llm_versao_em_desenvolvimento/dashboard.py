@@ -8,11 +8,88 @@ from db_access import (
     get_unique_values
 )
 from llm_session import query_groq
-from db_filters import apply_flags, calcular_multiplicadores  # Funções para sinalizadores e multiplicadores
+from db_filters import apply_flags, calcular_multiplicadores
 
-# Configuração da página
+# CSS para personalização (igual ao do programa original)
+st.markdown("""
+    <style>
+    .reportview-container { background-color: #f0f0f0; }
+    .sidebar .sidebar-content { padding-top: 0px; }
+    .block-container { padding-top: 2rem; }
+    .custom-card {
+        background-color: #2c3e50;
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid #34495e;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        text-align: center;
+        margin-bottom: 10px;
+        color: #ecf0f1;
+    }
+    .custom-card p {
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .card-container {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        gap: 10px;
+    }
+    .centered-title {
+        text-align: center;
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #ecf0f1;
+    }
+    .custom-header {
+        color: #ecf0f1;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .custom-subheader {
+        color: #bdc3c7;
+        font-size: 20px;
+    }
+    .stDataFrame div[data-testid="stHorizontalBlock"] {
+        width: auto !important;
+        min-width: 150px !important;
+    }
+    .ai-response {
+        font-size: 18px;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        color: #ecf0f1;
+        background-color: #2c3e50;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #34495e;
+    }
+    .down-green {
+        color: #50C878 !important;
+    }
+    .stTextArea textarea {
+        min-height: 100px;
+        max-height: 500px;
+        resize: vertical;
+        overflow: auto;
+        line-height: 1.5;
+        padding: 8px;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+    }
+    textarea {
+        height: auto !important;
+        min-height: 100px !important;
+        transition: height 0.1s ease-in-out;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Configuração da página com cabeçalho formatado
 st.set_page_config(layout="wide")
-st.markdown('<h1 style="text-align: center; color: #2c3e50;">Dashboard Operacional da Frota</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="centered-title">Frota - Dashboard Operacional</h1>', unsafe_allow_html=True)
 
 # Obter datas padrão para os filtros
 default_min_date, default_max_date = get_date_defaults()
@@ -44,10 +121,10 @@ if df.empty:
 if not df.empty:
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown(f"**Total de Registros:** {len(df):,}")
+        st.markdown(f'<div class="custom-card"><h3>Total de Registros</h3><p>{len(df):,}</p></div>', unsafe_allow_html=True)
     with col2:
         total_estimado = df["total_estimado"].sum() if "total_estimado" in df.columns else 0
-        st.markdown(f"**Total Estimado:** R$ {total_estimado:,.0f}")
+        st.markdown(f'<div class="custom-card"><h3>Total Estimado</h3><p>R$ {total_estimado:,.0f}</p></div>', unsafe_allow_html=True)
     
     # Preparação dos dados para o gráfico
     chart_data = df.copy()
@@ -118,10 +195,10 @@ if not df.empty:
 
     st.plotly_chart(fig, use_container_width=True)
 
-    # Exibição da tabela exatamente igual ao do programa original
+    # Exibição da tabela exatamente igual ao programa original
     st.subheader("Dados filtrados")
     if not df.empty:
-        # Aplica os sinalizadores (já com o ajuste)
+        # Aplica os sinalizadores (com a lógica ajustada) e calcula multiplicadores
         df = apply_flags(df)
         df = calcular_multiplicadores(df)
         
@@ -167,12 +244,12 @@ if not df.empty:
 
 # Área para perguntas à LLM
 st.subheader("Perguntas sobre os dados")
-user_question = st.text_area("Digite sua pergunta:", height=100)
-if st.button("Perguntar"):
+user_question = st.text_area("Digite sua pergunta:", height=100, key="auto_expanding_textarea", max_chars=None)
+if st.button("Perguntar ao GROQ"):
     if user_question:
         # Combina os dados filtrados e adicionais para enviar à LLM
         combined_data = {"filtered_data": df.to_dict(orient='records'), "additional_data": additional_data}
         answer = query_groq(combined_data, user_question)
         st.markdown(answer)
     else:
-        st.warning("Por favor, qual sua pergunta?")
+        st.warning("Por favor, insira uma pergunta.")
