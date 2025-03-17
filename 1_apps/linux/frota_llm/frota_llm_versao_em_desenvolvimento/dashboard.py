@@ -64,16 +64,60 @@ if not df.empty:
         'Uso vs Planejado': chart_data['Taxa Utilização Multiplicador'],
         'Consumo vs Planejado': chart_data['Consumo Multiplicador']
     })
+
+    # Criação do gráfico com as atualizações
     fig = px.bar(
         plot_data.melt(id_vars='Equipamento', var_name='Métrica'),
         x='Equipamento',
         y='value',
         color='Métrica',
         barmode='group',
-        title='Indicadores de Uso e Consumo por Equipamento'
+        title='Indicadores de Uso e Consumo por Equipamento',
+        labels={'value': 'Valor (Escala Log)', 'Equipamento': 'Equipamento'},
+        color_discrete_map={
+            'Uso vs Planejado': '#1f77b4',
+            'Consumo vs Planejado': '#ff7f0e'
+        }
     )
-    fig.update_layout(xaxis_tickangle=-45)
+
+    fig.update_layout(
+        xaxis_tickangle=-45,
+        xaxis_type='category',
+        legend_title_text='Indicadores',
+        yaxis_title="Multiplicador (Realizado/Planejado)",
+        hovermode="x unified"
+    )
+
+    # Aplicar escala logarítmica no eixo Y
+    fig.update_yaxes(type="log")
+
+    # Linha horizontal tracejada em y=1 (referência ao planejado)
+    fig.add_hline(
+        y=1, 
+        line_dash="dot", 
+        line_color="red",
+        annotation_text="Planejado (1.0)", 
+        annotation_position="bottom right"
+    )
+
+    # Linha vertical tracejada vermelha em um equipamento específico (exemplo: equipamento "25")
+    fig.add_shape(
+        type="line",
+        xref="x",     # Referência ao eixo X categórico
+        yref="paper", # Para que a linha cubra toda a altura do gráfico
+        x0="25",      # Altere "25" para a categoria desejada
+        x1="25",
+        y0=0,
+        y1=1,
+        line=dict(
+            color="red",
+            width=2,
+            dash="dot"  # Estilo tracejado
+        )
+    )
+
     st.plotly_chart(fig, use_container_width=True)
+
 
 # Área para perguntas à LLM
 st.subheader("Perguntas sobre os dados")
