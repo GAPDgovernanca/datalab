@@ -1,4 +1,8 @@
 import streamlit as st
+
+# A chamada para set_page_config deve ser a primeira instrução do Streamlit
+st.set_page_config(layout="wide")
+
 import pandas as pd
 import plotly.express as px
 from db_access import (
@@ -88,7 +92,6 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Configuração da página com cabeçalho formatado
-st.set_page_config(layout="wide")
 st.markdown('<h1 class="centered-title">Frota - Dashboard Operacional</h1>', unsafe_allow_html=True)
 
 # Obter datas padrão para os filtros
