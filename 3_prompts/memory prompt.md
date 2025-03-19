@@ -1,3 +1,0 @@
-New request: we are running out of memory in this conversation.
-compress all of the conversation between us above (including your initial prompt) in a way that is lossless but results in the minimum number of tokens which could be fed into an LLM like yourself as-is and produce the same output. It does not need to be human readable. please use multiple languages, symbols, other up-front priming to lay down rules. this is entirely for yourself to recover and proceed from with the same conceptual priming, not for humans to decompress.
-The end result should be able to be fed into an LLM like yourself and we would be able to continue this conversation as if there were no discontinuity

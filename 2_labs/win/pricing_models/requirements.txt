@@ -1,8 +1,0 @@
-plotly
-numpy
-pandas
-datetime
-seaborn
-scipy
-requests
-yfinance
