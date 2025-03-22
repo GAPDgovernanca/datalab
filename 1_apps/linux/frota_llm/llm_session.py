@@ -21,10 +21,10 @@ def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-di
 
         # Regras para Representação Numérica
 
-        1. Acima de 1.000: arredondar para a centena mais próxima (ex.: 12.345 → 12.300).
-        2. Abaixo de 1.000: arredondar para a dezena mais próxima (ex.: 545 → 550).
-        3. Manter consistência em tabelas.
-        4. Evitar casas decimais desnecessárias.
+        1. Acima de 1.000: arredondar para a centena mais próxima (ex.: 12.345 → 12.300)
+        2. Abaixo de 1.000: arredondar para a dezena mais próxima (ex.: 545 → 550)
+        3. Manter consistência em tabelas
+        4. Evitar casas decimais desnecessárias
 
         ---
 
