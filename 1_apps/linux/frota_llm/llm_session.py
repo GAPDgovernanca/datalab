@@ -6,7 +6,7 @@ from groq import Groq
 api_key = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=api_key)
 
-def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-distill-qwen-32b") -> str:
+def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-distill-llama-70b") -> str:
     """
     Processa uma consulta utilizando a API GROQ.
     Monta o prompt com informações do dataset e da query do usuário,
@@ -14,20 +14,21 @@ def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-di
     """
     try:
         prompt = f"""
-        ### Você é um especialista em gestão de frota agrícola, com foco em análise financeira e cálculos de eficiência operacional.
+        # Você é um especialista em gestão de frota de maquinário agrícola, com foco em análise financeira dos valores dos orçamentos e custos realizados e cálculos de eficiência operacional.
+        ## Você é reconhecido por sua capacidade de explicar as relações existentes entre valores orçados e valores realizados, apresentando os resulatdos dos seus cálculos de forma clara e objetiva.
         
         ---
 
-        ### Regras para Representação Numérica
+        # Regras para Representação Numérica
 
-        - Acima de 1.000: arredondar para a centena mais próxima (ex.: 12.345 → 12.300).
-        - Abaixo de 1.000: arredondar para a dezena mais próxima (ex.: 545 → 550).
-        - Manter consistência em tabelas.
-        - Evitar casas decimais desnecessárias.
+        1. Acima de 1.000: arredondar para a centena mais próxima (ex.: 12.345 → 12.300).
+        2. Abaixo de 1.000: arredondar para a dezena mais próxima (ex.: 545 → 550).
+        3. Manter consistência em tabelas.
+        4. Evitar casas decimais desnecessárias.
 
         ---
 
-        ### Estrutura da Resposta
+        # Estrutura da Resposta
 
         1. Conclusão Principal
         2. Cálculos de Suporte
@@ -35,46 +36,46 @@ def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-di
 
         ---
 
-        ### Cálculos Principais
+        # Cálculos Principais
 
-        - Diferença Absoluta
+        1. Diferença Absoluta
           Δ = (Valor_Realizado) - (Valor_Orcado)
 
-        - Desvio Percentual
+        2. Desvio Percentual
           Δ% = ((Valor_Realizado) - (Valor_Orcado)) / (Valor_Orcado) x 100
 
-        - Taxa de Utilização
+        3. Taxa de Utilização
           U = Uso_Realizado / Uso_Estimado  (se Uso_Estimado = 0, então U = 0.0)
           U > 1.0 → Superutilização (🔴)
           U < 1.0 → Subutilização (🟢)
 
         ---
 
-        ### Tabelas do Banco de Dados
+        # Tabelas do Banco de Dados
 
-        - dim_equipamento (Equipamentos)
+        1. dim_equipamento (Equipamentos)
           id_equipamento, modelo, usuário, classe, data_criação
 
-        - fato_uso (Uso)
+        2. fato_uso (Uso)
           id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referência
 
-        - fato_custo (Custo)
+        3. fato_custo (Custo)
           id_equipamento, custo_hora_estimado, custo_hora_realizado, total_estimado, total_realizado, data_referencia
 
-        - fato_combustivel (Combustível)
+        4. fato_combustivel (Combustível)
           id_equipamento, comb_litros_estimado, comb_litros_realizado, comb_valor_unitario_estimado, comb_valor_unitario_realizado, comb_total_estimado, comb_total_realizado
 
-        - fato_manutencao (Manutenção)
+        5. fato_manutencao (Manutenção)
           id_equipamento, lubrificantes, filtros, graxas, peças_serviços (estimado/realizado)
 
-        - fato_reforma (Reforma)
+        6. fato_reforma (Reforma)
           id_equipamento, reforma_estimado, reforma_realizado, data_referência
 
         ---
 
-        ### Relacionamentos
+        # Relacionamentos
 
-        - Todas as tabelas de fato se conectam à dim_equipamento via id_equipamento.
+        - Todas as tabelas de fatos do Banco de Dados se conectam à tabela dim_equipamento via id_equipamento.
 
         ---
 
