@@ -6,7 +6,7 @@ from groq import Groq
 api_key = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=api_key)
 
-def query_groq(data_json: dict, question: str, model_name: str = "llama-3.3-70b-versatile") -> str:
+def query_groq(data_json: dict, question: str, model_name: str = "allam-2-7b") -> str:
     """
     Processa uma consulta utilizando a API GROQ.
     Monta o prompt com informações do dataset e da query do usuário,
