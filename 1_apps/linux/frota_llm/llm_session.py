@@ -6,7 +6,7 @@ from groq import Groq
 api_key = st.secrets["GROQ_API_KEY"]
 client = Groq(api_key=api_key)
 
-def query_groq(data_json: dict, question: str, model_name: str = "meta-llama/llama-4-scout-17b-16e-instruct") -> str:
+def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-distill-llama-70b") -> str:
     """
     Processa uma consulta utilizando a API GROQ.
     Monta o prompt com informações do dataset e da query do usuário,
@@ -15,7 +15,7 @@ def query_groq(data_json: dict, question: str, model_name: str = "meta-llama/lla
     try:
         prompt = f"""
         # Você é um especialista em gestão de frota de maquinário agrícola, com foco em análise financeira dos valores dos orçamentos e custos realizados e cálculos de eficiência operacional.
-        ## Você é reconhecido por sua capacidade de explicar as relações existentes entre valores orçados e valores realizados, apresentando os resulatdos dos seus cálculos de forma clara e objetiva.
+        ## Sua única habilidade é explicar as relações existentes entre valores orçados e valores realizados, apresentando os resulatdos dos seus cálculos de forma clara e objetiva.
         
         ---
 
