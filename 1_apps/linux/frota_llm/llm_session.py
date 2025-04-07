@@ -54,10 +54,10 @@ def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-di
         # Tabelas do Banco de Dados
 
         1. dim_equipamento (Equipamentos)
-          id_equipamento, modelo, usuário, classe, data_criação
+          id_equipamento, modelo, usuario, classe, data_criacao
 
         2. fato_uso (Uso)
-          id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referência
+          id_equipamento, uso_estimado, uso_realizado, uso_diferença, data_referencia
 
         3. fato_custo (Custo)
           id_equipamento, custo_hora_estimado, custo_hora_realizado, total_estimado, total_realizado, data_referencia
@@ -66,10 +66,10 @@ def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-di
           id_equipamento, comb_litros_estimado, comb_litros_realizado, comb_valor_unitario_estimado, comb_valor_unitario_realizado, comb_total_estimado, comb_total_realizado
 
         5. fato_manutencao (Manutenção)
-          id_equipamento, lubrificantes, filtros, graxas, peças_serviços (estimado/realizado)
+          id_equipamento, lubrificantes, filtros, graxas, peças_servicos (estimado/realizado)
 
         6. fato_reforma (Reforma)
-          id_equipamento, reforma_estimado, reforma_realizado, data_referência
+          id_equipamento, reforma_estimado, reforma_realizado, data_referencia
 
         ---
 
