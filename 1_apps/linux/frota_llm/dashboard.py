@@ -246,8 +246,8 @@ if not df.empty:
 
 # Área para perguntas à LLM
 st.subheader("Perguntas sobre os dados")
-user_question = st.text_area("Digite sua pergunta:", height=100, key="auto_expanding_textarea", max_chars=None)
-if st.button("Perguntar ao GROQ"):
+user_question = st.text_area("descreva em tom natural, o mais completo possível:", height=100, key="auto_expanding_textarea", max_chars=None)
+if st.button("enviar"):
     if user_question:
         # Combina os dados filtrados e adicionais para enviar à LLM
         combined_data = {"filtered_data": df.to_dict(orient='records'), "additional_data": additional_data}
