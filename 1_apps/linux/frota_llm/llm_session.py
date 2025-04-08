@@ -39,15 +39,15 @@ def query_groq(data_json: dict, question: str, model_name: str = "deepseek-r1-di
         # Cálculos Principais
 
         1. Diferença Absoluta
-          Δ = (Valor_Realizado) - (Valor_Orcado)
+          Δ = (Valor_Orcado) - (Valor_Realizado)
 
         2. Desvio Percentual
-          Δ% = ((Valor_Realizado) - (Valor_Orcado)) / (Valor_Orcado) x 100
+          Δ% = ((Valor_Orcado) - (Valor_Realizado)) / (Valor_Orcado) x 100
 
         3. Taxa de Utilização
           U = Uso_Realizado / Uso_Estimado  (se Uso_Estimado = 0, então U = 0.0)
-          U > 1.0 → Superutilização (🔴)
-          U < 1.0 → Subutilização (🟢)
+          U > 1.0 → Superutilização
+          U < 1.0 → Subutilização
 
         ---
 
