@@ -141,7 +141,7 @@ if not df.empty:
     )
     plot_data = pd.DataFrame({
         'Equipamento': chart_data['id_equipamento'].astype(str),
-        'Uso vs Planejado': chart_data['Taxa Utilização Multiplicador'],
+        'Custo vs Planejado': chart_data['Taxa Utilização Multiplicador'],
         'Consumo vs Planejado': chart_data['Consumo Multiplicador']
     })
 
@@ -156,7 +156,7 @@ if not df.empty:
         title='Indicadores de Uso e Consumo por Equipamento',
         labels={'value': 'Valor (Escala Log)', 'Equipamento': 'Equipamento'},
         color_discrete_map={
-            'Uso vs Planejado': '#1f77b4',
+            'Custo vs Planejado': '#1f77b4',
             'Consumo vs Planejado': '#ff7f0e'
         }
     )
