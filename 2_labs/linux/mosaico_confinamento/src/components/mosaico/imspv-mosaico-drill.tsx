@@ -139,12 +139,12 @@ const IMSPVMosaico = () => {
     const bgColor = getFaixaColor(curralData.imspv);
     return (
       <div 
-        className={`p-2 ${bgColor} hover:opacity-80 cursor-pointer transition-all rounded-lg h-full`}
+        className={`p-1 sm:p-2 ${bgColor} hover:opacity-80 cursor-pointer transition-all rounded-lg h-full flex items-center justify-center`}
         onClick={() => setSelectedCurral(curralData)}
       >
-        <div className="text-white text-center">
-          <div className="font-bold text-xs">{curralData.curral}</div>
-          <div className="text-xs">{curralData.imspv.toFixed(2)}%</div>
+        <div className="text-white text-center w-full">
+          <div className="font-bold text-xs sm:text-lg">{curralData.curral}</div>
+          <div className="text-[10px] sm:text-base">{curralData.imspv.toFixed(2)}%</div>
         </div>
       </div>
     );
@@ -169,52 +169,52 @@ const IMSPVMosaico = () => {
     ];
 
     return (
-      <div className="p-4 bg-gray-50 rounded-lg mt-4">
+      <div className="p-2 sm:p-4 bg-gray-50 rounded-lg mt-4">
         <div className="flex items-center gap-2 mb-4">
-          <Info size={20} />
-          <h3 className="font-bold">
+          <Info size={16} className="sm:w-5 sm:h-5" />
+          <h3 className="font-bold text-sm sm:text-base">
             {selectedCurral.curral} - IMS_PV: {selectedCurral.imspv.toFixed(2)}%
           </h3>
-          <span className="text-sm text-gray-500">
+          <span className="text-xs sm:text-sm text-gray-500">
             ({getFaixaLabel(selectedCurral.imspv)})
           </span>
         </div>
 
-        {/* Painel de Indicadores */}
-        <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-white rounded-lg shadow-sm">
-          <div className="space-y-4">
+        {/* Painel de Indicadores mais compacto em mobile */}
+        <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-4 sm:mb-6 p-2 sm:p-4 bg-white rounded-lg shadow-sm">
+          <div className="space-y-3 sm:space-y-4">
             <div className="flex items-center gap-2">
-              <Scale className="text-blue-500" size={20} />
+              <Scale className="text-blue-500" size={16} />
               <div>
-                <div className="text-sm text-gray-500">Consumo MS</div>
-                <div className="font-bold">{selectedCurral.consumoMS.toFixed(2)} kg/dia</div>
+                <div className="text-xs sm:text-sm text-gray-500">Consumo MS</div>
+                <div className="font-bold text-sm sm:text-base">{selectedCurral.consumoMS.toFixed(2)} kg/dia</div>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Calendar className="text-green-500" size={20} />
+              <Calendar className="text-green-500" size={16} />
               <div>
-                <div className="text-sm text-gray-500">Dias Confinamento</div>
-                <div className="font-bold">{selectedCurral.diasConf} dias</div>
+                <div className="text-xs sm:text-sm text-gray-500">Dias Confinamento</div>
+                <div className="font-bold text-sm sm:text-base">{selectedCurral.diasConf} dias</div>
               </div>
             </div>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div>
-              <div className="text-sm text-gray-500">Tipo de Ração</div>
-              <div className="font-bold">{selectedCurral.tipoRacao}</div>
+              <div className="text-xs sm:text-sm text-gray-500">Tipo de Ração</div>
+              <div className="font-bold text-sm sm:text-base">{selectedCurral.tipoRacao}</div>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="text-orange-500" size={20} />
+              <Clock className="text-orange-500" size={16} />
               <div>
-                <div className="text-sm text-gray-500">Dias na Ração</div>
-                <div className="font-bold">{selectedCurral.diasRacao} dias</div>
+                <div className="text-xs sm:text-sm text-gray-500">Dias na Ração</div>
+                <div className="font-bold text-sm sm:text-base">{selectedCurral.diasRacao} dias</div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Gráfico de Pesos com cores vibrantes e eixo Y fixo */}
-        <div className="h-64">
+        <div className="h-48 sm:h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={pesoData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -222,7 +222,12 @@ const IMSPVMosaico = () => {
               <YAxis 
                 domain={[300, 600]} // Intervalo fixo para o eixo Y
                 ticks={[300, 350, 400, 450, 500, 550, 600]} // Marcações específicas
-                label={{ value: 'Peso (kg)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle' } }}
+                label={{ 
+                  value: 'Peso (kg)', 
+                  angle: -90, 
+                  position: 'insideLeft', 
+                  style: { textAnchor: 'middle', fontSize: '0.75rem' } 
+                }}
               />
               <Tooltip 
                 formatter={(value: any, name: string) => [
@@ -242,26 +247,26 @@ const IMSPVMosaico = () => {
         </div>
 
         {/* Legenda do gráfico */}
-        <div className="flex justify-center gap-8 mt-2 mb-4">
+        <div className="flex justify-center gap-4 sm:gap-8 mt-2 mb-2 sm:mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#16a34a' }}></div>
-            <span className="text-sm">Peso Entrada</span>
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded" style={{ backgroundColor: '#16a34a' }}></div>
+            <span className="text-xs sm:text-sm">Peso Entrada</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded" style={{ backgroundColor: '#2563eb' }}></div>
-            <span className="text-sm">Peso Atual</span>
+            <div className="w-3 h-3 sm:w-4 sm:h-4 rounded" style={{ backgroundColor: '#2563eb' }}></div>
+            <span className="text-xs sm:text-sm">Peso Atual</span>
           </div>
         </div>
 
         {/* Indicadores de Variação */}
-        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-          <div className="text-sm text-blue-800">
+        <div className="mt-2 sm:mt-4 p-2 sm:p-3 bg-blue-50 rounded-lg">
+          <div className="text-xs sm:text-sm text-blue-800">
             Ganho de Peso: {(selectedCurral.pesoAtual - selectedCurral.pesoEntrada).toFixed(2)} kg
           </div>
-          <div className="text-sm text-blue-800">
+          <div className="text-xs sm:text-sm text-blue-800">
             Variação: {((selectedCurral.pesoAtual - selectedCurral.pesoEntrada) / selectedCurral.pesoEntrada * 100).toFixed(2)}%
           </div>
-          <div className="text-sm text-blue-800">
+          <div className="text-xs sm:text-sm text-blue-800">
             Ganho Diário: {((selectedCurral.pesoAtual - selectedCurral.pesoEntrada) / selectedCurral.diasConf).toFixed(2)} kg/dia
           </div>
         </div>
@@ -269,59 +274,49 @@ const IMSPVMosaico = () => {
     );
   };
 
-  // Grid 10x10
-  const grid: (Curral | null)[][] = [];
-  for (let i = 0; i < 10; i++) {
-    const row: (Curral | null)[] = currais.slice(i * 10, (i + 1) * 10);
-    while (row.length < 10) row.push(null);
-    grid.push(row);
-  }
-
   return (
     <Card className="w-full max-w-4xl">
-      <CardHeader>
-        <CardTitle>Mosaico IMS_PV - Confinamento</CardTitle>
-        <div className="text-sm text-gray-500">
+      <CardHeader className="px-2 py-3 sm:px-6 sm:py-4">
+        <CardTitle className="text-xl sm:text-2xl text-center">Mosaico IMS_PV - Confinamento</CardTitle>
+        <div className="text-sm text-gray-500 text-center">
           Ingestão de Matéria Seca / Peso Vivo (%)
         </div>
       </CardHeader>
       
-      <CardContent>
-        <div className="grid grid-cols-10 gap-1 mb-4">
-          {grid.map((row, i) => (
-            <React.Fragment key={i}>
-              {row.map((curral, j) => (
-                <div key={`${i}-${j}`} className="aspect-square">
-                  {renderCell(curral)}
-                </div>
-              ))}
-            </React.Fragment>
+      <CardContent className="px-2 sm:px-6">
+        {/* Grid com menos colunas em telas pequenas */}
+        <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-1 mb-4">
+          {currais.slice(0, 100).map((curral, i) => (
+            <div key={`curral-${i}`} className="aspect-square">
+              {renderCell(curral || null)}
+            </div>
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-4 mb-4 text-sm">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-blue-500 rounded"></div>
+        {/* Legenda em duas colunas em mobile */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-4 mb-4 text-xs sm:text-sm">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-blue-500 rounded"></div>
             <span>Muito Alto (&gt;{(stats.media + 2 * stats.desvio).toFixed(2)}%)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-500 rounded"></div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded"></div>
             <span>Alto ({(stats.media + stats.desvio).toFixed(2)}-{(stats.media + 2 * stats.desvio).toFixed(2)}%)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-yellow-500 rounded"></div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-yellow-500 rounded"></div>
             <span>Acima média ({stats.media.toFixed(2)}-{(stats.media + stats.desvio).toFixed(2)}%)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-orange-400 rounded"></div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-orange-400 rounded"></div>
             <span>Abaixo média ({(stats.media - stats.desvio).toFixed(2)}-{stats.media.toFixed(2)}%)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-500 rounded"></div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-red-500 rounded"></div>
             <span>Alerta ({(stats.media - 2 * stats.desvio).toFixed(2)}-{(stats.media - stats.desvio).toFixed(2)}%)</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gray-800 rounded"></div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 bg-gray-800 rounded"></div>
             <span>Crítico (&lt;{(stats.media - 2 * stats.desvio).toFixed(2)}%)</span>
           </div>
         </div>
