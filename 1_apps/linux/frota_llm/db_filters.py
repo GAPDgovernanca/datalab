@@ -1,11 +1,13 @@
 """
 Módulo de filtros e cálculos para o dashboard.
+
 Este módulo mantém a estrutura original para consultas ao banco de dados,
 os cálculos de multiplicadores e a aplicação de sinalizadores (flags).
 
-ATENÇÃO: Este código NÃO altera os nomes das variáveis ou assinaturas de funções,
-mantendo assim a compatibilidade com o restante do sistema.
-A configuração dos sinalizadores está totalmente centralizada no arquivo db_config.yaml.
+Importante:
+- Nenhum nome de variável ou assinatura de função foi alterado, garantindo a compatibilidade com o restante do sistema.
+- A configuração dos sinalizadores está centralizada no arquivo db_config.yaml, que agora é carregado utilizando
+  um caminho absoluto baseado no local deste arquivo, para funcionar corretamente no Streamlit Cloud.
 """
 
 import os
@@ -14,9 +16,10 @@ from typing import Dict
 import pandas as pd
 import sqlite3
 
-CONFIG_FILE = "db_config.yaml"
+# Define o caminho absoluto para o arquivo db_config.yaml (localizado no mesmo diretório deste módulo)
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "db_config.yaml")
 
-# Lista das chaves obrigatórias que devem estar definidas no YAML.
+# Lista das chaves obrigatórias que devem estar definidas no arquivo YAML.
 REQUIRED_CONFIG_KEYS = [
     "threshold_percentage",
     "flag_over_threshold",
@@ -28,32 +31,35 @@ REQUIRED_CONFIG_KEYS = [
 def load_config():
     """
     Carrega a configuração do arquivo YAML.
-    Lança erro se o arquivo não for encontrado ou se alguma chave obrigatória estiver ausente.
+    
+    Lança um FileNotFoundError se o arquivo não for encontrado
+    e um KeyError se alguma chave obrigatória estiver ausente.
     """
     if not os.path.exists(CONFIG_FILE):
         raise FileNotFoundError(
-            f"Arquivo {CONFIG_FILE} não encontrado. Por favor, crie-o com as chaves obrigatórias: {REQUIRED_CONFIG_KEYS}"
+            f"Arquivo {CONFIG_FILE} não encontrado. Por favor, verifique se 'db_config.yaml' está no mesmo diretório de 'db_filters.py'."
         )
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         config = yaml.safe_load(f)
         if config is None:
             config = {}
-    # Verifica se todas as chaves obrigatórias estão definidas no YAML
+    
+    # Verifica se todas as chaves obrigatórias estão presentes
     for key in REQUIRED_CONFIG_KEYS:
         if key not in config:
             raise KeyError(
-                f"A chave '{key}' está ausente na configuração ({CONFIG_FILE}). "
-                "Adicione essa chave para continuar."
+                f"A chave '{key}' está ausente na configuração ({CONFIG_FILE}). Adicione essa chave para continuar."
             )
     return config
 
-# Carrega as configurações dos sinalizadores exclusivamente do arquivo YAML.
+# Carrega as configurações de sinalizadores utilizando o caminho absoluto para o arquivo YAML.
 CONFIG = load_config()
 
 def build_filters(filtros: Dict, alias: str = 'fc') -> str:
     """
     Constrói uma string de condições SQL a partir dos filtros fornecidos.
-    Mantém a compatibilidade com outras partes do sistema.
+    
+    Mantém a compatibilidade com as demais partes do sistema.
     """
     conditions = []
     data_referencia = filtros.get("data_referencia")
@@ -76,7 +82,8 @@ def calcular_multiplicadores(df: pd.DataFrame) -> pd.DataFrame:
     Calcula dois multiplicadores:
       - Taxa Utilização Multiplicador: custo_hora_realizado / custo_hora_estimado
       - Consumo Multiplicador: total_realizado / total_estimado
-    A divisão por zero é evitada, retornando 0.0 nesses casos.
+
+    A divisão por zero é evitada (retorna 0.0 nesses casos).
     """
     if df.empty:
         return df
@@ -97,17 +104,16 @@ def apply_flags(df):
     Aplica sinalizadores (flags) aos registros do DataFrame com base no desvio percentual entre o orçamento e o realizado.
 
     Critérios:
-      - Se total_estimado == 0 e total_realizado > 0, retorna flag_no_budget.
+      - Se total_estimado == 0 e total_realizado > 0, retorna CONFIG["flag_no_budget"].
       - Se total_estimado != 0, calcula:
             percentual = (total_diferenca / total_estimado) * 100
         (Espera-se que total_diferenca seja calculado como: total_orçado - total_realizado)
-      - Se percentual < -threshold_percentage, retorna flag_under_threshold.
-      - Se percentual > threshold_percentage, retorna flag_over_threshold.
-      - Para desvios entre -threshold_percentage e threshold_percentage, retorna flag_neutral.
+      - Se percentual < -CONFIG["threshold_percentage"], retorna CONFIG["flag_under_threshold"].
+      - Se percentual > CONFIG["threshold_percentage"], retorna CONFIG["flag_over_threshold"].
+      - Para desvios entre -CONFIG["threshold_percentage"] e CONFIG["threshold_percentage"], retorna CONFIG["flag_neutral"].
 
     OBSERVAÇÃO:
-      Garanta que o arquivo db_config.yaml esteja sempre atualizado, pois
-      os sinalizadores utilizados aqui dependem exclusivamente dele.
+      A configuração dos sinalizadores está centralizada no arquivo db_config.yaml.
     """
     def flag_diferenca(row):
         # Caso especial: orçamento zero mas custo realizado > 0.
@@ -116,15 +122,8 @@ def apply_flags(df):
 
         if row['total_estimado'] != 0:
             percentual = (row['total_diferenca'] / row['total_estimado']) * 100
-
-            # Se percentual < -threshold_percentage, retorna flag_under_threshold.
-            # Supondo que total_diferenca = total_orçado - total_realizado,
-            # percentual negativo indica que o realizado superou o orçado.
             if percentual < -CONFIG["threshold_percentage"]:
                 return CONFIG["flag_under_threshold"]
-
-            # Se percentual > threshold_percentage, retorna flag_over_threshold.
-            # Percentual positivo indica que o realizado ficou abaixo do orçado.
             elif percentual > CONFIG["threshold_percentage"]:
                 return CONFIG["flag_over_threshold"]
 
