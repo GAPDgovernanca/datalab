@@ -1,76 +1,101 @@
-# Documento Técnico para Equipe de Desenvolvimento
+```markdown
+# Módulo de Filtros e Cálculos do Dashboard
 
-## 📌 Visão Geral
-O projeto atual é um dashboard interativo de gestão operacional e financeira para frotas agrícolas, desenvolvido com Python e Streamlit, conectado a um banco de dados SQLite (`frota.db`).
-
-## 🛠️ Estrutura Modular Atual
-
-O projeto está modularizado em quatro arquivos principais:
-
-### 1. 📂 `db_connection.py`
-- Gerencia conexões com o banco de dados SQLite.
-- Inclui função para determinar datas padrão para inicialização.
-
-### Funções definidas:
-- **`get_db_connection(db_filename: str)`**: estabelece e retorna a conexão com o banco SQLite.
-- **`get_date_defaults(conn)`**: obtém datas mínimas e máximas para uso em filtros de interface.
+Este módulo realiza consultas ao banco de dados, calcula multiplicadores e aplica sinalizadores (flags) aos registros com base nos desvios entre os valores orçados e realizados. Toda a configuração dos sinalizadores está centralizada em um arquivo YAML (**db_config.yaml**), o que facilita futuras alterações sem a necessidade de modificar o código. Essa abordagem, juntamente com o uso de caminho absoluto para carregar o arquivo de configuração, garante que o módulo funcione corretamente no ambiente do Streamlit Cloud.
 
 ---
 
-### 🗃️ `db_filters.py`
-- Centraliza a criação de filtros SQL dinâmicos.
-- Implementa cálculos financeiros importantes para o dashboard.
+## Arquivos Principais
 
-#### Funções presentes:
-- **`build_filters(filtros: Dict, alias: str)`**: gera cláusulas condicionais SQL baseadas nos filtros selecionados na interface.
-- **`get_unique_values(conn, column_name)`**: retorna valores únicos de colunas dimensionais para filtros.
-- **`calcular_multiplicadores(df)`**: gera multiplicadores para indicadores de uso e consumo.
-- **`apply_flags(df)`**: sinaliza desempenho financeiro através de ícones de status (🔶, 🟢, 🔴, ⚪).
+- **db_filters.py**  
+  Contém as funções:
+  - `build_filters(filtros: Dict, alias: str = 'fc')`: Constrói uma string SQL de condições a partir dos filtros fornecidos.
+  - `calcular_multiplicadores(df: pd.DataFrame)`: Calcula multiplicadores (Taxa Utilização e Consumo) com base nos custos e totais orçados e realizados.
+  - `apply_flags(df)`: Aplica sinalizadores aos registros do DataFrame com base no desvio percentual entre o orçamento e o realizado.
+  
+  Essa implementação utiliza um caminho absoluto para localizar o arquivo **db_config.yaml** no mesmo diretório deste módulo, garantindo que o arquivo seja encontrado corretamente, mesmo no Streamlit Cloud.
 
----
-
-### 📊 `db_dashboard.py`
-- Responsável pela visualização gráfica e métricas do dashboard.
-
-Funções principais:
-- **`get_filtered_data(filtros)`**: consulta e retorna dados filtrados do banco.
-- **`display_metrics(df)`**: exibe métricas-chave no Streamlit.
-- **`plot_chart(df)`**: constrói gráficos interativos (Plotly) para análise visual do desempenho.
+- **db_config.yaml**  
+  Arquivo de configuração que centraliza todos os parâmetros relativos aos sinalizadores.  
+  Qualquer ajuste futuro relativo aos limites ou aos ícones dos sinalizadores deverá ser feito apenas neste arquivo.
 
 ---
 
-### 🚀 `frota_llm.py` (Arquivo Principal)
-- Integra todas as funções dos módulos auxiliares.
-- Executa o dashboard operacional diretamente pelo Streamlit.
+## Exemplo de Configuração (db_config.yaml)
 
-## 🧩 Fluxo de Trabalho Típico
+```yaml
+threshold_percentage: 10
+flag_over_threshold: "🔴"
+flag_under_threshold: "🟢"
+flag_neutral: "⚪"
+flag_no_budget: "🔶"
+```
 
-1. **Usuário acessa a aplicação via navegador**.
-2. **Seleciona filtros** na barra lateral (datas, usuários, classes, equipamentos).
-3. **Aplicação carrega os dados filtrados** através de consultas SQL.
-4. **Cálculos intermediários são feitos** (multiplicadores e flags).
-5. **Dados processados** são exibidos visualmente e em tabelas detalhadas.
-
----
-
-## 🚩 Variáveis e parâmetros críticos:
-- **`data_referencia`**: intervalo de datas usado como filtro principal.
-- **`id_equipamento`**, **`usuario`**, **`classe`**: filtros dimensionais secundários.
-- **Indicadores financeiros**: `total_estimado`, `total_realizado`, `custo_hora_estimado`, `custo_hora_realizado`.
-- **Multiplicadores**: indicam desvios e performance operacional.
+- **threshold_percentage**: Define o limite percentual para identificar desvios críticos.
+- **flag_over_threshold**: Sinalizador aplicado quando o percentual calculado é superior ao limite (indicando, conforme o cálculo, que o realizado ficou abaixo do orçado).
+- **flag_under_threshold**: Sinalizador aplicado quando o percentual calculado é inferior ao limite negativo (indicando que o realizado excedeu o orçado).
+- **flag_neutral**: Sinalizador aplicado quando o desvio está dentro do intervalo aceitável (entre -threshold e +threshold).
+- **flag_no_budget**: Sinalizador especial para situações onde não há orçamento definido, mas há custo realizado.
 
 ---
 
-## 🔄 Sugestões para Melhorias Futuras:
-- **Performance**: Otimizar consultas SQL, especialmente para grandes volumes de dados.
-- **Interatividade**: Adicionar funcionalidades adicionais, como exportação dos dados exibidos para Excel ou CSV diretamente pelo dashboard.
-- **Robustez e testes automatizados**: Incluir testes unitários para garantir estabilidade e confiabilidade após futuras alterações.
-- **Interface e UX**: Refinar a experiência visual do usuário com feedback visual mais responsivo.
+## Dependências
+
+Para o correto funcionamento deste módulo, além das bibliotecas que já fazem parte da sua instalação, é necessário ter instalado:
+
+- **pandas** (para manipulação dos DataFrames)
+- **PyYAML** (para carregar o arquivo YAML de configuração)
+
+Para instalar o PyYAML, execute:
+
+```bash
+pip install pyyaml
+```
 
 ---
 
-## 📌 Recomendações para equipe de desenvolvimento:
-- Manter clareza na modularização para facilitar futuras expansões ou correções.
-- Seguir padrões claros de nomenclatura e documentação em todas as funções.
-- Garantir revisões frequentes do desempenho e otimizações pontuais para manter uma boa performance da aplicação.
+## Considerações para o Ambiente Streamlit Cloud
 
+No Streamlit Cloud, o diretório de execução pode ser diferente do diretório onde os arquivos do projeto estão localizados. Para evitar problemas de localização do arquivo **db_config.yaml**, o módulo **db_filters.py** utiliza o caminho absoluto baseado na sua própria localização:
+
+```python
+import os
+CONFIG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "db_config.yaml")
+```
+
+**Certifique-se de que o arquivo db_config.yaml esteja no mesmo diretório que db_filters.py.**
+
+---
+
+## Instruções de Uso
+
+1. **Configuração:**  
+   - Coloque os arquivos `db_filters.py` e `db_config.yaml` juntos no mesmo diretório do seu projeto.
+   - Ajuste os parâmetros dos sinalizadores, se necessário, editando apenas o arquivo **db_config.yaml**.
+
+2. **Integração no Projeto:**  
+   Importe e utilize as funções no seu aplicativo, por exemplo, no seu dashboard:
+
+   ```python
+   from db_filters import build_filters, calcular_multiplicadores, apply_flags
+
+   # Exemplo de uso:
+   df = get_filtered_data(filtros)
+   df = calcular_multiplicadores(df)
+   df = apply_flags(df)
+   ```
+
+3. **Execução no Streamlit Cloud:**  
+   Como o caminho absoluto é utilizado para carregar o arquivo de configuração, o módulo funcionará corretamente independentemente do diretório de execução.
+
+---
+
+## Contribuição e Manutenção
+
+- **Centralização da Configuração:**  
+  Faça todos os ajustes relativos aos sinalizadores exclusivamente no arquivo **db_config.yaml**. Isso ajuda a manter a consistência e evita que alterações acidentais no código quebrem a integração com o restante do sistema.
+
+- **Documentação:**  
+  A docstring e os comentários no código explicam a lógica e os critérios usados para aplicar os sinalizadores. Esses comentários devem ser mantidos atualizados à medida que a lógica evoluir.
+
+---
