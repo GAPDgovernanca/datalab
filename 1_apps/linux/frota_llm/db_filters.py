@@ -55,12 +55,12 @@ def apply_flags(df):
             # Se o valor for menor que -10%, significa que realizamos bem mais do que o estimado
             # (houve estouro de orçamento) => vermelho (🔴)
             if percentual < -10:
-                return '🔴'
+                return '🟢'
 
             # Se o valor for maior que +10%, significa que gastamos bem menos do que o estimado
             # (houve sobra de orçamento) => verde (🟢)
             elif percentual > 10:
-                return '🟢'
+                return '🔴'
 
         # Caso contrário, fica neutro (⚪)
         return '⚪'
