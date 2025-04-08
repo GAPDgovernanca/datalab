@@ -1,8 +1,60 @@
+"""
+Módulo de filtros e cálculos para o dashboard.
+Este módulo mantém a estrutura original para consultas ao banco de dados,
+os cálculos de multiplicadores e a aplicação de sinalizadores (flags).
+
+ATENÇÃO: Este código NÃO altera os nomes das variáveis ou assinaturas de funções,
+mantendo assim a compatibilidade com o restante do sistema.
+A configuração dos sinalizadores está totalmente centralizada no arquivo db_config.yaml.
+"""
+
+import os
+import yaml
 from typing import Dict
 import pandas as pd
 import sqlite3
 
+CONFIG_FILE = "db_config.yaml"
+
+# Lista das chaves obrigatórias que devem estar definidas no YAML.
+REQUIRED_CONFIG_KEYS = [
+    "threshold_percentage",
+    "flag_over_threshold",
+    "flag_under_threshold",
+    "flag_neutral",
+    "flag_no_budget"
+]
+
+def load_config():
+    """
+    Carrega a configuração do arquivo YAML.
+    Lança erro se o arquivo não for encontrado ou se alguma chave obrigatória estiver ausente.
+    """
+    if not os.path.exists(CONFIG_FILE):
+        raise FileNotFoundError(
+            f"Arquivo {CONFIG_FILE} não encontrado. Por favor, crie-o com as chaves obrigatórias: {REQUIRED_CONFIG_KEYS}"
+        )
+    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+        config = yaml.safe_load(f)
+        if config is None:
+            config = {}
+    # Verifica se todas as chaves obrigatórias estão definidas no YAML
+    for key in REQUIRED_CONFIG_KEYS:
+        if key not in config:
+            raise KeyError(
+                f"A chave '{key}' está ausente na configuração ({CONFIG_FILE}). "
+                "Adicione essa chave para continuar."
+            )
+    return config
+
+# Carrega as configurações dos sinalizadores exclusivamente do arquivo YAML.
+CONFIG = load_config()
+
 def build_filters(filtros: Dict, alias: str = 'fc') -> str:
+    """
+    Constrói uma string de condições SQL a partir dos filtros fornecidos.
+    Mantém a compatibilidade com outras partes do sistema.
+    """
     conditions = []
     data_referencia = filtros.get("data_referencia")
     if data_referencia and len(data_referencia) == 2:
@@ -20,6 +72,12 @@ def build_filters(filtros: Dict, alias: str = 'fc') -> str:
     return " AND ".join(conditions)
 
 def calcular_multiplicadores(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calcula dois multiplicadores:
+      - Taxa Utilização Multiplicador: custo_hora_realizado / custo_hora_estimado
+      - Consumo Multiplicador: total_realizado / total_estimado
+    A divisão por zero é evitada, retornando 0.0 nesses casos.
+    """
     if df.empty:
         return df
     df['Taxa Utilização Multiplicador'] = df.apply(
@@ -36,35 +94,41 @@ def calcular_multiplicadores(df: pd.DataFrame) -> pd.DataFrame:
 
 def apply_flags(df):
     """
-    Marca em vermelho (🔴) quando o total_diferenca > 0 e for maior que 10% em magnitude
-    (ou seja, quando houve um estouro significativo de orçamento).
-    Marca em verde (🟢) quando há sobra de orçamento acima de 10%.
-    Sinal neutro (⚪) quando estiver dentro da faixa de -10% a +10%.
-    🔶 se não havia orçamento (0) mas houve custo > 0.
+    Aplica sinalizadores (flags) aos registros do DataFrame com base no desvio percentual entre o orçamento e o realizado.
+
+    Critérios:
+      - Se total_estimado == 0 e total_realizado > 0, retorna flag_no_budget.
+      - Se total_estimado != 0, calcula:
+            percentual = (total_diferenca / total_estimado) * 100
+        (Espera-se que total_diferenca seja calculado como: total_orçado - total_realizado)
+      - Se percentual < -threshold_percentage, retorna flag_under_threshold.
+      - Se percentual > threshold_percentage, retorna flag_over_threshold.
+      - Para desvios entre -threshold_percentage e threshold_percentage, retorna flag_neutral.
+
+    OBSERVAÇÃO:
+      Garanta que o arquivo db_config.yaml esteja sempre atualizado, pois
+      os sinalizadores utilizados aqui dependem exclusivamente dele.
     """
     def flag_diferenca(row):
-        # Caso especial: não havia orçamento (0), mas houve custo realizado > 0
+        # Caso especial: orçamento zero mas custo realizado > 0.
         if row['total_estimado'] == 0 and row['total_realizado'] > 0:
-            return '🔶'
+            return CONFIG["flag_no_budget"]
 
-        # Se havia orçamento, analisamos o 'total_diferenca' (estimado - realizado)
         if row['total_estimado'] != 0:
-            # Calcula o desvio percentual com base em total_diferenca
             percentual = (row['total_diferenca'] / row['total_estimado']) * 100
 
-            # Se o valor for menor que -10%, significa que realizamos menos que o estimado
-            # (não houve estouro de orçamento) => verde (🟢)
-            if percentual < -10:
-                return '🟢'
+            # Se percentual < -threshold_percentage, retorna flag_under_threshold.
+            # Supondo que total_diferenca = total_orçado - total_realizado,
+            # percentual negativo indica que o realizado superou o orçado.
+            if percentual < -CONFIG["threshold_percentage"]:
+                return CONFIG["flag_under_threshold"]
 
-            # Se o valor for maior que +10%, significa que gastamos bem menos do que o estimado
-            # (houve estouro de orçamento) => vermelho (🔴)
-            elif percentual > 10:
-                return '🔴'
+            # Se percentual > threshold_percentage, retorna flag_over_threshold.
+            # Percentual positivo indica que o realizado ficou abaixo do orçado.
+            elif percentual > CONFIG["threshold_percentage"]:
+                return CONFIG["flag_over_threshold"]
 
-        # Caso contrário, fica neutro (⚪)
-        return '⚪'
+        return CONFIG["flag_neutral"]
 
     df['Sinalizador'] = df.apply(flag_diferenca, axis=1)
     return df
-

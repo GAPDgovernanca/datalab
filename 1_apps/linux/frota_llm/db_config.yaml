@@ -1,0 +1,5 @@
+threshold_percentage: 10
+flag_over_threshold: "🔴"
+flag_under_threshold: "🟢"
+flag_neutral: "⚪"
+flag_no_budget: "🔶"
