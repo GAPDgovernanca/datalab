@@ -36,7 +36,7 @@ def calcular_multiplicadores(df: pd.DataFrame) -> pd.DataFrame:
 
 def apply_flags(df):
     """
-    Marca em vermelho (🔴) quando o total_diferenca < 0 e for maior que 10% em magnitude
+    Marca em vermelho (🔴) quando o total_diferenca > 0 e for maior que 10% em magnitude
     (ou seja, quando houve um estouro significativo de orçamento).
     Marca em verde (🟢) quando há sobra de orçamento acima de 10%.
     Sinal neutro (⚪) quando estiver dentro da faixa de -10% a +10%.
@@ -52,13 +52,13 @@ def apply_flags(df):
             # Calcula o desvio percentual com base em total_diferenca
             percentual = (row['total_diferenca'] / row['total_estimado']) * 100
 
-            # Se o valor for menor que -10%, significa que realizamos bem mais do que o estimado
-            # (houve estouro de orçamento) => vermelho (🔴)
+            # Se o valor for menor que -10%, significa que realizamos menos que o estimado
+            # (não houve estouro de orçamento) => verde (🟢)
             if percentual < -10:
                 return '🟢'
 
             # Se o valor for maior que +10%, significa que gastamos bem menos do que o estimado
-            # (houve sobra de orçamento) => verde (🟢)
+            # (houve estouro de orçamento) => vermelho (🔴)
             elif percentual > 10:
                 return '🔴'
 
