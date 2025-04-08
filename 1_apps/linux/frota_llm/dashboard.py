@@ -206,7 +206,7 @@ if not df.empty:
         
         # Renomeia colunas para exibição
         df = df.rename(columns={
-            'usuario': 'Fazenda',
+            'usuario': 'Usuário',
             'classe': 'Classe',
             'id_equipamento': 'Equip',
             'custo_hora_estimado': 'Custo Orçado',
@@ -218,7 +218,7 @@ if not df.empty:
         })
 
         # Ajusta a ordem das colunas para exibição
-        df = df[['Fazenda', 'Classe', 'Equip', 'Custo Orçado', 'Custo Realizado', 'Custo Dif', 
+        df = df[['Usuário', 'Classe', 'Equip', 'Custo Orçado', 'Custo Realizado', 'Custo Dif', 
                 'Total Orçado', 'Total Realizado', 'Total Dif', 'Sinalizador']]
 
         # Arredonda os valores numéricos para facilitar a visualização
