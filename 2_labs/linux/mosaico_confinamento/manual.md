@@ -47,3 +47,6 @@ Para visualizar informações detalhadas de um curral:
 ## Compatibilidade
 
 O dashboard funciona em desktops, tablets e smartphones, com interface otimizada para cada dispositivo.
+
+## Execução
+> npm start
