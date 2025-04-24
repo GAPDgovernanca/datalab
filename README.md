@@ -3,38 +3,64 @@
 ## Estrutura do Repositório
 
 ```
-GAPD/
-├── 1_apps/
-│   ├── linux/
-│   └── win/
-├── 2_labs/
-│   ├── linux/
-│   ├── win/
-│   └── gerenciamento do fluxo de versionamento
-├── 3_prompts/
-│   ├── 20241102 - dash do raizes do futuro.md
-│   ├── language mimic prompt.md
-│   ├── memory prompt.md
-│   ├── processamento das respostas do questionario de lideranca.md
-│   ├── prompt de analise - dados de frotas.md
-│   ├── prompt para analise de programa em python.md
-│   ├── sjudas - dash da avaliacao do 5S - tabela de notas - versao 1.md
-│   ├── sjudas - dash da avaliacao do 5S - tabela de notas - versao 2.md
-│   ├── sjudas - dash da avaliacao do 5S.md
-│   ├── sjudas - dash do relatorio de batidas - trendline.md
-│   ├── summarize texts.md
-│   └── virtualenvwrapper.md
-├── 4_gpt/
-│   ├── CORE-COMP-REF.md
-│   ├── GPT - AD devolutiva - config.md
-│   ├── GPT - Governança.md
-│   ├── IDP-GEN.md
-│   ├── IMFA-SUMM.md
-│   ├── IMFA-TECH.md
-│   ├── knowledge - Objetivo Geral do Projeto.md
-│   └── knowledge - Roles and Responsibilities.md
-├── README.md
-└── requirements.txt
+└───datalab
+    ├───.devcontainer
+    ├───1_apps
+    │   ├───linux
+    │   │   ├───5S_librecalc_macros
+    │   │   ├───frota
+    │   │   ├───frota_etl
+    │   │   │   ├───database
+    │   │   │   └───transformador
+    │   │   ├───frota_llm
+    │   │   │   └───backup
+    │   │   ├───mindpub
+    │   │   └───sjudas
+    │   │       ├───confinamento_batidas_histogramas
+    │   │       │   ├───.ipynb_checkpoints
+    │   │       │   └───instructions
+    │   │       ├───confinamento_batidas_trendline
+    │   │       ├───confinamento_horarios
+    │   │       └───confinamento_resources
+    │   └───win
+    │       ├───AD_excel_macros
+    │       └───heatmap
+    │           ├───public
+    │           └───src
+    │               └───components
+    ├───2_labs
+    │   ├───linux
+    │   │   ├───ad_analysis
+    │   │   ├───ajustes_b3
+    │   │   ├───analise-sensibilidade-gado
+    │   │   │   ├───public
+    │   │   │   └───src
+    │   │   │       └───components
+    │   │   ├───conselho_atas_de_reuniao
+    │   │   ├───dash
+    │   │   ├───frota_llm_versao_v2
+    │   │   │   └───documentacao
+    │   │   ├───mosaico_confinamento
+    │   │   │   ├───public
+    │   │   │   └───src
+    │   │   │       └───components
+    │   │   │           ├───mosaico
+    │   │   │           └───ui
+    │   │   └───yaml_files
+    │   └───win
+    │       ├───mec
+    │       ├───mec_der
+    │       │   └───lib
+    │       │       ├───bindings
+    │       │       ├───tom-select
+    │       │       └───vis-9.1.2
+    │       └───mec_sql_queries
+    ├───3_prompts
+    ├───4_gpt_devolutiva
+    └───lib
+        ├───bindings
+        ├───tom-select
+        └───vis-9.1.2
 ```
 
 ## Descrição
@@ -46,7 +72,7 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 - **1_apps**: Aplicações para sistemas Linux e Windows
 - **2_labs**: Laboratórios de desenvolvimento para diferentes sistemas operacionais
 - **3_prompts**: Coleção de prompts para análise de dados, geração de dashboards e outras tarefas
-- **GPT_base_de_conhecimento_devolutiva**: Base de conhecimento para GPT com foco em devolutivas
+- **4_GPT_base_de_conhecimento_devolutiva**: Base de conhecimento para GPT com foco em devolutivas
 - **lib**: Bibliotecas e dependências do projeto
 
 ## Requisitos
