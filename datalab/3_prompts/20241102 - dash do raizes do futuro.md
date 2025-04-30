@@ -1,7 +1,7 @@
 ### CONTEXTO
 Você terá acesso a três arquivos CSV contendo avaliações de um programa corporativo de mentoria:
 1. mentorados.csv - Avaliação dos mentorados pelos mentores
-2. mentor.csv - Avaliação dos mentores pelos mentorados
+2. mentor.csv - Avaliaçao dos mentores pelos mentorados
 3. mentor senior.csv - Avaliação geral do programa
 
 ### OBJETIVO

@@ -1,6 +1,6 @@
 # GAPDgovernanca/datalab
 
-## Estrutura do Repositório
+## Estrutura do Repositorio
 
 ```
 └───datalab
