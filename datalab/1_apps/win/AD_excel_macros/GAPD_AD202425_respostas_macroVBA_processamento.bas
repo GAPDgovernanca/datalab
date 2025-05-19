@@ -1,172 +1,259 @@
+Option Explicit
+
 ' =================================================================
-' Macro: ReordenarColunasComConversaovCGPT
-' Objetivo: Reorganizar colunas, converter dados e inserir linhas em branco após seções
+' Macro principal
 ' =================================================================
-Sub ReordenarColunasComConversaovCGPT()
-    ' Declaração de variáveis
-    Dim wsOrigem As Worksheet, wsDestino As Worksheet
-    Dim dict As Object
+Public Sub ReordenarColunasComConversaovCGPT_Flexivel_Corrigido()
+    Dim wsO As Worksheet, wsD As Worksheet
     Dim ultimaLinha As Long, ultimaColuna As Long
-    Dim i As Long, j As Long, novaColunaIndex As Long, rowIndex As Long, col As Long
-    Dim keepAsText As String, valorAtual As String
-    Dim tiposRelacao As Variant, tipo As Variant
-    Dim linhasParaExcluir As Variant, cel As Range
-    Dim larguraEmPontos As Double
-    
-    ' Configuração inicial
+    Dim i As Long, j As Long, novaColIndex As Long
+    Dim tipo As Variant, raw As String, mappedVal As Variant
+    Dim keepTxt As String
+
     Application.ScreenUpdating = False
-    Set dict = CreateObject("Scripting.Dictionary")
+
+    keepTxt = "Response Type,Start Date (UTC),Stage Date (UTC)," & _
+              "Submit Date (UTC),Network ID,Tags," & _
+              "Coisas para manter,Coisas para melhorar,sua relaÃ§Ã£o com"
+
+    Set wsO = ThisWorkbook.ActiveSheet
+    If wsO Is Nothing Then
+        MsgBox "Nenhuma planilha ativa encontrada.", vbExclamation
+        Exit Sub
+    End If
     
-    ' Configuração do dicionário de conversão
-    dict.CompareMode = vbTextCompare
-    dict("Nunca acontece") = 1
-    dict("Quase nunca acontece") = 2
-    dict("Ocorre de vez em quando") = 3
-    dict("Acontece com frequência") = 4
-    dict("Acontece o tempo todo") = 5
-    dict("Não sei avaliar") = "null"
-    
-    ' Campos que permanecem como texto
-    keepAsText = "Response Type,Start Date (UTC),Stage Date (UTC),Submit Date (UTC),Network ID,Tags," & _
-                 "Coisas para manter,Coisas para melhorar,sua relação com"
-    
-    ' Define planilha de origem
-    Set wsOrigem = ThisWorkbook.ActiveSheet
-    
-    ' Determina dimensões da planilha
-    ultimaLinha = wsOrigem.Cells(wsOrigem.Rows.Count, 1).End(xlUp).Row
-    ultimaColuna = wsOrigem.Cells(1, wsOrigem.Columns.Count).End(xlToLeft).Column
-    
-    ' Cria planilha de destino
-    Set wsDestino = ThisWorkbook.Sheets.Add(After:=wsOrigem)
-    wsDestino.Name = "Dados_Reorganizados_" & Format(Now, "yymmdd_hhnn")
-    
-    ' Copia coluna de perguntas
-    wsOrigem.Range(wsOrigem.Cells(1, 1), wsOrigem.Cells(ultimaLinha, 1)).Copy Destination:=wsDestino.Range("A1")
-    
-    ' Reorganiza colunas por tipo de relação
-    tiposRelacao = Array("autoavaliação", "liderado", "colega gestor", "diretor")
-    novaColunaIndex = 2
-    
-    For Each tipo In tiposRelacao
-        For j = 2 To ultimaColuna
-            If InStr(1, wsOrigem.Cells(1, j).Value, tipo, vbTextCompare) > 0 Then
-                ' Copia e converte dados
-                wsOrigem.Range(wsOrigem.Cells(1, j), wsOrigem.Cells(ultimaLinha, j)).Copy Destination:=wsDestino.Cells(1, novaColunaIndex)
+    ultimaLinha = wsO.Cells(wsO.Rows.Count, 1).End(xlUp).Row
+    ultimaColuna = wsO.Cells(1, wsO.Columns.Count).End(xlToLeft).Column
+
+    If ultimaLinha <= 1 And IsEmpty(wsO.Cells(1, 1).Value) Then
+        MsgBox "A planilha de origem parece estar vazia.", vbInformation
+        Exit Sub
+    End If
+
+    Set wsD = ThisWorkbook.Sheets.Add(After:=wsO)
+    wsD.Name = "Dados_Flex_" & Format(Now, "yymmdd_hhnnss") ' Adicionado segundos para evitar conflito de nome
+
+    ' Copia perguntas (coluna A inteira da origem para destino)
+    wsO.Range("A1:A" & ultimaLinha).Copy Destination:=wsD.Range("A1")
+
+    novaColIndex = 2 ' ComeÃ§a a preencher a partir da coluna B na planilha de destino
+    For Each tipo In Array("autoavaliaÃ§Ã£o", "liderado", "colega gestor", "diretor")
+        For j = 2 To ultimaColuna ' Itera pelas colunas da planilha de origem (a partir da B)
+            ' Verifica se o cabeÃ§alho da coluna na origem contÃ©m o 'tipo' atual
+            If InStr(1, CStr(wsO.Cells(1, j).Value), CStr(tipo), vbTextCompare) > 0 Then
+                ' Copia a coluna inteira da origem para a nova posiÃ§Ã£o na destino
+                wsO.Range(wsO.Cells(1, j), wsO.Cells(ultimaLinha, j)).Copy Destination:=wsD.Cells(1, novaColIndex)
                 
-                For i = 2 To ultimaLinha
-                    valorAtual = Trim(wsDestino.Cells(i, novaColunaIndex).Text)
+                ' Processa as respostas na coluna recÃ©m-copiada na planilha de destino
+                For i = 2 To ultimaLinha ' ComeÃ§a da linha 2 para pular o cabeÃ§alho
+                    raw = CStr(wsD.Cells(i, novaColIndex).Value2)
+                    mappedVal = MapResponse(raw)
                     
-                    If InStr(1, keepAsText, wsDestino.Cells(1, novaColunaIndex).Value, vbTextCompare) > 0 Then
-                        wsDestino.Cells(i, novaColunaIndex).NumberFormat = "@"
-                    Else
-                        If dict.exists(valorAtual) Then
-                            If dict(valorAtual) = "null" Then
-                                wsDestino.Cells(i, novaColunaIndex).Value = "null"
-                                wsDestino.Cells(i, novaColunaIndex).NumberFormat = "@"
-                            Else
-                                wsDestino.Cells(i, novaColunaIndex).Value = dict(valorAtual)
-                                wsDestino.Cells(i, novaColunaIndex).NumberFormat = "0"
-                            End If
-                        ElseIf Trim(valorAtual) = "" Then
-                            wsDestino.Cells(i, novaColunaIndex).Value = "null"
-                            wsDestino.Cells(i, novaColunaIndex).NumberFormat = "@"
+                    With wsD.Cells(i, novaColIndex)
+                        .Value = mappedVal
+                        ' Verifica se o cabeÃ§alho desta coluna estÃ¡ na lista 'keepTxt'
+                        ' OU se o valor mapeado nÃ£o Ã© numÃ©rico. Se sim, formata como Texto.
+                        If InStr(1, keepTxt, CStr(wsD.Cells(1, novaColIndex).Value), vbTextCompare) > 0 _
+                           Or Not IsNumeric(mappedVal) Then
+                            .NumberFormat = "@" ' Formato Texto
+                        Else
+                            .NumberFormat = "0"  ' Formato NÃºmero (sem casas decimais)
                         End If
-                    End If
+                    End With
                 Next i
-                
-                novaColunaIndex = novaColunaIndex + 1
+                novaColIndex = novaColIndex + 1 ' Prepara para a prÃ³xima coluna na planilha de destino
             End If
         Next j
     Next tipo
-    
-    ' Remove linhas indesejadas
-    linhasParaExcluir = Array("Response Type", "Start Date (UTC)", "Stage Date (UTC)", "Submit Date (UTC)", "Network ID", "Tags")
-    For rowIndex = wsDestino.Cells(wsDestino.Rows.Count, 1).End(xlUp).Row To 1 Step -1
-        Set cel = wsDestino.Cells(rowIndex, 1)
-        If Not IsError(Application.Match(cel.Value, linhasParaExcluir, 0)) Then
-            wsDestino.Rows(rowIndex).Delete
-        End If
-    Next rowIndex
-    
-    ' Insere linhas em branco após seções
-    InsertBlankLinesAfterSections wsDestino
-    
-    ' Formatação final
-    With wsDestino.Range("A1").CurrentRegion
-        .Columns.AutoFit
-        .Font.Name = "Courier New"
-        With .Rows(1)
-            .Font.Bold = True
-            .Interior.Color = RGB(240, 240, 240)
+
+    ' Remove linhas de metadados se existirem
+    Call RemoveMetadataLines(wsD)
+
+    ' Insere linhas em branco entre seÃ§Ãµes especÃ­ficas, se encontradas
+    Call InsertBlankLinesAfterSections(wsD)
+
+    ' FormataÃ§Ã£o final da planilha de destino
+    If wsD.Cells(1, 1).Value <> "" Then ' SÃ³ formata se houver dados
+        With wsD.Range("A1").CurrentRegion
+            .Columns.AutoFit
+            .Font.Name = "Courier New"
+            With .Rows(1)
+                .Font.Bold = True
+                .Interior.Color = RGB(240, 240, 240)
+            End With
         End With
-    End With
-    
-    ' Define largura das colunas
-    larguraEmPontos = 70 / 7.5
-    For col = 1 To wsDestino.Cells(1, wsDestino.Columns.Count).End(xlToLeft).Column
-        wsDestino.Columns(col).ColumnWidth = larguraEmPontos
-    Next col
-    
-    ' ============== INSERÇÃO 2: FONTE PARA TODAS AS CÉLULAS ==============
-    wsDestino.Cells.Font.Name = "Courier New"
-    ' ======================================================================
-    
-    ' Finalização
+        Call AdjustColumnWidths(wsD) ' Aplica largura de coluna padronizada
+        wsD.Cells.Font.Name = "Courier New" ' Garante a fonte para todas as cÃ©lulas
+    End If
+
     Application.ScreenUpdating = True
-    MsgBox "Processo concluído: Dados reorganizados, convertidos e linhas em branco inseridas.", vbInformation
+    MsgBox "ConcluÃ­do com conversÃ£o por regex flexÃ­vel (corrigido).", vbInformation
 End Sub
 
 ' =================================================================
-' Função: InsertBlankLinesAfterSections
-' Objetivo: Insere uma linha em branco após cada seção identificada
+' Mapeia resposta usando regex
 ' =================================================================
-Sub InsertBlankLinesAfterSections(ws As Worksheet)
-    Dim lastRow As Long, currentRow As Long
-    Dim sectionHeaders As Variant, Header As Variant
-    Dim headerProcessed As Boolean
+Public Function MapResponse(ByVal resp As String) As Variant
+    Dim norm As String
+    norm = NormalizeResponse(resp)
     
-    sectionHeaders = Array("Coisas para manter sobre", "Coisas para melhorar sobre")
-    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
-    headerProcessed = False
-    
-    For currentRow = lastRow To 1 Step -1
-        For Each Header In sectionHeaders
-            'Alteração: Removido vbTextCompare para garantir correspondência exata e preservar acentuação
-            If InStr(1, ws.Cells(currentRow, 1).Value, Header) > 0 Then
-                If Not headerProcessed Then
-                    ' Insere linha e copia o cabeçalho (linha 1)
-                    ws.Rows(currentRow + 1).Insert
-                    ws.Rows(1).Copy Destination:=ws.Rows(currentRow + 1)
-                    
-                    ' ============== CUSTOMIZAÇÃO ADICIONAL (COR DE FUNDO) ==============
-                    ws.Rows(currentRow + 1).Interior.Color = RGB(200, 200, 200) ' Cinza claro
-                    ' ===================================================================
-                    
-                    headerProcessed = True
-                End If
-                Exit For
-            End If
-        Next Header
-        
-        If Not IsHeader(ws.Cells(currentRow, 1).Value, sectionHeaders) Then
-            headerProcessed = False
-        End If
-    Next currentRow
-End Sub
+    If Len(norm) = 0 Then
+        MapResponse = "null": Exit Function ' Retorna "null" para respostas vazias apÃ³s normalizaÃ§Ã£o
+    End If
 
-' =================================================================
-' Função: IsHeader
-' Objetivo: Verifica se uma célula contém um cabeçalho de seção
-' =================================================================
-Function IsHeader(cellValue As String, headers As Variant) As Boolean
-    Dim Header As Variant
-    For Each Header In headers
-       'Alteração: Removido vbTextCompare para garantir correspondência exata e preservar acentuação
-        If InStr(1, cellValue, Header) > 0 Then
-            IsHeader = True
-            Exit Function
-        End If
-    Next Header
-    IsHeader = False
+    ' Teste de padrÃµes em ordem de especificidade
+    If RegexTest(norm, "\bnunca.*acontece\b") Then
+        MapResponse = 1
+    ElseIf RegexTest(norm, "\bquase.*nunca.*acontece\b") Then
+        MapResponse = 2
+    ElseIf RegexTest(norm, "\bocorre.*vez.*em.*quando\b") Then
+        MapResponse = 3
+    ElseIf RegexTest(norm, "\bacontece com frequencia\b") Then ' <<< PATCH APLICADO AQUI
+        MapResponse = 4
+    ElseIf RegexTest(norm, "\bacontece.*tempo.*todo\b") Then
+        MapResponse = 5
+    ElseIf RegexTest(norm, "\bnao.*sei.*avaliar\b") Then
+        MapResponse = "null"
+    Else
+        MapResponse = resp ' Se nenhum padrÃ£o corresponder, retorna a resposta original
+    End If
 End Function
+
+' =================================================================
+' Normaliza texto (lower, remove acentos, chars especiais, espaÃ§os)
+' =================================================================
+Public Function NormalizeResponse(ByVal txt As String) As String
+    Dim s As String, i As Long
+    Dim fromChars As String, toChars As String
+
+    s = LCase$(txt)
+    s = Replace(s, Chr(160), " ") ' Non-breaking space
+    s = Replace(s, vbTab, " ")
+    s = Replace(s, vbCrLf, " ")
+    s = Replace(s, vbCr, " ")
+    s = Replace(s, vbLf, " ")
+
+    fromChars = "Ã¡Ã Ã£Ã¢Ã¤Ã©Ã¨ÃªÃ«Ã­Ã¬Ã®Ã¯Ã³Ã²ÃµÃ´Ã¶ÃºÃ¹Ã»Ã¼Ã§Ã±"
+    toChars = "aaaaaeeeeiiiiooooouuuucn"
+    For i = 1 To Len(fromChars)
+        s = Replace(s, Mid$(fromChars, i, 1), Mid$(toChars, i, 1))
+    Next i
+
+    ' Remove tudo que nÃ£o for a-z, 0-9 ou espaÃ§o
+    ' Ã‰ importante que esta etapa venha depois da remoÃ§Ã£o de acentos
+    Dim rgx As Object
+    Set rgx = CreateObject("VBScript.RegExp")
+    With rgx
+        .Global = True
+        .IgnoreCase = False ' JÃ¡ estÃ¡ em minÃºsculas
+        .pattern = "[^a-z0-9 ]"
+        s = .Replace(s, "")
+    End With
+
+    s = Trim$(s) ' Remove espaÃ§os no inÃ­cio e fim
+    ' Remove espaÃ§os duplos/mÃºltiplos no meio da string
+    Do While InStr(s, "  ") > 0
+        s = Replace(s, "  ", " ")
+    Loop
+
+    NormalizeResponse = s
+End Function
+
+' =================================================================
+' Testa regex no texto
+' =================================================================
+Public Function RegexTest(ByVal txt As String, ByVal pattern As String) As Boolean
+    Dim rgx As Object
+    Set rgx = CreateObject("VBScript.RegExp")
+    With rgx
+        .Global = False ' Procura apenas a primeira ocorrÃªncia, o que Ã© eficiente para .Test
+        .IgnoreCase = True ' Embora o texto normalizado jÃ¡ esteja em minÃºsculas, Ã© uma boa prÃ¡tica
+        .pattern = pattern
+        RegexTest = .Test(txt)
+    End With
+End Function
+
+' =================================================================
+' Remove linhas de metadados
+' =================================================================
+Private Sub RemoveMetadataLines(ws As Worksheet)
+    Dim arr As Variant, r As Long, lastRowCheck As Long
+    arr = Array("Response Type", "Start Date (UTC)", "Stage Date (UTC)", _
+                "Submit Date (UTC)", "Network ID", "Tags")
+    
+    lastRowCheck = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
+    
+    For r = lastRowCheck To 1 Step -1 ' Itera de baixo para cima para evitar problemas ao deletar linhas
+        If Not IsError(Application.Match(CStr(ws.Cells(r, 1).Value), arr, 0)) Then
+            ws.Rows(r).Delete
+        End If
+    Next r
+End Sub
+
+' =================================================================
+' Insere linhas em branco e cabeÃ§alhos de seÃ§Ã£o
+' =================================================================
+Public Sub InsertBlankLinesAfterSections(ws As Worksheet)
+    Dim lastRow As Long, cur As Long, hdrs As Variant, h As Variant
+    Dim processedSectionHeader As Boolean ' Renomeado para clareza
+    
+    hdrs = Array("Coisas para manter sobre", "Coisas para melhorar sobre")
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(xlUp).Row
+    
+    processedSectionHeader = False ' Flag para controlar a inserÃ§Ã£o de apenas um cabeÃ§alho por seÃ§Ã£o
+    
+    ' Itera de baixo para cima para facilitar a inserÃ§Ã£o de linhas sem afetar Ã­ndices de loop
+    For cur = lastRow To 1 Step -1
+        Dim currentCellValue As String
+        currentCellValue = CStr(ws.Cells(cur, 1).Value)
+        
+        Dim isKnownHeader As Boolean
+        isKnownHeader = False
+        
+        For Each h In hdrs
+            If InStr(1, currentCellValue, CStr(h), vbTextCompare) > 0 Then
+                isKnownHeader = True
+                If Not processedSectionHeader Then
+                    ' Insere uma nova linha abaixo da linha do cabeÃ§alho da seÃ§Ã£o
+                    ws.Rows(cur + 1).Insert
+                    ' Copia o formato e conteÃºdo da primeira linha (cabeÃ§alho principal) para esta nova linha
+                    ws.Rows(1).Copy Destination:=ws.Rows(cur + 1)
+                    ' Aplica uma cor de fundo diferente para o cabeÃ§alho da seÃ§Ã£o inserido
+                    ws.Rows(cur + 1).Interior.Color = RGB(200, 200, 200)
+                    ws.Rows(cur + 1).Font.Bold = True ' Opcional: diferenciar do cabeÃ§alho principal
+                    
+                    processedSectionHeader = True ' Marca que um cabeÃ§alho foi inserido para esta seÃ§Ã£o
+                End If
+                Exit For ' Sai do loop de hdrs, pois jÃ¡ encontrou um correspondente
+            End If
+        Next h
+        
+        ' Se a linha atual NÃƒO Ã© um dos cabeÃ§alhos de seÃ§Ã£o conhecidos,
+        ' reseta a flag para permitir que o prÃ³ximo cabeÃ§alho de seÃ§Ã£o seja processado.
+        If Not isKnownHeader Then
+            processedSectionHeader = False
+        End If
+    Next cur
+End Sub
+
+' =================================================================
+' Ajusta largura de colunas para um valor fixo (aproximado)
+' =================================================================
+Private Sub AdjustColumnWidths(ws As Worksheet)
+    Dim ptWidth As Double, c As Long, lastColData As Long
+    
+    ' Define a largura desejada em pontos (ex: 70) e converte para unidades de largura de coluna do Excel.
+    ' A conversÃ£o exata pode variar ligeiramente com a fonte padrÃ£o, mas 7.5 Ã© uma aproximaÃ§Ã£o comum.
+    ' O valor "70 / 7.5" parece arbitrÃ¡rio. Uma largura padrÃ£o de Excel Ã© ~8.43 para Calibri 11.
+    ' Para "Courier New", a largura dos caracteres Ã© mais uniforme.
+    ' Vamos usar uma largura que acomode uns 10-12 caracteres de Courier New, por exemplo, 12.
+    ptWidth = 12 ' Ajuste este valor conforme necessÃ¡rio para Courier New.
+
+    lastColData = ws.Cells(1, ws.Columns.Count).End(xlToLeft).Column
+    If lastColData > 0 And ws.Cells(1, 1).Value <> "" Then ' SÃ³ ajusta se houver colunas
+        For c = 1 To lastColData
+            ws.Columns(c).ColumnWidth = ptWidth
+        Next c
+    End If
+End Sub
+
