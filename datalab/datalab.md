@@ -1,9 +1,3 @@
-Claro! Aqui está um prompt detalhado para reorganizar a estrutura de diretórios duplicada no Linux:
-
----
-
-**Prompt:**
-
 Quero corrigir uma duplicidade de diretórios no meu repositório Git. Atualmente, minha estrutura está assim:
 
 ```
@@ -17,7 +11,3 @@ Quero mover todo o conteúdo de `~/GitHub/GAPD/datalab/datalab/` para `~/GitHub/
 3. Atualizar o repositório Git com essas mudanças.
 
 Inclua comandos seguros e explique cada etapa.
-
----
-
-Se quiser, posso adaptar para um contexto mais específico!
