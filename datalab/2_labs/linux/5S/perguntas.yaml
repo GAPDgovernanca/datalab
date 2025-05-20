@@ -1,0 +1,30 @@
+dimensoes:
+  limpeza:
+    "Existe disponibilidade de equipamentos de limpeza adequados para remover resíduos de grãos e sujeiras no piso?": "Equipamentos Limpeza"
+    "As instruções de limpeza (principalmente para remover restos de silagem e insumos) estão claras e são respeitadas pela equipe?": "Instruções Claras Limpeza"
+    "Existe cronograma de limpeza que inclua recolhimento de grãos caídos e verificação das lonas de cobertura?": "Cronograma Limpeza"
+    "Pontos críticos de sujeira (regiões de transbordo, encaixe de lonas, base dos moinhos) recebem atenção especial?": "Pontos Críticos Sujeira"
+    "Há lixeiras ou recipientes adequados para descarte de resíduos sólidos, embalagens e plásticos de forragem?": "Lixeiras Adequadas"
+    "A limpeza é mantida durante a movimentação de caminhões e máquinas, evitando acúmulos ou derramamentos prolongados no piso?": "Limpeza Movimentação"
+    "A limpeza é realizada em frequência adequada para evitar pragas e contaminação dos ingredientes?": "Frequência Limpeza"
+    "As áreas de armazenamento (sob lonas), vias de circulação e equipamentos (moinhos) estão livres de acúmulo de sujeira e resíduos?": "Áreas Livres Sujeira"
+
+  organizacao:
+    "Somente os ingredientes necessários e utilizados (milho, silagem, bagaço etc.) estão presentes na área, sem materiais obsoletos ou fora de uso?": "Ingredientes Necessários"
+    "Há controle para evitar estocar insumos ou produtos em excesso, comprometendo espaço e qualidade (por exemplo, silagem já deteriorada)?": "Controle Estoque"
+    "Existe um processo claro para separar e descartar resíduos ou sobras de alimentos que não podem mais ser utilizados?": "Processo Descarte"
+    "É possível identificar rapidamente os locais onde cada tipo de ingrediente deve ser armazenado (ex.: milho, silagem de capim, bagaço)?": "Identificação Ingredientes"
+    "As vias de circulação para caminhões e máquinas permanecem livres, sem obstruções causadas por pilhas de insumos ou equipamentos fora do lugar?": "Vias Livres Circulação"
+    "Existe local específico para equipamentos de manutenção ou peças de reposição, evitando que fiquem espalhados pela área de silagem?": "Local Equipamentos Manutenção"
+    "As encostas e espaços ao redor do silo estão livres de entulhos, lonas danificadas ou pilhas de sobras que não deveriam estar ali?": "Espaços Livres Entulhos"
+    "A área está livre de insumos vencidos ou contaminados (ex.: silagem mofada, ração úmida em decomposição)?": "Área Livre Insumos Vencidos"
+
+  arrumacao:
+    "Cada tipo de ingrediente (milho, silagem, bagaço) tem área designada e sinalizada para armazenamento, com lonas adequadas?": "Área Designada Ingredientes"
+    "Os equipamentos estáticos (moinhos, esteiras) estão organizados, posicionados para fácil operação e sem prejudicar o trânsito de veículos?": "Equipamentos Organizados"
+    "Existem marcações visuais (por exemplo, placas, faixas de segurança) para delimitar áreas de tráfego, zonas de carga/descarga e armazenamento?": "Marcações Visuais"
+    "Os locais de armazenamento de lonas, coberturas e ferramentas para manejo estão adequados e de fácil acesso para a equipe?": "Armazenamento Acessível"
+    "É fácil identificar quando algum insumo ou material está em falta (ex.: espaço vazio ou controle visual/informatizado)?": "Identificação Falta Insumos"
+    "Os itens pesados ou volumosos (pilhas de silagem, sacarias grandes) são armazenados em altura e disposição que reduz riscos ergonômicos e de tombamento?": "Riscos Ergonômicos"
+    "A movimentação de ferramentas, lonas e insumos é feita de forma ordenada, de modo que qualquer item possa ser localizado e guardado rapidamente?": "Movimentação Ordenada"
+    "Os insumos mais utilizados (por exemplo, milho) estão próximos às áreas de carga/descarga para reduzir tempo e esforço no abastecimento?": "Insumos Próximos Áreas"
