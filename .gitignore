@@ -1,4 +1,4 @@
-# Python
+# --- Python ---
 __pycache__/
 *.py[cod]
 *$py.class
@@ -6,16 +6,45 @@ venv/
 .env
 .pytest_cache/
 
-# Sistema
+# --- Sistema e IDE ---
 .DS_Store
 Thumbs.db
 .vscode/
+.idea/
 
-# Logs e backups
+# --- Logs e Backups ---
 logs/
 *.log
 backups/
+*.bak
+*.old
+*.tmp
 
-# Node
+# --- Node.js ---
 node_modules/
+build/
+dist/
 
+# --- SEGURANÇA: Configurações e Chaves ---
+# Bloqueia qualquer arquivo que pareça ser de configuração sensível
+config.py
+db_config.yaml
+google_sheets_config.yaml
+EQconfig.yaml
+credentials.json
+client_secret.json
+
+# --- DADOS: Bancos de Dados e Planilhas ---
+# Evita subir dados reais de produção ou financeiros
+*.db
+*.sqlite
+*.sqlite3
+*.xlsx
+*.xls
+*.csv
+
+# --- PESSOAL: Mídia e Livros ---
+*.epub
+*.mp3
+*.mp4
+WhatsApp Image*

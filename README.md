@@ -208,7 +208,7 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │   │       ├── EQconfig.yaml
 │   │       └── google_sheets_config.yaml
 │   └── win
-│       ├── hegde_pec
+│       ├── hedge_pec
 │       │   ├── payoff_opcoes_base_app.py
 │       │   ├── Planilha Hedge.xlsx
 │       │   ├── requirements.txt
@@ -257,7 +257,7 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │       │   ├── VW_FK_Tabelas_Agendamento_OS.sql
 │       │   ├── VW_Mineração_Dados_OS_Completa.sql
 │       │   └── VW_OS_EQUIPAMENTOS_2021_2024_EMP_21.sql
-│       └── moisaco_sjudas
+│       └── mosaico_sjudas
 │           ├── DER.md
 │           ├── mosaico.py
 │           └── requirements.txt
@@ -294,5 +294,3 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 ├── README.md
 ├── requirements.txt
 └── tree.md
-
-58 directories, 228 files
