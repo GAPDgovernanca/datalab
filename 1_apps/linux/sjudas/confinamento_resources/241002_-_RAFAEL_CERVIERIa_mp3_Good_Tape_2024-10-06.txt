@@ -1,0 +1,303 @@
+241002 - RAFAEL CERVIERIa.mp3
+
+o que a gente pode fazer agora é validar ou responder? ah, vamos respondendo juntos, né?
+eu vou falando aqui, o que eu tiver condição, né?
+
+a parte que eu não tiver eu uso
+
+assim eu consigo talvez expressar mais coisas aí do que ele também o esquema lógico, né? opa, por que não tá ali... onde é as telas que estão? porque não tá ali?
+Beleza, então aqui é só pra entender, né? Quando o sujeito responde o nome, ele vai pra um determinado caminho. Vai derivar lá a maneja nutricional ou infraestrutura de alimentação e hidratação e segue. Então vamos passar.
+O que eu fiz? Começando com a viagem do Sérgio, a gente entendeu que a gente tem que começar devagar. Então a ideia foi selecionar as ruas do confinamento mais antigo para fazer essa avaliação, esse período de aprendizado.
+Certo. Então, não sei se você quer ser específico na tentativa das respostas e dar as respostas às perguntas que vêm a seguir que estejam relacionadas com esses piquetes aqui ou eu passo por cima?
+Passo por cima. Vamos no geral. Qualidade e armazenamento dos ingredientes. A escala de resposta, ela sempre segue uma escala única de cinco níveis. O de um é muito ruim e o cinco é muito bom.
+Aí eu procurei descrever o teor de cada resposta para facilitar o respondente, no caso. Para facilitar a turma. Tipo assim, segue esta tabela aqui para dar a resposta. Então, ingrediente de má qualidade, armazenamento inadequado, contaminações visíveis, qualidade regular dos ingredientes, armazenamento com falhas frequentes, ingredientes de qualidade razoável, armazenamento adequado, mas com algumas falhas, ingredientes de boa qualidade, armazenamento adequado, com poucas falhas, ingredientes de excelente qualidade, armazenamento ideal, com controle rigoroso.
+Cara, hoje eu estou entre 2 e 3, tá? Mais para 2 ou mais para 3? Estou com uns painéis de silo ruim, perdas em cima de silo, algumas lonas lá do carroço abertas, pode chover. Põe um 3. Eu fiz algumas filmagens com o drone, em cima do silo, inclusive. Só que eu acho que eu não peguei isso que você falou. Você acha que é conveniente que a cada vez que eu venho aqui, que é 30 dias para entregar as respostas,
+eu faça uma aérea de algumas partes e até depois te envia, se a gente não tiver a chance de estar no mesmo período, por exemplo? Ah, Rony, isso aí, cara. Isso é uma coisa que eu posso avaliar também, não preciso desse detalhamento não.
+Preparação da dieta. Aí, dieta mal misturada. Falta uma dieta com mistura regular. Ah, então, esse aí, vamos lá, depois eu... Dietas não tem que misturar entre os dois. Então, uma pequena variação na formulação, eu só vou conseguir ter com aquele indicador.
+Só não posso avaliar. Então, talvez preparação da dieta... Hoje o Sérgio te envia isso? Quando eu peço. Você tem um último que enviou para ele para dar uma olhada? Esse é do Sérgio.
+Você manda para mim, por favor. Você achou ele? Não. Eu estou procurando na verdade. Passa para o Rony. Coloca em tela. Aí é um relatório do TGC.
+E a gente colocou 3% de variação permitida como tolerado, tá? Isso é cada batida, cada insumo
+
+carregamento dos caras aqui, né?
+
+Então, por exemplo, o segundo insumo aí, o bagaço laranja, tá vendo? O cara errou 161 quilos, que dá 12%. Tá completamente fora, né? Só que aí tem um problema. Batidas muito pequenas com carregamentos muito pequenos dão um erro relativo muito alto.
+Ok. É o reproporcional. Proporcional. Tá? Aqui é difícil a gente fazer batidas pequenas hoje. A gente faz batida grande. O que é batida pequena? Abixo de 2 mil quilos, por exemplo. Essa é 6 mil, 6 mil é grande. Não era para ele errar isso aí. Aqui é enxugo de operação.
+Esse 11% é o parcial do bagaço de laranja. Daquela batida ele errou, ele jogou 11% a mais de laranja. Quer dizer, a dieta que você está formulada está adequada? Não. Essa não está ali.
+Só que a gente não tem como analisar todas assim, dessa forma. Isso aqui é um confronto grande. Então isso aí vai te gerar, por exemplo, tem 10 insumos... Hoje você não recebe então, tipo assim, algum alerta que, ó, isso aqui saiu muito fora?
+Não, alguns tem que... Tem que... Ah, então isso eu vou resolver. O programa não tem alerta nenhuma, isso aí. Ele é meramente demonstrativo, você identifica ali... Ok, aí é uma leitura passiva? É uma leitura passiva, tá?
+Ok. Então ele tem menos 12%, ó, o cara errou 35kg abaixo... Acima? Para baixo ali, ó. Quer dizer, vai entrando aí, pode ir descendo e tem todas as batidas. Aqui o vermelho é? Quando está acima dos 3% de variação.
+E o azul é quando está abaixo dos 3%. Então ele é um além dos 3%. Então aqui é um erro positivo de 11% a mais. O sinal negativo significaria... Carregou a menos aquele som.
+Então por exemplo, essa batida aí... Deixa eu só entender. Hoje se eu tivesse condições de gerar um workflow para entregar algo assim para você, em que tivesse um reporte, uma sinalização, presta atenção nessa batida aqui, porque
+ela deu problema. Ou, o que a Bruna faz? Ela mostra qual o insumo que... Ela coloca em primeiro plano a batida que a variação foi acima de um parâmetro.
+Ela coloca a média de todos os insumos, não por batida. Agora o que você pode fazer, que eu sei que você dá conta. Tem um erro sistêmico, os caras aterrando sempre um farelo no algodão, isso você pode gerar. O erro mais frequente é o farelo no algodão,
+os caras aterrando para mais. Isso é fácil, você tira direto. Isso é uma informação muito útil. Então, por exemplo, essa batida aí, essa primeira, está uma porcaria. Isso não é a dieta que eu formulei. Esse 579 aqui é a diferença de quilos total a...
+Não, tinha que ser módulo, né? Isso me passou totalmente burro do sistema. Não serve para nada. O positivo e o material ativo. O total ali não... Ele está somando com o negativo. A linha total aqui é descartável.
+Só o total ali... O que importa para você é aquela grade ali que está significando o seguinte, tem que ter um erro, uma diferença maior que a tolerância, teve cinco que teve uma diferença menor que a tolerância.
+Ele só acertou um. Ele só acertou um. Ou seja, é uma porcaria. Isso não é imediato. Entendi. Isso não é imediato. Tá, mas ok. Essa informação aqui foi de agosto. Quando é que você recebeu isso?
+
+De agosto. Foi de agosto.
+
+No dia? É, só eu vou pedir a senhora. Na segunda quinzena de agosto. É. E a devolutiva como foi? Minha? É. Aí eu palmo ele de maneira assim. Ó, certo. Os caras estão errando muito em tal mistura. É uma avaliação minha. Ou as batidas não estão boas.
+Ou os caras estão errando. Entendi. Entendeu? Beleza. E aqui para baixo é a mesma coisa. Mesma coisa. Aí vai errar todas as batidas. Entendeu? Aí, por exemplo, nesse dia teve... Carregou... Teve 1.500 carregamentos. Tivemos 500 não conformes.
+Então nós ficamos só 66% conformes Nossa, pega esse segundo Esse aí já está bem melhor Bem diferente E aqui eu consigo ver quem foi o operador? Consegue
+Então em tese eu consigo montar um histórico Por operador? Toda hora E é o que você tem hoje? Aqui? Não Hoje não está nada compilado, Rony Eu analiso só
+Por isso que eu estou te falando É o trabalho que a Bruna faz. É compilar e traduzir isso em paranómas, em resumos. Em fechamentos. Está cheio de oportunidade. O programa traz tudo. Beleza. Aqui tem alguma informação? Tem algum
+ganho qualitativo da informação? Se além do carreador você souber qual foi o horário? Não. Bom, e aqui é sentimento, né? É a mesma coisa. Cada batida... Pronto. Essa última também foi boa então para responder o cheque a batida está formulada adequada
+hoje eu não posso fazer isso só lendo um por um praticamente que eu vou ter tempo porque aí no fim do mês de deus é você não consegue dizer assim ó você tá dizendo tantos por cento será 25% de tudo que você faz um mês, você está desviando para cá. Não consigo.
+Eu não tenho o resumo dessa informação. Entendi. Entendeu? Beleza. Vai ser uma percepção pessoal. Isso não tem. Isso é objetivo. Isso é uma informação numérica. Eu não tenho que ter nenhuma subjetividade. Eu posso ter subjetividade na qualidade mistura no coxo. Aí eu tenho as minhas capacidades técnicas.
+E é variado. É você que vai lá. Aí beleza. Está bem misturado. Eu tenho meu filho, minha experiência. Olhos, corda e fésco, vejo um monte de coisa então a minha decisão se está bem misturada ou não agora com relação a estar bem carregada, aí não posso falar nada hoje, não posso
+porque eu vejo de vez em quando que eu não tenho uma sistematização da informação na verdade você só vê quando tem alguma coisa alerta, ou quando lembra ou quando lembra ou quando alguma coisa está desviando a informação está quase on time todo dia, a gente só não consegue trazer isso para o nosso uso e o servo também pode
+sim e são automáticos a mesma coisa para distribuição o pacote então dessas informações o pacote que pode orientar com mais qualidade o retorno na operação
+ou seja a gestão da operação é incluir aqueles três indicadores que você comentou que é o horário do primeiro prato que é esse aqui que é a precisão, qual o nome desse aqui? eficiência de carregamento
+eficiência de carregamento, horário do primeiro trato e eficiência de distribuição eficiência de distribuição, que é a uniformidade você vai ver, você vê aí, Sérgio? manda pro Rony pra ele entender, agora você vai entender em pacote completo primeiro trato é barbado, isso aí não tem que entender
+vai lá no orímetro na hora que... o cara, só que acabou o primeiro trato, ele já marca quando acabou geralmente a gente dá uma variação também, dá um rate pro cara trabalhar 15 minutos pra cada lado, por exemplo.
+E está conforme ou não conforme. E também está vinculado com o operador. Tudo isso tem um operador, Sérgio? Esse que você vai mandar agora para mim é? É a distribuição. Então está previsto jogar naquele curral tantos quilos naquele trato.
+O cara foi assertivo ou não. Que é isso aí. Curral, lote. Então tem o previsto do dia, o realizado do dia, quanto foi a diferença em quilos e a diferença relativa. Ok, também é o operador, alguma ocorrência. O que é essa ocorrência aqui?
+Ah, é se eles preencherem com alguma quebra, alguma coisa, né? Aí, cara, é o seguinte, às vezes eles tratam o mesmo curral de manhã um, à tarde outro, tá? Mas isso aí dá para ajustar. E, tolerado aqui, cara, com um confinamento bom pra caramba, com automação, é 1% de desvio relativo.
+E aqui tem 12%, por exemplo. É, porque às vezes ele passou a mais, porque é animal é em adaptação, mas aí tudo bem. Tem outra informação que precisa ser checada para conferir se essa diferença aqui ela está dentro do
+aceitável ou fora. Está conforme ou não conforme. Isso eu olho de vez em quando, olho o visito, o Sérgio me manda. além assim, batendo o olho como como numa análise mais intuitiva
+o que é essa página que te salta os olhos? que está razoavelmente bom, não me incomoda que a diferença de percentual dentro do previsto dentro do previsto, não é nada grave
+por exemplo, se eu estou investigando tem apenas um evento ali, mas não quer dizer que se eu estou investigando um confinamento que não está performando bem, essa aqui não seria um ponto de análise meu a princípio. As batidas sim, que não estão legais. Tem muita corzinha ali, muita variação.
+Esse aqui não seria um ponto de investigação meu, no primeiro momento. Se os caras estão andando muito, atrapalhando a leitura de coxo dele. Aí tem a uniformidade do coxo, aí a visual lá. Está distribuído em forma, forma cabeceira, partes muito cheias. Mais alto, mais baixo.
+Mais baixo, mais baixo. Aí eu rodei de manhã e já peguei. porco hoje estão muito bem pouca cabeça de coisa pouca poucas mais do que o certo da questão 7 sem celular e cara é isso aí é bom porque
+não entendi eu acho que o saco de fazer lá sempre foi muito bem é certo não o nosso menino são bons nunca foi um pouco incomodou isso aí o nome desse relatório aqui é e olha esse retrato e olha que os dois aí é dois novo não é nem é você tem
+coisa melhor e esse daí e essa eficiência de trato aqui é a carga massa de dieta que é servida no coxo a cada trato e no final do dia lembra que eu te expliquei o último trato faz o ajuste o trato
+tem o ajuste não pode errar o último trato ele tem que acertar na mosca que é a correção do dia inteiro que é aquela quantidade de quilos que é servido para aquele grupo de demais então se ele errou o último muito, isso vai dar desvio alto e a gente encontra umas barbaridades
+isso era tudo manual, era fita em ficha, imagina que os caras mentiam aqui não tem horário, aqui é a leitura do dia é, aí o final do dia essa leitura aí é o que eu deixo de manhã
+é o que ele fez de manhã, a variação de sobra e tal tá bem então aqui foram todas as distribuições feitas na manhã do dia 16 de agosto. O dia todo? O dia todo. Vamos lá, o dia todo.
+Aí é a soma do dia. Dá para ver trato a trato também, mas não é nesse relatório. Tá, entendi. Beleza. E aqui, bom, então, em teto, o lote que o quê? Esse identificador lote aqui é?
+É quando você... é o lote que você cria. Vamos supor, 72 lá, marquei, marca todo esse lote aí, e deu, aí ele vai mandar o número de lote aí, e o véu vai mandar o síndrome de lote. Ele está vinculado à história do animal.
+O TTC trabalha com o indivíduo, ele consegue arrastar a vida do indivíduo baseado na história do lote dele. Então se ele troca de curral, ele vai pegar a história do lote que ele estava e vai jogar na média daquele. Então ele consegue carregar, o TTC dos Poucos Problemas faz isso.
+Ele preserva a história. Preserve a história, se bem que mede a vida. Ele preserva o indivíduo. É a brincagem, etc. pesado de vida a brincar gente é o que prepara o dia então você vai eu
+colocaria diretas bem misturados quatro pequenas variações na formulação que eu acho que o nível que a gente está hoje tá não tá tão variado como apareceu ali naquele momento faz um ano faz 20 dias eu não diria que está é de atraso
+misturada já está bem misturada a gente está com a dieta bem misturada. Trocou tem dois dias, mas ela está bem misturada. A distribuída, você já tem até o indicado aí. A gente pode até revalizar esses valores.
+Exatamente. Só não dá mais para baixo. Se você quiser diminuir um pouquinho para caber tudo na tela, pode abrir. Vamos lá. A quantidade distribuída sempre precisa, a quantidade distribuída geralmente próximo da prescrita, eu colocaria 4. A gente deve estar abaixo de 3% de variação. Mas está vendo que eu estou meio intuitivo aqui?
+Isso é um mito da objetiva, porque nós precisamos ter um painel, um dado concreto. É muito cedo para recalibrar esses percentios? Não, pode deixar assim. Mas ele vai dar tudo 4,5% ali. Consumo. Aí você olha o monitoramento diário. Aqui a gente monitora o consumo,
+precisa e completa sempre. Porque o processo de leitura do leitura do coxo não é o resultado ali. Hoje, por exemplo, eu tenho tempo que não me mostrou sério trabalhar isso porque costumava fazer recebo animada bastante o controle solteca
+avaliação de nota vejo os últimos três dias e as outras ele tem variado pouco uma consistência com a classe coerente quem é que usava este feito leitura noite que a gente toma decisão de manhã uma coisa que implementou depois de
+algum tempo o sérgio chamou asções por causa de pessoas, normal. Mas ele tem usado e assim, aparentemente eu estou aí no 4. Eu não posso avaliar mais nem menos que isso, porque eu não estou fazendo com ele. Eu tenho que fazer com ele. Entendi. Para entender o raciocínio dele em cada nota.
+Entendeu? Sim. Mas como eu já li hoje com o Sérgio? A métrica. Eu sei que ele vai estar aí bem colocado. E a gente tem também o histórico do lote de curva de consumo, que eu sempre olho para o Sérgio nas visitas. Então a flutuação diária e gráfica, como é que tá naquele lote.
+Então eu consigo pegar também alguns sete supostos erros dele. E corrigir a rota dele. Ó, Sérgio, você tá oscilando o lote. Você deu uma nota reduzida e o dia se aumentou. Aqui você segurou muito a mão. O bairro tá com fome. Aí é uma análise um pouquinho mais complexa.
+Mas tá ali no 4. Aí, ó. Primeiro trato. Aí eu não sei dizer o indicador ok tem problema de nada e tem lá dentro tem alguém que a rapaz é contar tudo isso em resumo diário e não sabe entender e aqui
+então que seria hoje pode colocar os pontos ainda aos 30 minutos aí até 15 hoje é o evento 3 e 4 porque mas o 3 1 4 mas o 4? mais que o 4 já, se for pra acabar 4 e meio os tratos, então tá bem...
+tá acabando o horário primeiro, se não ele não acabaria 4, 5 e meio os tratos pelo tamanho do confinamento não é que é o efeito cascata, se atrasou o primeiro você vai embora só que assim ó, depende do que acontece nos vantos, se quebra, beleza?
+se é o primeiro ou o segundo, dependendo do horário a enviar o quarto seu rosto o que vai ser sempre
+baseado em quatro do 2 sem basear o que eu já peguei e foi de manhã que eu pegar de manhã em quatro já está lá o preço do dia então o povo e os meninos atraso do dono vai fazer o terceiro tr 2000 tomou dessa base então vai penalizar o
+grupo o terceiro total o órgão foi fazer aqui e aí o terceiro parto da faca mil porque é isso já voltou o trabalho mas o importante é muito bem isso não é o ideal mas é isso é legal é uma prática
+que todo mundo faz como precisa importante ele aquele precisa se trata correto é o problema não é o novo tem que falar três por cento a 2 dentro da faixa de variação da quinta e por mais que tenha um trato né é a receita para avaliar o leite maior distribuição 4 distribuição
+boa pequenos alguns ocasionais é muito bom pouquinho a cabeceira ok vai ter cada dia sempre distribuindo os corretos pode por 5 esse é o alimento certo no lugar certo isso o tempo com a população muito difícil cara é o próprio
+exercício que alerta que a dieta está no curral errado quando não tem automação da cagada claro que ela pula uma rua ao cara é a barra desperdiça distribuição durante a distribuição não a gente tem perda de
+comida pois joga para fora a comida um pouquinho nós temos perdido e esse o lote sobrecarregado agora vai então é ponto que você tá até que a gente tá se importando
+com a gente melhorar ele já é uma briga minha filial para tudo não vai melhorar porque vai ter que carregar você tá com hoje em média sem animais por 150 o pai então entendeu assim é de 166 eu já fizemos um ano você pegar ali na das de abate lá acho que o 22, 23 carregou o confinamento com 140, no Rio de
+Navarra. E aí, ponto melhor ano, eu acho. É, aliviou a pressão. Aliviou a pressão. Pode colocar o 4 aí também. Mas é minha briga aí. Olha, você poderia ter tirado uma foto das ruas e colocado, entendeu? Você não tem nenhuma aí? De hoje, não. Eu estava com o celular, poderia ter tirado foto. Falta um costume, né? Pronto.
+E você não tirou nenhuma hoje, né? Nem da dieta que você tinha acabado de ver. Não, não tirei. Primeira vez. Primeira vez. pronto escolher um ok aí eu não posso saúde eu vou pular mas
+então é isso aqui eu queria acertar então o caminho lógico deixa eu ver o que tem ali só só as opções são duas perguntas que tem não eu não posso falar nada. Pronto. Então aqui a gente vai refazer a questionário.
+Minha rota você tem que tirar isso aí. É, eu vou ter que refazer o questionário. Mas antes deixa eu te perguntar se tem outras perguntas que eu tenho que ajustar. Vou pegar aqui. Você tem condições de avaliar a infraestrutura?
+Condições de pousada, condições de couve, condições de bebedouro. Então peraí, então nós vamos ter que fazer o seguinte, deixa eu mudar, eu vou ter que descer o psíquico. Bebedouro, água, não porque eu não olho todas as baias, eu desço toda hora, né?
+E ambiente bem-estar animal, que é condições de terreno, piso. Sim, tá. Rodando o pé, não sei. Então é o manejo nutricional, é a infraestrutura de alimentação e hidratação e o ambiente bem-estar animal.
+O último que é o monitoramento de saúde animal não faz parte. Não, eu não consigo avaliar para você. Beleza, então deixa eu sentar. O que é? Deixa eu lembrar.
+
+Não sai, senão não calma. Então, só...
+
+Todas as perguntas eu estou passando para... consigo continuar respondendo outras lições. Exibição, precisão, desperdício, voto...
+
+O que está indo para cá? Ah, está aqui. o que que tá indo para cá? tá aqui ó
+
+bom aquele note lá né, você viu? ó, borrado 135% do lado desde que deu aquele lucro todo foi produtivo não se inscreveu quantas arroz produzimos? nove
+qual são as suas calçadas? essa calçada se diz respeito ao acesso ao bebedouro e coxo pode ser o 3 ali bastante imperfeição nos bebedouros o bebedouro tem bastante problema de acesso.
+
+Isso aqui então, né? É. Os coxos. Quatro. E bebedores por fim. Aí que está o problema hoje.
+
+Isso. Eu não desci para avaliar, estou no ar o que o Sérgio me falou. Hoje como é que está a frequência de limpeza hoje, Sérgio? Está entre 3 e 4, Lígio. Sim. Estava tentando fazer o máximo possível para uma vez por semana.
+Mas antes eu estava com duas. Nós estamos com um bloco aqui com o raio, que é o problema de abastecimento 44 a 45 está demorando a encher desce lá embaixo e vem o 3
+o enche de baixo para cima e chega aqui e esses caras ficam apertados eu já mandei pipa lá agora encher então seria um 3 sabe o que aconteceu? quebrou um cano
+mas arrumou e agora está no normal não é só que é hoje carinho 4 aí uma vez de semana que consegue lavar mas que não estava com dois aí Seria o reservatório em geral? É, os bebedouros.
+Bebedouro? Para o animal beber. Eu colocaria três também. A gente não faz análise regular. Geralmente limpo. Dá para mandar análise também?
+Dá, pode não encaixar nada. Não encaixa nada. Não encaixa nada. A análise de água, a água é de cheiro. Água não pode ter cheiro, cara. Quais são os terrenos do piquete? Terrenos com desnível, terrenos preparados, leve, bem nivelado e limpo.
+Quatro.
+
+Quanto isso? Seria o pé de boi, vamos falar.
+
+Seria o pé de boi, né? Não, seria a baia inteira. Não, eu vi... A baia toda? A baia toda, piquete todo. Tem buraco, tem buraco, é aquilo que você falou, vai chover. É, hoje dá para dizer que está geralmente bem nivelado, teria que ter um acúmulo de esterco, né?
+Se botar um esterco acumulado, entendeu? Entendi, dá para colocar. Dá para colocar, entendeu colocar entendeu ok mas o que já aceitava o ter o médio ao grande poder do círculo lá mas hoje a nota seria 3 Ok, beleza, acho que é isso aí
+
+Foi?
+
+Foi Então, beleza, vamos lá O que eu entendi? Que existe espaço para a Bruna Porque o que ela faria, ainda que artesanal Seria completar um fluxo de informações que você hoje não recebe Recebe por demanda, quando pede ou quando lembra
+Perfeito E que seria para lá de importante poder receber com regularidade de análise Sim importante poder receber com regularidade de análise. Se depois eu vou incorporar esse resultado, esse fluxo de informações dentro do sistema de PA inteligente, aí é outro detalhe, mas já vai estar pronto. Tem um ponto de partida.
+E a gente já está monitorando, mesmo que sem a consistência toda, mas está monitorando, cara. De alguma maneira. É bem importante, Filipe. Tá vendo isso, entendi. Uma forma de eu cutucar o Sérgio aqui. Está presente no confinamento sem estar presente.
+É um ponto sensível. Muito! Começou a batida errada, está tudo errado para frente. Está tudo errado! Entendeu? É o mais sensível é você carregar certo. Porque a partir dali, está tudo errado. Você viu aquela batida que o cara pensa e a gente dá uma olhada?
+Está tudo errado! O cara ganhou imediato.
+
+Não é. O cara errou tudo. Uma batida grande, o cara errou.
+
+Isso é mal. É que é uma distribuída em várias bases, vai diluindo os erros, mas tá errado. O legal do programa é que ele pega essa batida que tá errada e sabe pra quem foi.
+Então ele computa custo pela batida realmente feita. Isso é o legal do TDC. Pelo realizado, ele faz. Então o problema com essa vai-e-a-são é ele ter o custo correto de cada vai. Porque essa inteligência é um problema que os outros não têm. contudo a diferença que calcula absoluta e não é a cala de totalização da
+clara que está em segundo o segundo saque não tinha um sinal positivo e negativo só tudo já fez aí
+bom ok hoje a parte da operação nem falta não faltou uma página no rio vai aumentar é muito tempo
+o norte está começando a chegar lá o que o mundo já que já tratou da ainda com o novo aqui para começar a fazer o jogo é o certo e outro o perfeito que o cara se pôr as duas e te entendo e não te aperta sabe disso
+a parte de nós aqui mas é um treino de externa da mulher nunca fiz uma coisa aí a mulher é o que eu fico com o pai eu e ela a gente lava roupa suja que conversa mas eu fico esperando o grupo porque eu sei que tem condições limitantes mas a
+partir do que a gente tem um número de poder jogar e mas por que está com 75% de sua carregamento porque o pai é o porquê porque nós estamos com uma só é corrido é isso aqui o marcelo vai dar mais uma coisa mais agora hoje o melhor por favor vai dar uma melhorada
+porque o comando está com o ponto de som 8 9 na dieta hoje em 5 então o descarregamento é elevado de entregar essa informação você é que ela vai pra dentro também de alguma maneira e se estiliza o agente decisor é que vai
+entender isso vai atender o apontamento assim a deficiência está aqui falta alguma coisa que faltam no, falta olhar o... enfim. Os outros confinamentos é uma praga, mas só tem o multi box, né?
+
+É, tem, mas até...
+
+Então o cara já chega, lá quem já chega aqui pra carregar, uma metade do... do coiso dele já tá pronto. Então ele só vai tombar e o cara já vai se importar pra lá, pegando de novo. Então hoje, é o que você fala, hoje até...
+O meu importante dentro da Bruna seria isso, que eu ia mostrar que ele mostrar mais para ele mas é mais porque vai nós estamos com uma pai carregando quatro caminhão eu tô com medo eu tô comendo tô com os mesmos equipamentos de quando nós começamos confinamento aqui ó eu quero um caminhão uma fala
+aí só um cabelo é só me é tão caminhão só aumentou mais caminhão mais coisas e passo com a menor fica a menor coisa isso é como tá não tem como porque ela querendo ou não vai carre descarregar o barracão, então o cara que está com a pá, é a pá dele que vai puxar um caminhão
+essa parte que estava aí agora, ela vai subir e descer da régua ele vai puxar um caminhão que está atolado ali, que acabou de descarregar, aí tem que ver quem é todo ou ele deixa 4, 5 minutos parado ou ele vai fazer um trato no caminhão
+porque se o caminhão não sai, desce o outro caminhão, fica 4, 5 minutos parado e fica nesse regulismo, entendeu? Aí o cara vai puxar o caminhão, ele demora mais uns 15 minutos, aí ele tem que voltar ali, aí já começa a carregar, aí já não, já tem 3, aí ele tenta carregar
+já os 3 para descer os 3, entendeu? Então assim, só quem vive dentro do negócio que sabe qual que é a coisa. Ah, o Martel, você é igual ao Martel, é, falei você que dava para tratar o confinamento com dois caminhões.
+Mas se a gente mostrar isso pra ele que as partidas estão totalmente erradas, eu quero ver se ele não vai se dobrar. E aí eu falei assim, não Marcelo, geralmente, porque isso, quando eu já tinha um confinamento de 12, eu já tratava pra um confinamento de 18,
+de 16, né, pelo tanto de bagagem que a gente usava. Então, hoje a gente só se reajustou a algumas coisas, mas assim, mas só que o dia que se quebrar é pequeno. Apertar, a gente tem que apertar, tá? A cozinha é nossa pequena, cozinha é nossa para apertar.
+Com a calça curta. Então com a calça curta, estamos dispostos a qualquer erro ser grave. A tolerância para erro diminuiu porque o ajustamento da operação está estreito.
+Já teve dia de tempo de eu deixar, vamos supor, a moeda mais pesadona, eu deixar de sentar. A busca de uma super eficiência dos negativos deixou o nível de tolerância a erros muito baixo
+do que seria o ideal e aí você pega isso isso aí você vai cobrar o operador de uma carregadeira o cara uma correria como é que vai ter precisão é uma exceção geral os caras apitando bravo correndo para o lobo é que você gosta
+de todo dia ele faz faz até mais do lado só que aí não outro dia, já começa assim, mas ou o que que eu faço? Ou eu atundo um, ou eu atundo o outro, não tem jeito de eu fazer tudo ao mesmo tempo. E eu fico assim, vai deixar 4, 3 caminhões parados, me deixa 4, 5 pessoas de gente, e é assim, é difícil.
+Aí eu me enverra, mas tem sempre neve parada, não tá faltando gente, tem sempre neve parada. Não, não tá parada porque o caminhão tá do lado, a parte dele eles já fizeram. Aí quando eu volto, hoje, tô morrendo de vírus, aí eu tô ali, o cara ver se os carros mesmo dá um suporte ou se não o
+cara já vem ficar aqui e já tem outro caminhão então o cara do murinho ele já vai lá e já coloca o barulho bagaço lá porque já tá mais perto lá então assim hoje 32 para uma só para barracão ou
+fazer todos os insumos no barracão ficaria uma parte só que trocar o certo mas ainda eu acho Seria o ideal colocar todos na mesma condição de acesso pelo menos.
+Isso. Porque a pavcaria só aqui em cima. Pronto. É. É uma proposta, precisa de um espaço ali para fazer. Aí você precisa trazer milho moído e milho úmido para cá. Toda noite ficaria dois, que aí nós temos, já tem esses puxa-noite, só que assim é
+muito, é igual, é bastante insumo, é bastante coisa que tem que fazer, tem que deixar bem organizado para o outro dia chegar e não coisa boa legal hoje mesmo não puxei na verdade eu achei que dava porque eu queria acabar o assinado que estava no barracão
+precisava um pouco mais eu puxei domingo já a quarta era para ter puxado ontem mas como tinha bastante assim não se eu puxar é que tal você põe na frente da velha então a velha vai sempre ter um veja então eu pensei não vou puxar e hoje eu já tive que porque queria voltar bem de operação ao lado ao lado desse ao lado dessa grande
+informações aquela outra que é referente à eficiência da distribuição a eficiência da composição de carregamento e é de carregamento é sempre um novo hoje não ou é TXT ou CFS
+CFS, é esporte CFS ou CFS-B CFS-B Aí depois da lista, só tem que compilar algumas coisas pra fazer ficar mais válido E o espaço que a Bruna teria condições de ocupar
+é fazer um módulo que realize isso em um workflow O que te manda o nome? Vou zoomar aqui pra você ver Na Bruna?
+
+Entendi
+
+É, agora todo mundo não entendeu é assim vai ele tá com medo de fazer a mesma coisa que vocês já vão começar a fazer entendeu ela não é aí tá mas ele entendeu essa questão
+a ter vai ser lá diante vai chegar no ponto que eu vou convergindo tudo né mas não é agora de partida não é é a nossa confinamento por grande por dispensa Hoje aqui, antigamente estava falando aqui, o Rafael e nós dois, praticamente,
+só teve começo aqui, né? Só no primeiro ano que o Rafael fez cada coisa. Nós andávamos de pé.
+
+Eu me lembro, aqui embaixo.
+
+Hoje nós gastamos duas horas para fazer, para nós rodar, ter vontade de ir conversando, baler. E assim, é que eu não sabia. Só tinha essa parte aqui até.
+Foi, foi. Desce até lá embaixo. Mandou? Aqui? Est estou te mandando essa é do primeiro trato ela gera essa formação ela tem uma tolerância de amarelo até o valor
+vermelho passou do horário e o amarelo está no... foi a classificação dela mas está verdinho, acabaram no horário isso tudo tem que ser tirado o que ela faz é tirar
+e joga aí com a planilha e os milhões já rapidamente ela já monta isso aí e cola em um mano. Vou te mandar dos traços aqui. Então o que ela faz é a planilha, né? Já entendi. O que ela faz são as macros da planilha.
+Isso. Pronto. Essa aí é da fabricação da adaptação. Deixa eu te dar mais uma. Aí tem por ingrediente. Todas as adaptações do dia que foram produzidas, tá? Dentro, acima, abaixo e dentro da meta.
+
+Isso aí eu faço.
+
+Isso aí eu mando fazer, moço. Mas o que eu falei da outra vez? Já, candidato. Tem que cabeçar os caminhos. Por que você não fez? Você só mexeu melhor que eu, que eu sei. Já está querendo tirar o Pires da gruna, rapaz.
+Não, ela entrou. Eu não sei fazer esse caminho que ela faz aí, ó. Só para entender, adaptação, quando você fala, refere-se a? Tieta de adaptação. Então, esse referenciar a adaptação é a chegada do irmão o ingrediente é o filho ficou dentro da
+meta no meio do dia a dia a atendida 30 de foi o primeiro foi o campeão então foram 10 já é um Os 10 pegamentos de gérmen, ele ficou dentro da média, com 2% de desvio médio.
+Já o milho aqui atrás... Essa é a sala esquerda e direita, referenciada à escala. Ah, é aqui porque ela vai andar de 107 ao baixo de 100, né? Então daria uma tolerância de 3%, por exemplo, aqui. É. Então, sei se seria um acerto total.
+Eu vou ser de 3, seria passar 3% a mais na média. Sim. E o de lá de lá?
+
+Aqui eu acho que é o princípio da reação.
+
+Não sei.
+
+Tem um curto princípio da reação. É, você vê. acho que eu fiz inclinação, não sei, tem um buio de inclinação
+
+é, a CV, então, variou 7%, então eu acho que o CVzinho mesmo, o CVzinho valeu a maioria mesmo ó, aqui ela passou 7% acima da meta do meio hidratado acho que a meta vê, ela compilou isso aqui.
+De uma dieta, ela faz por dieta. Aqui nós temos três dietas também, a data, o fornecimento e a informação. Ela solta as três, todos os insumos.
+
+Então se enxerga qual assunto é ruim mais, qual assunto é ruim menos, qual o operador.
+
+É que aquela botou os três, os três carregaram a data, talvez. Não sei por que tá os três aí. E tem o do fornecimento também. Claro, aqui tem intervenção humana. Ela monta a planilha e alguém faz a exportação e a finalização.
+Isso já praticamente já está montado, né? A estrutura já está montada, ela só cola e libera uma máquina. Então, se você pagar o BI do TGC, ele faz isso. Tem que pagar o BI do TGC.
+3 pau por mês. Ah, 18 pau. Quanto é que é? Acho que é 3 pau por mês de BI. 3 mil por mês. Os dados brutos são 18. Aqui o fornecimento vai mais ou menos
+é o seu tratador é de nair tá aí várias barrinhas que cada cada barreira é seu curral ok então tem dentro abaixo acima da meta
+o verde está dentro da meta o amarelo acho que está a 5% dentro da meta né e o azul ele errou 5% acima da meta então tá azul e um fornecimento para cima do tolerado a maré está dentro da variação deve ser por sempre verde e
+deus fornecimento real por cima do ideal que ela construiu ideal é esse que é o que ela considera ok aí está por tratador ea quantidade em
+cada cada vai jogar o jornal caso então a escala em mil que é melhorar o time de transforma-se mas tudo bem está ajudando muito pronto eu não tinha isso não é não
+eles ficam rodando estava organizando a já não tem a mesma regra de cima
+tem que ser um negócio visual com cor, para ver rápido porque os verdes já... tem três não conforme, aí aparece um monte não conforme aí olha só o que aconteceu, olha o Rafael, era tratador novato
+já aconteceu ele fazer isso, tratador novato, está aprendendo o que ele está acontecendo? tratador novato, é sofrimento então Então é isso que ela faz. Entendi. Por nosso escopo aqui, mas ela faz uma checagem muito mais completa que um monte de coisa.
+Desde cadastro, que meu doutor sempre precisa aqui. Para a rastreadibilidade, faz a matéria seca, ensina a fazer. Ela está me ajudando muito lá. Os meninos lá são bonzinhos, mas são muito verdes. E o pessoal que estava lá antes que saiu, não apoiou muito eles. Eram os caras experientes de confinamento,
+só que não deram atenção para eles. E eu vou lá a cada dois meses, que eu não tenho tempo de fazer isso. Eu estou lá para discutir planejamento, custo, só que não me deram atenção pra eles. E eu vou lá a cada dois meses, eu não tenho tempo pra fazer isso. Eu tô lá pra pedir planejamento, custo, ver a dieta que tá funcionando, é outra visão, né?
+Essa parte mais operacional tem que ficar mais tempo. Entendi. Aí eu pedi ajuda, ela tá me ajudando lá, gente. Operação, se for pra vir, tem que ficar um mês, entendi. Ela ficou um mês, né? Ela pode ficar um mês. Ela ficou um mês, né? Nem todo dia, todo dia igual. É complicado demais.
+Se ela vier sair aqui, não sei quanto ela propôs, o seu trabalho uma semana a deus me basta de amanhã o júlio já estava esperando a parte da parte que é assim que passa de 20 para fazer um trabalho para não falar igual
+você de macaco acaba nunca você tem que ter que ficar todo dia uma coisa que foi bom e não tem toda a nova pc ajuda muito também não é o que ela consegue fazer, ela né, então assim, aí levou uma pá, então uma pá
+ela teve que decidir pra ficar em cima do carretão, então assim, foi o N coisas que você vai fazer, na verdade dura isso né, tem que começar, não é precisar do negócio, falar assim, não ó, com isso, tá tendo aí esse resultado, tá bom pra vocês? Se é bom, então tá tudo certo, agora se você
+quiser mais, então é mais máquina, porque assim, ou nós disponibilizamos uma máquina pra fazer tal coisa ou quando ele tem mais outras coisas logo não vai ficar decidido a uma parte é muito fator ou mais eu aí sim ele
+quebrou muito uma palavra com o serviço não a gente fica feliz não está criando essa informação. Tira totalmente o foco dele.
+Aí você começa a sair fora desses pequenos detalhes, porque aí você fica só no maior. Aí você fica assim, e agora? Amanhã cedo eu não tenho nem só para rodar, e aí eu faço o quê? Rodar o meio inteiro?
+O que eu percebo é o seguinte, vamos ver se você me corrige. Isso é uma dificuldade natural, tanto do Sérgio quanto do Lielson, talvez, em configurar com contornos adequados o tipo de problema, o tipo de desafio
+e as consequências e etc. É uma característica própria, pessoal, profissional de um e de outro. E estão lidando com os dois acionistas. Um com um perfil de decisão muito firme, com um bom nível de sensibilidade, como no
+caso é ocial não obstante é uma como se diz uma decisão que não necessariamente percorre todas as suas etapas então não tem a chance de produzir
+uma boa decisão 100% das vezes o outro por sua vez é com uma capacidade de articulação muito mais desenvolvida superior de fato superior é e que talvez crie algumas dificuldades
+adicionais, tanto para um quanto para outro em apresentar e configurar o problema com contornos melhores a ponto de dizer olha, há solução para isso de fato, é A ou B diferente daquilo que ele pensa
+que é o super aproveitamento dos ativos, no caso aí uma par em vez de duas e por aí vai, seria mais ou menos isso ou não? não, não tem medo, sabe, de marcar mais ou menos a um tempo eu tenho medo do próprio mercado mas uma parte é uma
+briga que dá mas aí a ver aquele simbolismo em peso é aí que não dá aí assim é que saudar não é que a bola toda essa história e as horas ele vai e assim se tem maquinário trabalha tudo agora é fácil
+aperto operacional afunda o confinamento afunda, afunda, mas afunda feio cara tive uma unidade do mar frio que tem 6 confinamentos grupo MFG né, a gente tá atendendo eles
+aqui em Pireira da Reda é do lado certo, 70 km o problema ele para tão sério que vai vai passar o fome do dia a dia aqui ele consegue pegar os carros entregar então se passar no 9 horas da manhã que eu
+vou fazer e porque a galera primeiro trato mas não consegui já não já como eles vão dar um tempo olha o problema grave tá vestindo desempenho agora é o único problema da baixa dinheiro aí aí ele fica óbvio porque porque vai tomar uma lapada. Não tem conversa. O oi tolera muita coisa. Mas tem coisas que ele não aceita e ele vai mostrar novamente.
+Troca de dieta, isso, aquilo. Mas até ficar assim com o menino poxa ele vai te ajudar. começou o desempenho, aí depois, aí nós retomamos o negócio de horta e entramos em valor de horta, mas não estou querendo cair em valor de nota.
+E assim, é porque a gente está, igual eu tenho o Léo, que é mais dois a um, o Léo entende muito, visão, assim, é outra visão, eu tenho uma visão diferente da dele, então às vezes já passa lá o serviço e gado aqui, que dia que vai? Aí eu falo assim, Léo, tem que ir tal dia, aí ele já fica, mas não consegue antecipar falar e se dá para antecipar o jacob jacob não dá
+para matar ou em ver algumas coisas mas quando não dá para o que nós temos a tolerância de dias agora é para o melhor local de brinco não vai comer aí fala vai comer 15 de grau
+o que ele tem uma visão diferente não se nós toca até legal assim só que quando o Marcelo fala, vou levar o rapaz embora ele não dá, cara não, você está com dois, Marcelo, de levar o rapaz embora
+aí ele deixa, não, Marcelo, você não vai dar conta aí não, se falou, está tudo certo se ele falou, já está aí o Marcelo já fica com a traidora aí, mas assim bom, se um já deu o start de 50%
+aí já está aí nós já vemos aqueles bolitos que ele leva embora, aí para com o que precisa não, que trata, que faz que ajeita igual eu to com um vagãozinho no cantinho que ficou comigo aqui
+beleza, eles consideram que tem um equipamento mas só que o equipamento dá pra 2 mil quilos não serve pelo volume grande na verdade ele acaba até atrapalhando porque as vezes o caminhão ta soltando
+acelerando e ele ta ali atrapalhando aí é batidas pequenas claro batidas pequenas, faz o mesmo trajeto para fazer a outra e então fica assim melhor deixar de fora e fazer
+a parte da operação só quem está dentro sabe
+
+entendi, muito bem, o que mais?
+
+já falamos dos três indicadores que você também acha que são importantes que são o GDC, o FD, GDK, EFB e arrumas produzidas. Falamos desses indicadores operacionais,
+tendo um workflow que automatiza o envio desses indicadores operacionais, que são a eficiência dos tratos, o horário do primeiro trato, né? E a eficiência de carregamento. E falamos desses outros relatórios que mostram
+esses dados com um nível de detalhamento um pouco melhor. É isso. Ok, entendi. Eu acho que acaba tendo espaço no Google, sim. Eu também acho, Felipe. Nós vamos ganhar tempo. Já botar as máquinas para rodar e aí é só a gente configurar isso.
+Eu tenho medo da próxima expansão. A próxima expansão é a que dá mais medo. Porque aí vai demandar muita coisa. É um investimento de, eu vou falar pra você, de 8 a 10 milhões.
+É um caminhão, 3 mil de confinamento, 1 milhão e meio de confinamento, 1 milhão e meio de caminhão, uma pá, cilos, barracão, e aí? É uma granada pro pessoal.
+Entendeu? É assim, aí beleza, a gente só tá falando, não, vamos lançar, eles estão lançando o confinamento mais um caminhão, beleza, mas o resto das coisas? E o resto? E aí, qualquer coisa que eu acho que eles falam, mas qual que vocês preferem?
+Se nós tivermos só o barracão em silo, não vai agregar nada. É investimento, mas pro próximo ano ficaria bom. Agora, se eles falarem de fazer tudo isso, dá mesmo. E gente, né? Que é o pacote principal, que eu não acho.
+Igual eu falei pra pai, hoje eu tô com o meu tratador aí, que é o mais velho aí.
+
+Tá com o meu dele de 5 anos.
+
+5. Tem algum confinamento que tem que tenha um tanto desse? Ah, são... pode ter alguns computadores em alguns lugares, a maioria tem rotação. É rotação, você pega ali CMA, Campanella, IADA, todo mundo ali naquele server ali, deve ser uma disputa boa, porque todo mundo quer, se tem condição em ônibus...
+Qual é o concorrente hoje é o 5. É então, porque o cara quer... quem quer pegar uma rotina igual essa aí? Sábado e domingo. Sábado e domingo, 6, cinco, um, que fica todo dia. Então os ministros não tem que pedir uma nova, se eu tiver condição. Tem que ajeitar, se não consigo.
+Porque se você fala não, ah, beleza, o cara vai de Salvador, não é? Um Natal, já tem que vir aqui, tá indo lá da família dele pra vir aqui.
+
+Aí você tem que falar, ah, eu não vou, deixa lá. Aí você não tá aqui, ele não vem, e aí você faz o que?
+
+Você entra e chora, porque você tá longe, você não consegue ver mais nada. Aí você vai mandar um cara embora na segunda-feira, porque o cara não quis vir, fala Natal, beleza, ele pode entrar no festival, mas não vai embora no dia. É ele que corre, esse vai ser um dos mais problemáticos, vai ser isso aí, é crescer e não ter gente.
+O confinamento do lado aqui tá rapando mesmo, tá rapando. Quando será mais tempo? Não, é um pouquinho pra frente. Não é esse? Não, é um outro é isso aqui ele é ninguém é mas ele faz convidação
+com o marquinhos ele é o marquinhos de ter visto então se tem um que é do querubim onde já pega a gente lá lá está crescendo eu não sei até quando ele vai conseguir se der não é fácil encontrar se nem
+fala que ele partilhou muito da gestão do lula lei a rua neve ele é escritor para nós temos dinheiro da muito dinheiro da porra, tem investimento assim, sim, pra tá do jeito que tá assim
+Quem é o fulano? José Arnaldo, então assim, ele cresceu, disse que vai comprar caminhão, chega lá e não, quer dois, três manda pro vagão, chama, entra, pra carregadeira, cera, não sei como conhecer tudo e aí começa mas pegar
+gente sei lá trabalho diferente a vez do cara lá consegue ter uma foto melhor aí vamos começar não beleza entendi eu vou fazer a minha parte lá corta é o ácido da bronca aí cairia para nós muito serjão eu te conheço cabeça aberta eu te
+conheço cabeça aberta não vem aqui para tomar teu lugar nada ou agora não é o que eu mais preciso porque o conheço eu tô mais precisa de ser um homem que passa a conhecer já é de sergio sérgio é não
+mais é o que eu vou fazer mas ele melhorou se ela vai te ajudar a não vou deixar ela vir aqui e fazer nada que eu não esteja pedindo pra não é o sinal que falar falar do Sérgio na frente do Sérgio é quase um privilégio para quem fala e para o
+Sérgio também porque a ponta assim ó aqui tá melhorar que dá para melhorar o ruim é falar com o Sérgio quando o Sérgio não tá porque aí tipo assim não dá para falar assim do cara
+ou não ficar chateado ou que realmente tem problema não é alguns pontos você vai concordar, o Sérgio melhorou bem.
+Em alguns outros pontos ainda não houve um progresso positivo. Tem o que melhorar? Tem espaço para melhorar. Tem espaço para melhorar no qualitativo de algumas tare se ele já tem o respeito do Arthur e do Marcelo na
+condição que está, imagina podendo melhorar essas coisas que têm espaço para melhorar. Sabe, a paudália tem uma característica que é muito peculiar, eu não sei se é de todas as empresas, mas na paudália ela trata as suas pessoas de um modo muito diferente.
+A ponto de você ter uma relação muito próxima da empresa com certos funcionários. Então, por exemplo, o Marcelo gosta, e é natural que seja assim, não é um problema. O Marcelo gosta do fulano, do beltrano e do ciclano mais do que gosta de outros fulanos e outros ciclanos e outros beltranos.
+Ok, tudo certo. o ator a mesma coisa o ator gosta de mais gosta mais de fulano no trânsito ano apesar de dizer que gosta de todo mundo mas é não não é assim que eu era sempre a ciência se essa turma que tem esse apreço diferenciado do marcelo e
+do ator se desse conta da oportunidade que tem nas mãos porque se relaciona direto com um acionista com o dono do negócio né e olhar se passe esse puta cara onde é que eu posso melhorar
+com essa turma estava com a vida ganha estava com a vida ganha você concorda não corta então o sérgio um deles também é o sérgio tem o apreço do marcelo tem críticas o ator bem o apreço o sérgio tem uma
+prefeitura tudo tem críticas e tem espaço melhor então imagina se ele se desse conta dessas oportunidades melhorar o que seria a vida dele é o que seria a vida dele se tivesse quando assim não lá que entende
+você é que eu eu sei que é novo melhor e me entrega resultado o nosso desempenho são bom então bem dinheiro e me traga resultado tem defeitos entregas no caso do porto todo o que eu estou tirando do ouro à correia e tem treinos a casa entregando número do plano
+insatisfeitos no nosso que se pensa em sua mensagem e não é o primeiro ano não sofremos algum tempo aí já está ruim esse ano já está ruim mesmo porque estamos no sul eu falei porque eles vão estar no tabu a expectativa que particularmente
+tem um esse processo de gestão a vista que mais é é o sinal a evidência que eu estou me servindo para continuar essa empreitada de gestão à vista e tudo mais,
+é o sinal que eu começo a escutar tanto do Arthur quanto do Marcelo. Principalmente do Marcelo, que ele é mais crítico. Ele é mais crítico, mais intolerante a algumas coisas. Tudo bem, pode ter uma régua diferente. A régua poderia ser diferente,
+se for a necessidade. Mas, não obstante, o retorno que ele deu nos primeiros 30 dias desse processo, da maneirinha simples que a gente está fazendo, foi muito bom. Falei com ele hoje de manhã e assim que a gente está fazendo foi muito bom falei com ele hoje de manhã e só gostando das coisas que eu tô vendo em relação
+como era a última vez que eu fui melhor ele falou muito melhor não falou bem melhor ele ressaltou o não é melhor é muito melhor é dar uns 80% foi melhorou
+80% está muito melhor agora é questão de bolinha disciplina capricha de ser então esse é o tipo de sinal que eu na posição do Sérgio, na posição do Liel, eu ficaria assim
+Poxa, o que é que eu posso melhorar? O que eu posso fazer para ser um profissional melhor, mais capaz, mais antenado e tudo mais De acordo Pronto Tá filho, não é um puta com feedback Não, lógico Beleza?
+Isso aí filho Eu tenho um pouco de preparado mesmo para nós Agora vocês tem que se preparar para trabalhar, tá? Tá Rafael, eu estou te devendo muito. Não, não está devendo nada, vamos conversando. Isso aqui está dando certo, é legal pra caramba. Eu estou com outras ideias, vou tirar uma cópia.
+Pode passar no check-in que eu faço os itens mais técnicos. Se o sítio vai ter, você vai olhar? Quero. Podemos desenvolver coisas mais para hoje.
+
+A gente desenvolveu a escolha? Sim.
+
+Vou te dar a cópia, quando eu não tenho problema em relação a... Ah não, isso aqui é o meu.
+
+Você está contribuindo desde a hora certa.
+
+Se tem duas pessoas que contribuíram desde a hora certa, com uma contribuição muito importante, eu vou fazer o juízo. Desde a hora certa, ah ok, entendi. O que eu posso fazer? Ah, o Gilberto é forte.
+
+E o outro é você, né cara? Nunca era assim...
+
+Ah, não, depois, me liga depois, etc, etc. Tem um monte de consequência de uma voz, de utilizar a cor. Eu só não te respondi porque você mandou eu falar que estava uma pauleta no carrega
+
+do seu celular do passado. Eu sabia que eu ia te encontrar aqui. Entendi.
+
+Tá, gente, vamos trabalhar.
+
+Vamos.

@@ -5,9 +5,6 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 ## Estrutura do Repositório
 
 <details>
-<summary>📂 Clique aqui para expandir a árvore de arquivos completa</summary>
-
-```text
 .
 ├── 1_apps
 │   ├── linux
@@ -19,7 +16,6 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │   │   │   ├── frota.py
 │   │   │   └── requirements_frota.txt
 │   │   ├── frota_etl
-│   │   │   ├── config.py
 │   │   │   ├── database
 │   │   │   │   ├── esquema.py
 │   │   │   │   ├── __init__.py
@@ -29,90 +25,73 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │   │   │   ├── relacionamentos.py
 │   │   │   ├── relationships.txt
 │   │   │   ├── requirements_frota_etl.txt
-│   │   │   ├── totalorcadofrotas.xlsx
 │   │   │   └── transformador
 │   │   │   │   ├── excel.py
 │   │   │   │   └── __init__.py
 │   │   ├── frota_llm
 │   │   │   ├── backup
-│   │   │   │   ├── frota.db
 │   │   │   │   ├── frota_llm.py
 │   │   │   │   └── requirements.txt
 │   │   │   ├── dashboard.py
 │   │   │   ├── db_access.py
-│   │   │   ├── db_config.yaml
 │   │   │   ├── db_filters.py
-│   │   │   ├── frota.db
 │   │   │   ├── KNIME - Prompt Completo para Query Consolidada.md
 │   │   │   ├── list_frota_db.py
 │   │   │   ├── llm_session.py
 │   │   │   └── README.md
 │   │   ├── mindpub
 │   │   │   ├── CUMBUCA - plano de trabalho.md
-│   │   │   ├── Este Barco Tambem e Seu - D. Michael Abrashoff.epub
 │   │   │   ├── mindpub.py
 │   │   │   └── README.txt
 │   │   └── sjudas
-│   │   │   ├── confinamento_batidas_histogramas
-│   │   │   │   ├── batidas.py
-│   │   │   │   ├── config.yaml
-│   │   │   │   ├── instructions
-│   │   │   │   │   ├── Entendendo os Pesos Relativos no Controle de Dietas.html
-│   │   │   │   │   ├── formula_calculo.tex
-│   │   │   │   │   ├── instructions_for_app_batidas.md
-│   │   │   │   │   ├── ### Lista de Comandos para Commit.md
-│   │   │   │   │   ├── pseudocode.md
-│   │   │   │   │   └── requirements.md
-│   │   │   │   ├── requirements.txt
-│   │   │   │   └── sjudas - app batidas - prompt para refatorar o programa.md
-│   │   │   ├── confinamento_horarios
-│   │   │   │   ├── analise temporal turnos.md
-│   │   │   │   ├── analise_temporal_turnos.py
-│   │   │   │   ├── horario_curral.py
-│   │   │   │   ├── horario_hex.csv
-│   │   │   │   ├── horario_hex_periodo.py
-│   │   │   │   ├── horario_hex.py
-│   │   │   │   ├── horario_lote.py
-│   │   │   │   ├── horarios.csv
-│   │   │   │   ├── hora.txt
-│   │   │   │   └── tratos.txt
-│   │   │   └── confinamento_resources
-│   │   │   │   ├── 241002 - RAFAEL CERVIERIa.mp3
-│   │   │   │   ├── 241002_-_RAFAEL_CERVIERIa_mp3_Good_Tape_2024-10-06.txt
-│   │   │   │   ├── 241002 - RAFAEL CERVIERI.MP3
-│   │   │   │   ├── 241002_-_RAFAEL_CERVIERI_MP3_Good_Tape_2024-10-06.txt
-│   │   │   │   ├── WhatsApp Image 2024-10-02 at 16.22.43(1).jpeg
-│   │   │   │   ├── WhatsApp Image 2024-10-02 at 16.22.43(2).jpeg
-│   │   │   │   └── WhatsApp Image 2024-10-02 at 16.22.43.jpeg
-│   │   └── win
-│   │       ├── AD_excel_macros
-│   │       │   └── GAPD_AD202425_respostas_macroVBA_processamento.bas
-│   │       └── heatmap
-│   │           ├── package.json
-│   │           ├── package-lock.json
-│   │           ├── postcss.config.js
-│   │           ├── public
-│   │           │   └── index.html
-│   │           ├── src
-│   │           │   ├── App.jsx
-│   │           │   ├── components
-│   │           │   │   └── Heatmap.jsx
-│   │           │   ├── index.css
-│   │           │   └── index.js
-│   │           ├── tailwind.config.js
-│   │           └── webpack.config.js
+│   │       ├── confinamento_batidas_histogramas
+│   │       │   ├── batidas.py
+│   │       │   ├── config.yaml
+│   │       │   ├── instructions
+│   │       │   │   ├── Entendendo os Pesos Relativos no Controle de Dietas.html
+│   │       │   │   ├── formula_calculo.tex
+│   │       │   │   ├── instructions_for_app_batidas.md
+│   │       │   │   ├── ### Lista de Comandos para Commit.md
+│   │       │   │   ├── pseudocode.md
+│   │       │   │   └── requirements.md
+│   │       │   ├── requirements.txt
+│   │       │   └── sjudas - app batidas - prompt para refatorar o programa.md
+│   │       ├── confinamento_horarios
+│   │       │   ├── analise temporal turnos.md
+│   │       │   ├── analise_temporal_turnos.py
+│   │       │   ├── horario_curral.py
+│   │       │   ├── horario_hex_periodo.py
+│   │       │   ├── horario_hex.py
+│   │       │   ├── horario_lote.py
+│   │       │   └── hora.txt
+│   │       └── confinamento_resources
+│   └── win
+│       ├── AD_excel_macros
+│       │   └── GAPD_AD202425_respostas_macroVBA_processamento.bas
+│       └── heatmap
+│           ├── package.json
+│           ├── package-lock.json
+│           ├── postcss.config.js
+│           ├── public
+│           │   └── index.html
+│           ├── src
+│           │   ├── App.jsx
+│           │   ├── components
+│           │   │   └── Heatmap.jsx
+│           │   ├── index.css
+│           │   └── index.js
+│           ├── tailwind.config.js
+│           └── webpack.config.js
 ├── 2_labs
 │   ├── gerenciamento do fluxo de versionamento
 │   ├── linux
 │   │   ├── 5S
 │   │   │   ├── correlacao.py
 │   │   │   ├── matriz_correlacao_5S.png
-│   │   │   ├── perguntas.yaml
-│   │   │   └── silos.csv
+│   │   │   └── perguntas.yaml
 │   │   ├── ad_analysis
 │   │   │   └── EQassessment.ipynb
 │   │   ├── ajustes_b3
-│   │   │   ├── ajustes_b3.csv
 │   │   │   ├── ajustes_b3.py
 │   │   │   ├── endpoint.py
 │   │   │   ├── main.py
@@ -168,7 +147,6 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │   │   │   │   ├── Guideline para o Módulo main_py.md
 │   │   │   │   ├── Guideline para o Módulo processing_py.md
 │   │   │   │   └── Guideline para o Módulo ui_py.md
-│   │   │   ├── frota.db
 │   │   │   └── test_database.py
 │   │   ├── GAPD - pecuaria - resultados.md
 │   │   ├── langchain_extrator_modelo.py
@@ -205,24 +183,16 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │   │   │   ├── tailwind.config.js
 │   │   │   └── tsconfig.json
 │   │   └── yaml_files
-│   │       ├── EQconfig.yaml
-│   │       └── google_sheets_config.yaml
 │   └── win
 │       ├── hedge_pec
 │       │   ├── payoff_opcoes_base_app.py
-│       │   ├── Planilha Hedge.xlsx
-│       │   ├── requirements.txt
-│       │   └── uploaded_planilha.xlsx
+│       │   └── requirements.txt
 │       ├── mec
-│       │   ├── all tables.csv
 │       │   ├── analisar_dados.py
 │       │   ├── automotive_analysis.py
 │       │   ├── base MEC.md
 │       │   ├── conector.py
 │       │   ├── consultasimples.py
-│       │   ├── gatec_mec_mineracao.csv
-│       │   ├── lista completa de tabelas.csv
-│       │   ├── lista completas de tabelas.xlsx
 │       │   ├── listar_tabelas.py
 │       │   ├── maintenance_predictor.py
 │       │   ├── MEC_relacionamentos.csv
@@ -230,14 +200,12 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │       │   ├── predictive_analytics.py
 │       │   ├── predictive_analytics_v2.py
 │       │   ├── predictive_analytics_v3.py
-│       │   ├── relacionamentos.csv
 │       │   ├── relacionamentos.xlsx
 │       │   ├── RelatorioAnomaliasManutencao.pdf
 │       │   ├── RelatorioDesviosManutencao.pdf
 │       │   ├── RelatorioManutencao.pdf
 │       │   ├── RelatorioManutencaoPrioritaria.pdf
-│       │   ├── sqlopenai.py
-│       │   └── Total Orçado Frotas.xlsx
+│       │   └── sqlopenai.py
 │       ├── mec_der
 │       │   ├── lib
 │       │   │   ├── bindings
@@ -292,5 +260,17 @@ GAPD é um repositório dedicado a ferramentas, laboratórios e prompts para pro
 │       ├── vis-network.css
 │       └── vis-network.min.js
 ├── README.md
-├── requirements.txt
-└── tree.md
+└── requirements.txt
+</details>
+
+## Componentes Principais
+
+    1_apps: Aplicações desenvolvidas para ambientes Linux e Windows.
+
+    2_labs: Laboratórios de experimentação, testes de conceito e scripts de análise.
+
+    3_prompts: Biblioteca de prompts otimizados para uso com LLMs em tarefas de análise de dados.
+
+    4_gpt_devolutiva: Base de conhecimento estruturada para geração de devolutivas via GPT.
+
+    lib: Bibliotecas auxiliares e dependências de front-end/visualização.
