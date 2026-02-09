@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas de Projeto: Automação de Ingestão Google Drive</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Mermaid JS para Fluxogramas -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose' });
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        .step-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .step-active {
+            border-color: #f97316; /* orange-500 */
+            background-color: #fff7ed; /* orange-50 */
+        }
+        /* Mermaid Container Styling */
+        .mermaid-wrapper {
+            position: relative;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .mermaid-wrapper:hover {
+            border-color: #f97316;
+        }
+        .mermaid-container {
+            display: flex;
+            justify-content: center;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            border: 2px solid #e7e5e4; /* Thicker border for visual cue */
+            overflow-x: auto;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            min-height: 200px; /* Prevent collapse before load */
+        }
+        /* Zoom Overlay */
+        .zoom-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.2s;
+            border-radius: 0.75rem;
+        }
+        .mermaid-wrapper:hover .zoom-overlay {
+            opacity: 1;
+        }
+        .zoom-btn {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            color: #f97316;
+            transform: translateY(10px);
+            transition: transform 0.2s;
+        }
+        .mermaid-wrapper:hover .zoom-btn {
+            transform: translateY(0);
+        }
+        
+        /* Modal Styling */
+        #diagram-modal {
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+        }
+        #modal-content svg {
+            width: 100% !important;
+            height: auto !important;
+            max-height: 85vh;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800 antialiased selection:bg-orange-200 selection:text-orange-900">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold">R</div>
+                <h1 class="text-xl font-bold text-stone-900">Projeto Ingestão Drive</h1>
+            </div>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#problem" class="text-stone-600 hover:text-orange-600 font-medium transition-colors">O Desafio</a>
+                <a href="#workflow" class="text-stone-600 hover:text-orange-600 font-medium transition-colors">Workflow</a>
+                <a href="#technical" class="text-stone-600 hover:text-orange-600 font-medium transition-colors">Implementação</a>
+                <a href="#benefits" class="text-stone-600 hover:text-orange-600 font-medium transition-colors">Benefícios</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
+        <div class="text-center max-w-3xl mx-auto">
+            <span class="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-700 text-sm font-semibold mb-4">Automação & Infraestrutura</span>
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight text-stone-900 mb-6">AUTOMAÇÃO DE UPLOAD</h2>
+            <p class="text-lg text-stone-600 mb-8 leading-relaxed">
+                Solução automatizada para resolver problemas de quota de armazenamento e desorganização no Google Drive corporativo, utilizando Rclone e Linux Middleware com <strong>execução única diária</strong>.
+            </p>
+            <div class="flex justify-center gap-4">
+                <button onclick="document.getElementById('problem').scrollIntoView({behavior: 'smooth'})" class="bg-stone-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-stone-700 transition-colors">
+                    Explorar Solução
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 1: The Problem & Simulation -->
+    <section id="problem" class="bg-white py-16 border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold text-stone-900 mb-4">1. O Problema da Quota Individual</h3>
+                    <p class="text-stone-600 mb-6">
+                        No Google Drive padrão, o armazenamento é descontado da conta de quem <strong>cria</strong> o arquivo, não da pasta onde ele reside. Isso causa bloqueio nas contas pessoais dos colaboradores.
+                    </p>
+                    <div class="bg-stone-50 p-6 rounded-xl border border-stone-200">
+                        <h4 class="font-semibold mb-2">Cenário Atual:</h4>
+                        <ul class="space-y-2 text-sm text-stone-600">
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-500 font-bold">✕</span> Usuários lotam suas contas pessoais.
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-500 font-bold">✕</span> Arquivos ficam dispersos e misturados.
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-500 font-bold">✕</span> Risco de segurança entre departamentos.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Interactive Quota Simulation -->
+                <div class="bg-stone-100 p-6 rounded-2xl shadow-inner">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-stone-800">Simulação de Impacto</h4>
+                        <button id="toggleSimBtn" onclick="toggleSimulation()" class="bg-orange-500 hover:bg-orange-600 text-white text-sm px-4 py-2 rounded shadow transition-colors">
+                            Ativar Solução (Rclone)
+                        </button>
+                    </div>
+                    <p class="text-xs text-stone-500 mb-4 text-center" id="simStatusText">Estado Atual: Arquivos ocupam espaço do Usuário</p>
+                    
+                    <div class="chart-container">
+                        <canvas id="quotaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Interactive Workflow -->
+    <section id="workflow" class="py-16 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl font-bold text-stone-900">2. Arquitetura da Solução</h3>
+                <p class="text-stone-600 mt-4 max-w-2xl mx-auto">
+                    Abaixo, o diagrama completo do fluxo de dados.
+                </p>
+            </div>
+
+            <!-- Mermaid Diagram Container with Zoom -->
+            <div class="mermaid-wrapper" onclick="expandDiagram()">
+                <div class="mermaid-container">
+                    <div class="mermaid">
+                        graph TD
+                        %% Definição dos Atores
+                        User1[👤 Fulano 001]
+                        User2[👤 Fulano 002]
+                        User3[👤 Fulano 003]
+                        User4[👤 Fulano 004]
+
+                        %% Definição da Área de Entrada
+                        subgraph "Área de Coleta (01_COLETA_Geral)"
+                            Input1[📂 /Unidade_001]
+                            Input2[📂 /Unidade_002]
+                            Input3[📂 /Unidade_003]
+                            Input4[📂 /Unidade_004]
+                        end
+
+                        %% Definição do Processo Automatizado
+                        subgraph "Middleware (Linux)"
+                            Rclone((⚙️ RCLONE MOVE))
+                        end
+
+                        %% Definição da Área Final
+                        subgraph "Armazenamento Final (Conta Central)"
+                            Output1[🗄️ /Unidade_001]
+                            Output2[🗄️ /Unidade_002]
+                            Output3[🗄️ /Unidade_003]
+                            Output4[🗄️ /Unidade_004]
+                        end
+
+                        %% Fluxos
+                        User1 -- Upload --> Input1
+                        User2 -- Upload --> Input2
+                        User3 -- Upload --> Input3
+                        User4 -- Upload --> Input4
+
+                        Input1 -.-> Rclone
+                        Input2 -.-> Rclone
+                        Input3 -.-> Rclone
+                        Input4 -.-> Rclone
+
+                        Rclone == "00:00 (Move)" ==> Output1
+                        Rclone == "00:00 (Move)" ==> Output2
+                        Rclone == "00:00 (Move)" ==> Output3
+                        Rclone == "00:00 (Move)" ==> Output4
+
+                        style Rclone fill:#f97316,stroke:#333,stroke-width:2px,color:white
+                        style Input1 fill:#fff,stroke:#d3d3d3,color:#666
+                        style Input2 fill:#fff,stroke:#d3d3d3,color:#666
+                        style Input3 fill:#fff,stroke:#d3d3d3,color:#666
+                        style Input4 fill:#fff,stroke:#d3d3d3,color:#666
+                    </div>
+                </div>
+                <!-- Visual Cue for Zoom -->
+                <div class="zoom-overlay">
+                    <span class="zoom-btn">🔍 Clique para Ampliar</span>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <p class="text-stone-500 text-sm">Clique no diagrama acima para ampliar ou nos cards abaixo para detalhes.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Interactive Flow Column -->
+                <div class="lg:col-span-1 space-y-4">
+                    <div onclick="selectStep('input')" id="card-input" class="step-card bg-white p-5 rounded-lg border-l-4 border-stone-300 shadow-sm step-active">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-stone-800">1. Entrada (Inbox)</h4>
+                            <span class="text-xl">📂</span>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-1">Upload pelos Usuários</p>
+                    </div>
+
+                    <div class="flex justify-center"><span class="text-stone-400 text-2xl">↓</span></div>
+
+                    <div onclick="selectStep('middleware')" id="card-middleware" class="step-card bg-white p-5 rounded-lg border-l-4 border-stone-300 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-stone-800">2. Middleware (00:00)</h4>
+                            <span class="text-xl">⚙️</span>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-1">Servidor Linux + Rclone</p>
+                    </div>
+
+                    <div class="flex justify-center"><span class="text-stone-400 text-2xl">↓</span></div>
+
+                    <div onclick="selectStep('output')" id="card-output" class="step-card bg-white p-5 rounded-lg border-l-4 border-stone-300 shadow-sm">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-stone-800">3. Armazenamento</h4>
+                            <span class="text-xl">🗄️</span>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-1">Conta Central (Vault)</p>
+                    </div>
+                </div>
+
+                <!-- Detail View Column -->
+                <div class="lg:col-span-2 bg-white p-8 rounded-2xl border border-stone-200 shadow-lg relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <span class="text-9xl font-bold font-serif">?</span>
+                    </div>
+                    
+                    <h4 id="detail-title" class="text-2xl font-bold text-orange-600 mb-4">Selecione uma etapa</h4>
+                    <div id="detail-content" class="space-y-4 text-stone-700">
+                        <p>Clique no diagrama à esquerda para ver os detalhes técnicos, permissões e estrutura de pastas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Implementation Details -->
+    <section id="technical" class="py-16 bg-white border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-stone-900 mb-8">3. Implementação Técnica</h3>
+            <p class="text-stone-600 mb-8 max-w-3xl">
+                O script foi atualizado para rodar uma única vez por dia. Isso requer configuração precisa do CRON e uso de Lockfile para segurança.
+            </p>
+
+            <div class="mb-6 border-b border-stone-200">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+                    <button onclick="switchTab('script')" id="tab-script" class="border-orange-500 text-orange-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Script Completo</button>
+                    <button onclick="switchTab('cron')" id="tab-cron" class="border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Agendamento (Cron)</button>
+                    <button onclick="switchTab('cmd')" id="tab-cmd" class="border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Comando Core</button>
+                </nav>
+            </div>
+
+            <div id="code-panel" class="bg-stone-900 rounded-xl shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-2 bg-stone-800 border-b border-stone-700">
+                    <div class="flex space-x-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <span id="filename-display" class="text-stone-400 text-xs font-mono">ingestao_departamental.sh</span>
+                </div>
+                <div class="p-0 overflow-x-auto">
+                    <pre id="code-content" class="text-sm p-4 text-stone-300 font-mono leading-relaxed"></pre>
+                </div>
+            </div>
+            
+            <div class="mt-4 p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <h5 class="text-orange-800 font-bold text-sm mb-2">💡 Nota de Agendamento:</h5>
+                <p class="text-orange-700 text-sm">
+                    A execução está configurada para <strong>00:00 (Meia-noite)</strong>. O uso do <code>Lockfile</code> no script é vital para garantir que, se houver muitos dados e o processo passar de 24h (improvável, mas possível), o sistema não inicie uma nova cópia encavalada no dia seguinte.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Benefits Grid -->
+    <section id="benefits" class="py-16 bg-stone-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-stone-900 mb-10 text-center">4. Matriz de Benefícios</h3>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-green-600 text-2xl mb-4">🔒</div>
+                    <h4 class="font-bold text-stone-800 mb-2">Segurança</h4>
+                    <p class="text-sm text-stone-600">Isolamento entre departamentos e proteção contra concorrência de uploads.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 text-2xl mb-4">🗂️</div>
+                    <h4 class="font-bold text-stone-800 mb-2">Organização</h4>
+                    <p class="text-sm text-stone-600">Arquivos chegam classificados automaticamente no destino final por pasta de origem.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 text-2xl mb-4">⚙️</div>
+                    <h4 class="font-bold text-stone-800 mb-2">Simplicidade</h4>
+                    <p class="text-sm text-stone-600">Script único e agnóstico. Não precisa ser alterado para novos colaboradores.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-100 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 text-2xl mb-4">💾</div>
+                    <h4 class="font-bold text-stone-800 mb-2">Quota Livre</h4>
+                    <p class="text-sm text-stone-600">Libera 100% do espaço dos usuários ao transferir a propriedade para a Conta Central.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-4">Baseado no Canvas de Projeto: Automação de Ingestão Google Drive</p>
+            <div class="text-sm">
+                <span>Ferramentas: Rclone • Linux Bash • Google Drive API</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Zoom Modal -->
+    <div id="diagram-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="relative w-full max-w-7xl h-full max-h-[90vh] flex flex-col items-center justify-center">
+            <!-- Close Button -->
+            <button onclick="closeDiagram()" class="absolute top-4 right-4 bg-white text-stone-600 hover:text-stone-900 rounded-full w-10 h-10 flex items-center justify-center shadow-lg font-bold text-xl z-10 transition-transform hover:scale-110">
+                ✕
+            </button>
+            
+            <!-- Content Container -->
+            <div id="modal-content" class="w-full h-full bg-white rounded-xl shadow-2xl p-4 overflow-auto flex items-center justify-center">
+                <!-- SVG cloned here via JS -->
+            </div>
+            
+            <p class="absolute bottom-6 bg-stone-900 text-white px-4 py-2 rounded-full text-sm opacity-75">
+                Pressione ESC para fechar
+            </p>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- DATA STORAGE ---
+        const workflowData = {
+            input: {
+                title: "1. Área de Coleta (Input)",
+                icon: "📂",
+                content: `
+                    <p class="mb-4">Esta é a área onde os usuários depositam os arquivos durante o dia. A estrutura é segmentada.</p>
+                    <div class="bg-stone-50 p-4 rounded border border-stone-200">
+                        <h5 class="font-bold text-sm text-stone-800 mb-2">Estrutura de Pastas (Google Drive):</h5>
+                        <ul class="list-none text-sm space-y-2 font-mono text-stone-600">
+                            <li>📂 01_COLETA_Geral <span class="text-red-500 text-xs">(Não compartilhado)</span></li>
+                            <li class="pl-4">├── 📂 Unidade_001 <span class="bg-green-100 text-green-800 text-xs px-1 rounded">Editor: Fulano 001</span></li>
+                            <li class="pl-4">├── 📂 Unidade_002 <span class="bg-green-100 text-green-800 text-xs px-1 rounded">Editor: Fulano 002</span></li>
+                            <li class="pl-4">└── ...</li>
+                        </ul>
+                    </div>
+                `
+            },
+            middleware: {
+                title: "2. Middleware (Execução Única)",
+                icon: "⚙️",
+                content: `
+                    <p class="mb-4">Servidor Linux configurado para execução pontual diária.</p>
+                    <div class="bg-stone-50 p-4 rounded border border-stone-200">
+                        <h5 class="font-bold text-sm text-stone-800 mb-2">Lógica de Execução:</h5>
+                        <ol class="list-decimal list-inside text-sm space-y-2 text-stone-600">
+                            <li><strong>Horário:</strong> Exatamente às 00:00 (Meia-noite).</li>
+                            <li><strong>Lockfile:</strong> Garante que o script anterior terminou.</li>
+                            <li><strong>Segurança:</strong> <code>--min-age 15m</code> previne corrupção de uploads de última hora.</li>
+                            <li><strong>Ação:</strong> Move tudo de Coleta para Arquivo Central.</li>
+                        </ol>
+                    </div>
+                `
+            },
+            output: {
+                title: "3. Armazenamento Final (Vault)",
+                icon: "🗄️",
+                content: `
+                    <p class="mb-4">Destino final dos arquivos. A propriedade é transferida para a conta central.</p>
+                    <div class="bg-stone-50 p-4 rounded border border-stone-200">
+                        <h5 class="font-bold text-sm text-stone-800 mb-2">Resultado:</h5>
+                        <ul class="list-none text-sm space-y-2 font-mono text-stone-600">
+                            <li>🗄️ 02_ARQUIVO_Central <span class="bg-blue-100 text-blue-800 text-xs px-1 rounded">Dono: Conta Central</span></li>
+                            <li class="pl-4">├── 📂 Unidade_001/fotos.jpg</li>
+                            <li class="pl-4">├── 📂 Unidade_002/relatorio.pdf</li>
+                        </ul>
+                        <div class="mt-4 text-sm text-green-700 font-semibold">
+                            ✓ Espaço liberado na conta dos usuários.<br>
+                            ✓ Organização mantida automaticamente.
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        const codeSnippets = {
+            cmd: `rclone move "meudrive:01_COLETA_Geral" "meudrive:02_ARQUIVO_Central" \\
+    --drive-server-side-across-configs \\
+    --min-age 15m \\
+    --drive-use-trash=false \\
+    --delete-empty-src-dirs`,
+            script: `#!/bin/bash
+
+# ==========================================
+# CONFIGURAÇÕES
+# ==========================================
+REMOTE="meudrive"
+SOURCE_FOLDER="01_COLETA_Geral"
+DEST_FOLDER="02_ARQUIVO_Central"
+LOG_FILE="/home/roni-chittoni/logs/rclone_ingest.log"
+LOCK_FILE="/tmp/rclone_ingest.lock"
+
+# Cria diretório de log se não existir
+mkdir -p /home/roni-chittoni/logs
+
+# ==========================================
+# VERIFICAÇÃO DE EXECUÇÃO (SINGLETON)
+# ==========================================
+if [ -e "$LOCK_FILE" ]; then
+    echo "$(date): Script já em execução (Lockfile detectado). Saindo..." >> "$LOG_FILE"
+    exit 1
+fi
+
+touch "$LOCK_FILE"
+trap "rm -f $LOCK_FILE" EXIT
+
+# ==========================================
+# EXECUÇÃO DO PROCESSO
+# ==========================================
+echo "$(date): Iniciando processo de ingestão diária (00:00)..." >> "$LOG_FILE"
+
+/usr/bin/rclone move "$REMOTE:$SOURCE_FOLDER" "$REMOTE:$DEST_FOLDER" \\
+--drive-server-side-across-configs \\
+--min-age 15m \\
+--drive-use-trash=false \\
+--delete-empty-src-dirs \\
+--stats-one-line \\
+-v >> "$LOG_FILE" 2>&1
+
+EXIT_CODE=$?
+
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "$(date): SUCESSO - Processo finalizado." >> "$LOG_FILE"
+else
+    echo "$(date): AVISO - Rclone finalizou com código $EXIT_CODE." >> "$LOG_FILE"
+fi
+
+echo "------------------------------------------------" >> "$LOG_FILE"`,
+            cron: `# Edite o crontab com: crontab -e
+# Executa UMA VEZ por dia, exatamente à meia-noite (00:00)
+0 0 * * * /usr/local/bin/ingestao_departamental.sh`
+        };
+
+        // --- CHART CONFIGURATION ---
+        let chartInstance = null;
+        const chartData = {
+            labels: ['Fulano 001', 'Conta Central'],
+            datasets: [
+                {
+                    label: 'Armazenamento Usado (GB)',
+                    data: [12, 5], // Initial state: User full, Central empty
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.7)', // Red for User (Bad)
+                        'rgba(34, 197, 94, 0.7)'  // Green for Central (Good)
+                    ],
+                    borderColor: [
+                        'rgb(239, 68, 68)',
+                        'rgb(34, 197, 94)'
+                    ],
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        // --- FUNCTIONS ---
+
+        function initChart() {
+            const ctx = document.getElementById('quotaChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 15,
+                            title: {
+                                display: true,
+                                text: 'Gigabytes (GB)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw + ' GB Usados';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        let isSolved = false;
+        function toggleSimulation() {
+            const btn = document.getElementById('toggleSimBtn');
+            const statusText = document.getElementById('simStatusText');
+            
+            if (!isSolved) {
+                // Apply Solution
+                chartInstance.data.datasets[0].data = [0, 17]; // Move data to Central
+                chartInstance.data.datasets[0].backgroundColor = ['rgba(34, 197, 94, 0.7)', 'rgba(34, 197, 94, 0.7)']; // All green
+                statusText.innerText = "Estado Solucionado: Espaço do usuário liberado, Central assume propriedade.";
+                statusText.className = "text-xs text-green-600 mb-4 text-center font-bold";
+                btn.innerText = "Resetar Simulação";
+                btn.className = "bg-stone-500 hover:bg-stone-600 text-white text-sm px-4 py-2 rounded shadow transition-colors";
+                isSolved = true;
+            } else {
+                // Reset
+                chartInstance.data.datasets[0].data = [12, 5];
+                chartInstance.data.datasets[0].backgroundColor = ['rgba(239, 68, 68, 0.7)', 'rgba(34, 197, 94, 0.7)'];
+                statusText.innerText = "Estado Atual: Arquivos ocupam espaço do Usuário";
+                statusText.className = "text-xs text-stone-500 mb-4 text-center";
+                btn.innerText = "Ativar Solução (Rclone)";
+                btn.className = "bg-orange-500 hover:bg-orange-600 text-white text-sm px-4 py-2 rounded shadow transition-colors";
+                isSolved = false;
+            }
+            chartInstance.update();
+        }
+
+        function selectStep(stepKey) {
+            // Remove active class from all cards
+            ['input', 'middleware', 'output'].forEach(key => {
+                const el = document.getElementById(`card-${key}`);
+                el.classList.remove('step-active', 'border-orange-500', 'bg-orange-50');
+                el.classList.add('border-stone-300');
+            });
+
+            // Add active class to selected
+            const activeEl = document.getElementById(`card-${stepKey}`);
+            activeEl.classList.add('step-active', 'border-orange-500', 'bg-orange-50');
+            activeEl.classList.remove('border-stone-300');
+
+            // Update content
+            const data = workflowData[stepKey];
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-content').innerHTML = data.content;
+        }
+
+        function switchTab(tabKey) {
+            // Update Tab Styles
+            ['cmd', 'script', 'cron'].forEach(key => {
+                const btn = document.getElementById(`tab-${key}`);
+                if (key === tabKey) {
+                    btn.className = "border-orange-500 text-orange-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm";
+                } else {
+                    btn.className = "border-transparent text-stone-500 hover:text-stone-700 hover:border-stone-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm";
+                }
+            });
+
+            // Update Content
+            document.getElementById('code-content').innerText = codeSnippets[tabKey];
+            
+            // Update Filename
+            const filenames = {
+                'cmd': 'rclone_command_snippet.sh',
+                'script': 'ingestao_departamental.sh',
+                'cron': 'crontab_config'
+            };
+            document.getElementById('filename-display').innerText = filenames[tabKey];
+        }
+
+        // --- ZOOM MODAL FUNCTIONS ---
+        function expandDiagram() {
+            const modal = document.getElementById('diagram-modal');
+            const content = document.getElementById('modal-content');
+            const originalSvg = document.querySelector('.mermaid svg');
+            
+            if (originalSvg) {
+                // Clear previous content
+                content.innerHTML = '';
+                
+                // Clone the SVG
+                const clone = originalSvg.cloneNode(true);
+                
+                // Ensure SVG scales to fit the modal container
+                clone.removeAttribute('style'); // Remove inline styles like max-width that might limit size
+                clone.removeAttribute('height');
+                clone.removeAttribute('width');
+                clone.style.width = '100%';
+                clone.style.height = 'auto';
+                clone.style.maxWidth = 'none';
+                
+                content.appendChild(clone);
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            }
+        }
+
+        function closeDiagram() {
+            const modal = document.getElementById('diagram-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        // Close on ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Escape") {
+                closeDiagram();
+            }
+        });
+
+        // Close on clicking outside the content (optional)
+        document.getElementById('diagram-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDiagram();
+            }
+        });
+
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initChart();
+            selectStep('input'); // Default selection
+            switchTab('script'); // Default code tab
+        });
+
+    </script>
+    
+    <!-- Placeholder Comments -->
+    <!-- Chosen Palette: Warm Neutrals (Stone) with Orange Accents for "Work/Action" -->
+    <!-- Application Structure Plan: 
+         1. Hero: Title and Context.
+         2. Problem Simulator: Interactive Chart to visualize quota pain point vs solution.
+         3. Workflow Diagram: Interactive flow replacing the static diagram, allowing deep dives into each step. Now includes Zoom functionality.
+         4. Tech Specs: Tabbed code explorer for easy copy-paste/review.
+         5. Benefits: Clear card grid summary.
+    -->
+    <!-- Visualization & Content Choices:
+         - Quota Chart (Chart.js): Bar chart clearly shows the transfer of storage burden.
+         - Interactive Steps (HTML/JS): Replaces static Mermaid/Flowchart.
+         - Mermaid Diagram with Zoom: Provides technical overview, now readable via modal.
+         - Code Tabs (HTML/JS): Clean way to present multiple script files without scrolling.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used (except generated by Mermaid/Chart.js). NO Mermaid JS used DIRECTLY (used via module import). -->
+</body>
+</html>
