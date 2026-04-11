@@ -1,6 +1,6 @@
 **INTERNAL_EXECUTION_PROTOCOL**  
 **PROTOCOL_ID:** IMFA-TECH-01
-**VERSION:** 1.1
+**VERSION:** 1.3
 **OBJECTIVE:** EXECUTE_PRIMARY_ALGORITHM_V3.1
 **LANG:** EN_US/PT-BR
 **TARGET_ENTITY:** ASSESSMENT_SYNTHESIS_DATA
@@ -27,12 +27,50 @@
   - `CHECK_ALIGNMENT(competency_id ↔ framework_map)`
   - `VALIDATE_DESCRIPTORS(CORE-COMP-REF)`
 
-3. **QUANTITATIVE_ANALYSIS_MODULE**
- - **SOURCE:** `INPUT_DATA_BOUNDED(<results></results>)`
+3. **DATA_PREPROCESSING_MODULE**
+ - **OBJECTIVE:** `NORMALIZE_INPUT_FORMAT`
+ - **LABEL_MAP:**
+   - `'Nunca acontece' → 1`
+   - `'Quase nunca acontece' → 2`
+   - `'Ocorre de vez em quando' → 3`
+   - `'Acontece com frequência' → 4`
+   - `'Acontece o tempo todo' → 5`
+ - **DETECTION_PIPELINE:**
+   - `SCAN_COLUMNS(quantitative_range)`
+   - `IF CONTAINS(LABEL_MAP.keys) → FORMAT = TEXTUAL`
+   - `ELSE IF IS_NUMERIC → FORMAT = NUMERIC`
+   - `ELSE → FLAG_ERROR(unknown_format)`
+ - **CONVERSION_PIPELINE:**
+   - `FOR EACH cell IN quantitative_columns:`
+   -   `IF IS_NUMERIC(cell) → FLOAT(cell)`
+   -   `ELIF cell IN LABEL_MAP → LABEL_MAP[cell]`
+   -   `ELIF IS_NULL(cell) → EXCLUDE_PAIRWISE`
+   -   `ELSE → FLAG_ERROR(unmapped_value)`
+ - **QUAL_COLUMN_DETECTION:**
+   - `CHECK_HEADER_NAME(column) FOR 'manter' OR 'melhorar'`
+   - `ASSIGN qual_manter, qual_melhorar BY HEADER_CONTENT`
+   - `DO NOT ASSUME BY COLUMN_POSITION`
+ - **QUESTION_MAPPING_PIPELINE:**
+   - `OBJECTIVE: MAP_ITEMS_TO_DESCRIPTORS_BY_CONTENT`
+   - `FOR EACH quantitative_column:`
+   -   `EXTRACT header_text`
+   -   `MATCH header_text AGAINST QUESTION_MAP(keywords) — case_insensitive, regex_partial`
+   -   `ASSIGN column → (competency_id, cluster_id)`
+   - `VALIDATION:`
+   -   `ASSERT EACH cluster HAS 2 mapped_items`
+   -   `IF unmapped_column → FLAG_WARNING(column_name)`
+   -   `NEVER ASSUME item_position = descriptor_identity`
+   - `NOTE: Question order within a competency block may vary between cycles. This pipeline ensures cluster assignment is stable regardless of ordering.`
+ - **POST_VALIDATION:**
+   - `ASSERT ALL values IN [1, 5]`
+   - `LOG(format_detected, rows_converted, nulls_excluded)`
+
+4. **QUANTITATIVE_ANALYSIS_MODULE**
+ - **SOURCE:** `PREPROCESSED_DATA (from DATA_PREPROCESSING_MODULE)`
  - **DATA_STRUCTURE:**
    - `competency_id: STRING` (POST_TAG=##)
-   - `self_assessment: FLOAT[1-5]` (LIKERT_SCALE)
-   - `received_ratings: ARRAY[FLOAT[1-5]]` (MULTI_SOURCE)
+   - `self_assessment: FLOAT[1-5]` (LIKERT_SCALE, normalized)
+   - `received_ratings: ARRAY[FLOAT[1-5]]` (MULTI_SOURCE, normalized)
      - `SOURCE_MAPPING: [peer, subordinate, superior]`
  - **EXECUTION_PIPELINE:**
    - `NORMALIZE_DATA(z_score_alignment)`
@@ -51,7 +89,7 @@
  - **ERROR_HANDLING:**
    - `ON_ERROR: RETURN_STATUS_AND_LOG`
 
-4. **QUALITATIVE_ANALYSIS_MODULE**
+5. **QUALITATIVE_ANALYSIS_MODULE**
  - **EXECUTION_CONDITION:** `ON_QUALITATIVE_INPUT`
  - **INPUT_STRUCTURE:**
    - `self_narratives: STRING`
@@ -68,7 +106,7 @@
    - `CHECK_WEIGHT(threshold=0.85)`
    - `VALIDATE_THEMES(competency_mapping)`
 
-5. **OUTPUT_GENERATOR**
+6. **OUTPUT_GENERATOR**
  - **PER_COMPETENCY_FORMAT:**
    - `METRICS: [mean, standard_deviation]`
    - `EVIDENCE: TF-IDF(weight>0.85)`
@@ -84,13 +122,13 @@
    - `CONTENT: INTEGRATED_FINDINGS`
    - `TERMINATION: USER_PROMPT("Next assessment?")`
 
-6. **SYSTEM_GUIDELINES**
+7. **SYSTEM_GUIDELINES**
  - **FRAMEWORK:** `CONCISE-OBJECTIVE-SPECIFIC`
  - **LEXICON:** `TECHNICAL(audience=expert)`
  - **PRIORITY:** `TIER-1(visibility=c-suite)`
  - **STATUS:** `OPERATIONAL`
 
-7. **EXECUTION_STATUS**
+8. **EXECUTION_STATUS**
  - **STATE:** `READY`
  - **AWAIT:** `IMFA_DATA_INPUT`
  - **ACCESS_CONTROL:** `ON_USER_REQUEST`
