@@ -116,7 +116,9 @@ Tabela com 3 colunas:
 **Regras:**
 - Sempre listar as 6 competências, mesmo que todas estejam na mesma faixa.
 - Ordenar da maior para a menor média (internamente calculada, não exibida).
-- A classificação em faixas segue os thresholds do IMFA-TECH: ≥4.5 = Ponto forte; 3.51–4.49 = Dentro do esperado; ≤3.50 = Ponto para desenvolver.
+- A classificação em faixas segue os thresholds do IMFA-TECH (seção 4.2), incluindo as zonas de transição: classificações nos limites (4.30–4.49 e 3.30–3.50) dependem de σ e tamanho amostral.
+- A faixa exibida ao avaliado é sempre uma das 3 (🟢🟡🔴) — a confiança (alta/moderada) é metadado interno, não aparece no documento.
+- Se o número total de avaliadores for < 3, adicionar nota visível no cabeçalho: "Resultado preliminar — número reduzido de participantes" com ícone ⚠️.
 
 **Heatmap por descritor (componente visual abaixo da tabela-resumo):**
 
@@ -273,11 +275,34 @@ Três formatos disponíveis. O usuário pode solicitar um ou mais:
 - **Cabeçalho:** "Avaliação de Desempenho 360° — Ciclo [Ano]" (alinhado à direita, itálico).
 - **Rodapé:** "Documento confidencial — uso exclusivo do avaliado e sua liderança direta" (centralizado, itálico).
 - **Paleta de cores:** Azul escuro (#1F4E79) para títulos, verde (#2E7D32) para positivos, vermelho (#C62828) para pontos de atenção, cinza (#424242) para corpo de texto.
-- **Ferramenta:** `docx-js` via Node.js. Validar com `validate.py`.
+- **Fluxo de geração (ordem de preferência):**
+  1. **Pandoc (preferencial):** Gerar o HTML primeiro (6c), depois converter:
+     ```bash
+     pandoc SE_AD_2025_Nome.html -o SE_AD_2025_Nome.docx --reference-doc=template_ad.docx
+     ```
+     Se `template_ad.docx` não estiver disponível, omitir `--reference-doc` (pandoc usará estilos padrão).
+  2. **python-docx (alternativa):** Se pandoc não estiver instalado, gerar via Python:
+     ```python
+     from docx import Document
+     doc = Document()
+     # ... montar seções programaticamente
+     doc.save('SE_AD_2025_Nome.docx')
+     ```
+  3. **Fallback manual:** Entregar apenas o .html e instruir o usuário a abrir no Word e salvar como .docx.
 
 ### 6b. Formato `.pdf`
 - **Uso:** Visualização, distribuição somente-leitura.
-- **Geração:** Conversão a partir do `.docx` via LibreOffice (`soffice.py --headless --convert-to pdf`).
+- **Fluxo de geração (ordem de preferência):**
+  1. **weasyprint (preferencial):** Converter diretamente do HTML (preserva CSS fielmente):
+     ```bash
+     weasyprint SE_AD_2025_Nome.html SE_AD_2025_Nome.pdf
+     ```
+  2. **LibreOffice headless (alternativa):** Se weasyprint não estiver disponível:
+     ```bash
+     soffice --headless --convert-to pdf SE_AD_2025_Nome.html
+     ```
+  3. **Fallback manual:** Instruir o usuário a abrir o .html no navegador e imprimir como PDF (Ctrl+P → Salvar como PDF).
+- **Nota:** O `@media print` do HTML já garante que todas as abas sejam expandidas e o bloco de confirmação seja ocultado na versão impressa/PDF.
 
 ### 6c. Formato `.html` (Intranet)
 - **Uso:** Publicação direta na intranet corporativa, acesso pelo navegador do avaliado.
@@ -330,8 +355,8 @@ Três formatos disponíveis. O usuário pode solicitar um ou mais:
   - Sublabel: "Ao confirmar, o RH e sua liderança serão notificados automaticamente."
   - Botão "Enviar confirmação" (desabilitado até o checkbox ser marcado)
   - 3 estados visuais: `.sending` (spinner), `.success` (check verde + timestamp), `.error` (mensagem vermelha)
-  - **JavaScript:** 4 variáveis de configuração no `<script>` (`GESTOR_NOME`, `GESTOR_EMAIL`, `DOCUMENTO`, `CICLO`) + `WEBHOOK_URL` (URL do Power Automate). Função `enviarConfirmacao()` faz `fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })` com os dados do gestor + timestamp.
-  - **Backend:** Power Automate flow com trigger "When a HTTP request is received" → Create item no SharePoint (lista `PDI_Confirmacoes_Leitura`) → Send email ao HRBP (opcional) → Response 200. Ver `references/EMAIL-PDI-AUTOMATION.md` para detalhes.
+  - **JavaScript:** 5 variáveis de configuração no `<script>` (`GESTOR_NOME`, `GESTOR_EMAIL`, `DOCUMENTO`, `CICLO`, `DOC_TOKEN`) + `WEBHOOK_URL` (URL do Power Automate). A variável `DOC_TOKEN` é um token HMAC-SHA256 gerado no momento da criação do HTML (ver nota no SKILL.md). Função `enviarConfirmacao()` faz `fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...payload, token: DOC_TOKEN }) })` com os dados do gestor + timestamp + token.
+  - **Backend:** Power Automate flow com trigger "When a HTTP request is received" → **Validar token** (Compose: recalcular HMAC com a mesma chave secreta e comparar com `triggerBody()?['token']`; se inválido → Response 403) → **Verificar duplicidade** (Get items no SharePoint filtrando por `gestor_email + documento + ciclo`; se já confirmado → Response 409) → Create item no SharePoint (lista `PDI_Confirmacoes_Leitura`) → Send email ao HRBP (opcional) → Response 200. Ver `references/EMAIL-PDI-AUTOMATION.md` para detalhes.
   - **Regra de impressão:** `.read-confirmation { display: none; }` no `@media print`.
 - **Nomenclatura do arquivo:** `SE_AD_[ANO]_[NOME].html`
 
@@ -393,10 +418,86 @@ Os três formatos devem conter **exatamente o mesmo conteúdo textual** — mesm
 - [ ] Botão "Enviar confirmação" desabilitado até checkbox ser marcado?
 - [ ] 3 estados visuais implementados: `.sending` (spinner), `.success` (check verde + timestamp), `.error`?
 - [ ] 4 variáveis de configuração preenchidas no `<script>`: `GESTOR_NOME`, `GESTOR_EMAIL`, `DOCUMENTO`, `CICLO`?
+- [ ] `DOC_TOKEN` preenchido (HMAC-SHA256 gerado na criação do HTML)?
 - [ ] `WEBHOOK_URL` definida (placeholder ou URL real)?
-- [ ] Função `enviarConfirmacao()` com `fetch()` POST para o webhook?
+- [ ] Função `enviarConfirmacao()` com `fetch()` POST incluindo `token: DOC_TOKEN` no payload?
 - [ ] `@media print` oculta `.read-confirmation`?
 
 ---
+
+## Exemplo de Referência — Síntese para Avaliado (Caso 1: Carlos Mendes)
+
+> **Nota:** Este exemplo serve como calibração de formato, tom e nível de detalhe. Use como referência ao gerar sínteses reais. Os dados vêm do `VALIDATION-CASES.md`, Caso 1.
+
+---
+
+### Seção 1 — Cabeçalho
+
+| Campo | Valor |
+|---|---|
+| Nome | Carlos Mendes |
+| Cargo | Gerente de Operações |
+| Ciclo | 2025 |
+| Participantes | 4 liderados, 3 colegas gestores, 1 diretor + autoavaliação |
+
+### Seção 2 — Como funciona esta avaliação
+
+> Na avaliação 360°, pessoas que trabalham diretamente com você — liderados, colegas gestores e diretores — respondem a um questionário sobre seis temas ligados à sua atuação como gestor. Você também se avalia nos mesmos temas.
+>
+> Cada pergunta usa uma escala de 1 a 5, onde 1 significa "raramente" e 5 significa "quase sempre". Os resultados são agrupados por tema, e a média das respostas define o seu resultado em cada um deles.
+>
+> O objetivo desta devolutiva não é premiar ou punir — é ajudar você a enxergar com clareza o que já funciona bem e onde existem espaços para crescer. A partir desses resultados, será construído junto com sua liderança um plano de desenvolvimento individual.
+
+### Seção 3 — Seus resultados por tema
+
+| Tema avaliado | Resultado | Comentário |
+|---|---|---|
+| Conhecimento Técnico | 🟢 Ponto forte reconhecido | Você é referência técnica para a equipe e para outras áreas |
+| Orientação para Resultados | 🟢 Ponto forte reconhecido | Sua energia e determinação para alcançar metas são reconhecidas por todos |
+| Planejamento e Organização | 🟡 Dentro do esperado | Você organiza bem as atividades e cumpre prazos, com espaço para envolver mais a equipe |
+| Otimização de Recursos | 🟡 Dentro do esperado | Há boas práticas de uso de recursos, com oportunidade de ampliar para toda a equipe |
+| Trabalho em Equipe | 🟡 Dentro do esperado | A colaboração funciona, mas a equipe gostaria de mais momentos de troca e escuta |
+| Desenvolvimento de Pessoas | 🔴 Ponto para desenvolver | A equipe sente falta de mais orientação, feedback e acompanhamento individual |
+
+*(Abaixo da tabela: heatmap accordion com 6 blocos × 5 descritores cada — ver spec completa na seção 3)*
+
+### Seção 4 — O que as pessoas reconhecem em você
+
+**Conhecimento Técnico**
+Você domina os processos e ferramentas da área com profundidade. As pessoas recorrem a você quando há dúvidas técnicas complexas, e reconhecem que você se mantém atualizado. Essa competência é consistente — todos os avaliadores convergem nessa percepção.
+
+**Orientação para Resultados**
+Sua determinação em alcançar metas é visível. Você mantém o foco mesmo diante de obstáculos e transmite um senso de urgência produtivo para a equipe. Os avaliadores reconhecem sua capacidade de priorizar o que realmente importa.
+
+### Seção 5 — Onde você pode crescer
+
+**Desenvolvimento de Pessoas**
+Sua equipe valoriza sua experiência técnica, mas sente falta de mais proximidade no dia a dia. Há espaço para investir em orientações mais frequentes, feedbacks estruturados e acompanhamento do crescimento individual. Essa é a principal oportunidade de desenvolvimento deste ciclo.
+
+### Seção 6 — Como você se vê vs. como os outros te veem
+
+> Nesta avaliação, comparamos como você se avaliou com as notas que recebeu dos outros participantes. Essa comparação ajuda a entender como a sua visão sobre si mesmo se alinha com a percepção das pessoas ao seu redor.
+
+No tema Desenvolvimento de Pessoas, existe uma diferença significativa entre sua visão e a dos avaliadores. Você se avalia acima do que os avaliadores percebem. Isso não significa que sua percepção esteja errada — mas indica que há uma lacuna entre a sua intenção e o que a equipe vivencia no dia a dia. Buscar mais feedback nesse tema pode ajudar a calibrar essa percepção.
+
+Nos demais temas, sua autoavaliação está alinhada com a visão dos avaliadores.
+
+### Seção 8 — Principais temas dos comentários
+
+**O que manter:**
+- Disponibilidade para tirar dúvidas técnicas e resolver problemas complexos
+- Foco e disciplina na entrega de resultados
+
+**O que melhorar:**
+- Frequência e qualidade do feedback individual aos liderados
+- Mais momentos de escuta ativa e acompanhamento do desenvolvimento da equipe
+
+### Seção 9 — E agora?
+
+> A partir destes resultados, será construído um Plano de Desenvolvimento Individual (PDI) em conjunto com a sua liderança direta. Esse plano vai definir ações concretas, prazos e metas para trabalhar os pontos identificados nesta avaliação.
+>
+> Você receberá uma conversa individual com o seu gestor para discutir esses resultados, tirar dúvidas e alinhar as prioridades de desenvolvimento. Esse é um momento de diálogo — aproveite para trazer a sua perspectiva.
+>
+> O acompanhamento será feito ao longo dos próximos meses, com revisões periódicas para verificar o progresso e ajustar o plano conforme necessário.
 
 **END_PROTOCOL**

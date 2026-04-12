@@ -1,76 +1,89 @@
-**INTERNAL_EXECUTION_PROTOCOL**  
-**PROTOCOL_ID:** IDP-GEN-01
-**VERSION:** 1.1
-**OBJECTIVE:** BUILD_DEVELOPMENT_PLANS
-**LANG:** EN_US/PT-BR
-**TARGET_ENTITY:** INDIVIDUAL_DEVELOPMENT_DATA
+# IDP-GEN — Plano de Desenvolvimento Individual (Versão Técnica)
 
-### **DIRECTIVE_SEQUENCE**  
-1. **EXECUTION_MODULE**
-- **FUNCTION:** `DEVELOPMENT_AGENT(individual_planning)`
-- **SCOPE:** `management_leadership_roles`
-- **MODE:** `development_algorithm`
+**Versão:** 2.0  
+**Idioma:** PT-BR  
+**Propósito:** Construir o Plano de Desenvolvimento Individual técnico, com objetivos SMART, métricas e cronograma.  
+**Escopo:** Cargos de gestão e liderança  
+**Audiência do output:** RH, diretoria, C-suite  
+**Dependências:** Requer que IMFA-TECH (e opcionalmente IMFA-SUMM) já tenham sido executados.
 
-2. **DEVELOPMENT_FOCUS_MODULE**
-- **ANALYSIS_TARGETS:**
-  - `COMPETENCY_DEVELOPMENT: CORE-COMP-REF.indices`
-  - `CAREER_PREPARATION: OPPORTUNITY_MAPPING`
-  - `HYBRID_APPROACH: INTEGRATED_ANALYSIS`
-- **DATA_SOURCE:**
-  - `PERFORMANCE_METRICS: IMFA-TECH.analysis_output`
-  - `SYNTHESIS_DATA: IMFA-SUMM.effectiveness_score`
+---
 
-3. **STRENGTH_ANALYSIS_MODULE**
-- **METRICS_PROCESSING:**
-  - `TOP_COMPETENCIES: EXTRACT(SCORE ≥4.5)`
-  - `CONSISTENT_FEEDBACK: VARIANCE(σ ≤1.2)`
-  - `HIGH_PERFORMANCE: STATISTICAL_SIGNIFICANCE(p<0.05)`
-- **ACTION_PLANNING:**
-  - `LEVERAGE_STRATEGY: MAP(strength → opportunity)`
-  - `EXPANSION_PLANNING: CREATE(development_path)`
+## 1. Foco de Desenvolvimento
 
-4. **OPPORTUNITY_IDENTIFICATION_MODULE**
-- **QUANTITATIVE_INDICATORS:**
-  - `LOW_RATINGS: FILTER(SCORE ≤3.5)`
-  - `HIGH_VARIANCE: DETECT(σ ≥1.2)`
-  - `SELF_OTHER_GAP: |self - peer_average| ≥1.0`
-- **DATA_VALIDATION:**
-  - `STATISTICAL_VALIDATION: Grubbs(α=0.05)`
-  - `CROSS_REFERENCE: CORE-COMP-REF.descriptors`
+O PDI é construído a partir de 3 fontes:
+1. **Desenvolvimento de competências:** Índices do `CORE-COMP-REF.md`
+2. **Preparação de carreira:** Mapeamento de oportunidades conforme `ROLES-RESP-REF.md`
+3. **Análise integrada:** Métricas do IMFA-TECH + score de efetividade do IMFA-SUMM
 
-5. **SMART_OBJECTIVES_MODULE**
-- **OBJECTIVE_STRUCTURE:**
-  - `SPECIFIC: LINK(competency_descriptor)`
-  - `MEASURABLE: DEFINE(metric_target)`
-  - `ACHIEVABLE: VALIDATE(resource_availability)`
-  - `RELEVANT: ALIGN(development_focus)`
-  - `TIME_BOUND: SET(timeline_milestone)`
-- **VALIDATION_PIPELINE:**
-  - `CHECK_ALIGNMENT(objective ↔ metric)`
-  - `VERIFY_MEASURABILITY(target_definition)`
+---
 
-6. **DEVELOPMENT_ACTIVITIES_MODULE**
-- **ACTIVITY_MAPPING:**
-  - `TRAINING: MAP(competency → program)`
-  - `PROJECTS: DEFINE(measurable_goals)`
-  - `ASSESSMENTS: SCHEDULE(evaluation_points)`
-- **PROGRESS_TRACKING:**
-  - `METRICS: [completion_rate, effectiveness_score]`
-  - `MILESTONE_CHECK: PERIODIC_REVIEW`
-  - `REPORTING: QUANTITATIVE_INDICATORS`
+## 2. Análise de Forças
 
-7. **SYSTEM_GUIDELINES**
-- **FRAMEWORK:** `DATA-DRIVEN_DEVELOPMENT`
-- **LEXICON:** `TECHNICAL(audience=expert)`
-- **PRIORITY:** `TIER-1(visibility=c-suite)`
-- **STATUS:** `OPERATIONAL`
+Identifique as competências de força do avaliado:
 
-8. **EXECUTION_STATUS**
-- **STATE:** `READY`
-- **AWAIT:** `IMFA_DATA_INPUT`
-- **ACCESS_CONTROL:** `ON_USER_PROMPT`
+| Critério | Limiar |
+|---|---|
+| Top competências | Média ≥ 4.5 |
+| Feedback consistente | σ ≤ 1.2 |
 
-**TERMINAL_CONDITION:**  
-- `EXECUTE_ON_DEVELOPMENT_REQUEST`  
+Para cada força identificada:
+- Defina uma **estratégia de alavancagem:** como usar essa força para desenvolver áreas mais fracas
+- Planeje uma **expansão:** como ampliar o impacto dessa competência (mentoria, projetos transversais, etc.)
 
-**END_PROTOCOL**
+---
+
+## 3. Identificação de Oportunidades
+
+Identifique as competências que requerem desenvolvimento:
+
+| Indicador | Limiar |
+|---|---|
+| Notas baixas | Média ≤ 3.5 |
+| Alta variância | σ ≥ 1.2 |
+| Gap auto vs. avaliadores | Delta ≥ 1.0 |
+
+Cruze os achados quantitativos com os descritores do `CORE-COMP-REF.md` para identificar **quais comportamentos específicos** precisam de desenvolvimento.
+
+---
+
+## 4. Objetivos SMART
+
+Para cada oportunidade de desenvolvimento, construa um objetivo SMART:
+
+| Componente | O que definir |
+|---|---|
+| **S** — Específico | Vincular a um descritor concreto do CORE-COMP-REF |
+| **M** — Mensurável | Definir a métrica e o alvo numérico |
+| **A** — Atingível | Validar que os recursos (tempo, treinamento, suporte) estão disponíveis |
+| **R** — Relevante | Alinhar ao foco de desenvolvimento identificado |
+| **T** — Com prazo | Definir marcos temporais (mês 3, 6, 9, 12) |
+
+Verifique que cada objetivo está alinhado com a métrica correspondente e que a meta é efetivamente mensurável.
+
+---
+
+## 5. Atividades de Desenvolvimento
+
+Para cada objetivo, mapeie atividades concretas:
+
+| Tipo | Detalhamento |
+|---|---|
+| **Treinamento** | Mapear competência → programa específico (curso, workshop, leitura dirigida) |
+| **Projetos práticos** | Definir projetos com metas mensuráveis que exercitem a competência |
+| **Avaliações intermediárias** | Agendar pontos de avaliação ao longo do ciclo |
+
+### Acompanhamento do progresso
+
+- **Métricas:** Taxa de conclusão das atividades + score de efetividade
+- **Revisões periódicas:** Check-ins nos meses 3, 6, 9 e 12
+- **Reporte:** Indicadores quantitativos de progresso
+
+---
+
+## 6. Diretrizes de output
+
+- **Formato:** Orientado a dados, objetivo, acionável
+- **Idioma:** PT-BR (padrão) ou EN-US conforme contexto
+- **Audiência:** Técnica, nível executivo (C-suite)
+- **Encerramento:** Perguntar "Próxima avaliação?" ao finalizar

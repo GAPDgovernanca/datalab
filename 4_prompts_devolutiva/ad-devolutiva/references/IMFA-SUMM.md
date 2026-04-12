@@ -1,93 +1,79 @@
-**INTERNAL_EXECUTION_PROTOCOL**  
-**PROTOCOL_ID:** IMFA-SUMM-01
-**VERSION:** 1.1
-**OBJECTIVE:** GENERATE_ASSESSMENT_SYNTHESES_V3.1
-**LANG:** EN_US/PT-BR
-**TARGET_ENTITY:** ASSESSMENT_SYNTHESIS_DATA
+# IMFA-SUMM — Síntese Executiva (Versão Técnica)
 
-### **DIRECTIVE_SEQUENCE**  
-1. **EXECUTION_MODULE**
- - **FUNCTION:** `SYNTHESIS_AGENT(assessment_synthesis)`
- - **SCOPE:** `management_leadership_roles`
- - **MODE:** `synthesis_algorithm`
+**Versão:** 2.0  
+**Idioma:** PT-BR  
+**Propósito:** Gerar uma versão condensada da análise IMFA-TECH, orientada para consumo rápido pela liderança sênior.  
+**Escopo:** Cargos de gestão e liderança  
+**Audiência do output:** RH, diretoria, C-suite  
+**Dependência:** Requer que IMFA-TECH já tenha sido executado.
 
-2. **COMPETENCY_MODULE**
-- **FRAMEWORK_MAPPING:** `SOURCE: CORE-COMP-REF.md`
-  - `PD-01: PEOPLE_DEVELOPMENT`
-  - `TW-02: TEAMWORK`
-  - `PO-03: PLANNING_ORGANIZATION`
-  - `RO-04: RESULTS_ORIENTATION`
-  - `TK-05: TECHNICAL_KNOWLEDGE`
-  - `RO-06: RESOURCE_OPTIMIZATION`
-- **MAPPING_DETAILS:**
-  - `DESCRIPTORS: CORE-COMP-REF.descriptors`
-  - `INDICES: CORE-COMP-REF.indices`
-  - `SCOPE: management_leadership_roles`
-- **VALIDATION:**
-  - `CHECK_ALIGNMENT(competency_id ↔ framework_map)`
-  - `VALIDATE_DESCRIPTORS(CORE-COMP-REF)`
+---
 
-3. **QUANTITATIVE_ANALYSIS_MODULE**
- - **SOURCE:** `INPUT_DATA_BOUNDED(<results></results>)`
- - **DATA_STRUCTURE:**
-   - `competency_id: STRING` (POST_TAG=##)
-   - `self_assessment: FLOAT[1-5]` (LIKERT_SCALE)
-   - `received_ratings: ARRAY[FLOAT[1-5]]` (MULTI_SOURCE)
-     - `SOURCE_MAPPING: [peer, subordinate, superior]`
- - **ANALYSIS_OUTPUT:**
-   - `STRENGTH_ANALYSIS:`
-     - `CRITERIA: SCORE ≥4.5` (aligned with IMFA-TECH)
-     - `VARIANCE: σ ≤1.2`
-     - `VALIDATION: SHA-256`
-   - `OPPORTUNITY_ANALYSIS:`
-     - `FLAG_THRESHOLD: ≤3.5` (aligned with IMFA-TECH)
-     - `STATISTICAL_TEST: GRUBBS(α=0.05)`
-     - `INDICATOR_RANGE: LOWEST_DECILE`
- - **ERROR_HANDLING:**
-   - `ON_ERROR: RETURN_STATUS_AND_LOG`
+## 1. Framework de Competências
 
-4. **PATTERN_RECOGNITION_MODULE**
- - **EXECUTION_CONDITION:** `ON_QUALITATIVE_INPUT`
- - **TEXT_PROCESSING:**
-   - `VECTORIZATION: TF-IDF`
-   - `THEME_EXTRACTION: LDA(n_topics=4)`
-   - `ANOMALY_DETECTION: Z-SCORE>3.0`
- - **VALIDATION_PIPELINE:**
-   - `CHECK_WEIGHT(threshold=0.85)`
-   - `VALIDATE_THEMES(competency_mapping)`
- - **PROCESSING_PIPELINE:**
-   - `THEMATIC_CODING(method=NVivo)`
-   - `SENTIMENT_ANALYSIS(engine=VADER)`
-   - `CROSS_REFERENCE(QA-IMFA_data)`
+Utiliza o framework definido em `CORE-COMP-REF.md` com as 6 competências (PD-01 a RO-06). Todos os descritores e índices seguem aquele referencial.
 
-5. **OUTPUT_GENERATOR**
- - **PER_COMPETENCY_FORMAT:**
-   - `METRICS: [mean, standard_deviation]`
-   - `EVIDENCE: TF-IDF(weight>0.85)`
-   - `GAP_ANALYSIS: |self - peer_average|`
-   - `RECOMMENDATIONS: SMART_FORMAT`
- - **EXECUTIVE_SUMMARY:**
-   - `EFFECTIVENESS_SCORE: COMPUTE_IMFA`
-   - `PRIORITIZE_BY(delta, variance)`
- - **OUTPUT_FORMAT:**
-   - `REPORT_TYPE: CONCISE`
-   - `PREAMBLE: NONE`
-   - `LANGUAGE: [EN_US, PT-BR]`
-   - `CONTENT: INTEGRATED_FINDINGS`
-   - `TERMINATION: USER_PROMPT("Next assessment?")`
+---
 
-6. **SYSTEM_GUIDELINES**
- - **FRAMEWORK:** `CONCISE-OBJECTIVE-SPECIFIC`
- - **LEXICON:** `TECHNICAL(audience=expert)`
- - **PRIORITY:** `TIER-1(visibility=c-suite)`
- - **STATUS:** `OPERATIONAL`
+## 2. Dados de entrada
 
-7. **EXECUTION_STATUS**
- - **STATE:** `READY`
- - **AWAIT:** `IMFA_DATA_INPUT`
- - **ACCESS_CONTROL:** `ON_USER_REQUEST`
+Os dados devem estar dentro de `<results></results>` e conter, por competência:
+- `competency_id` — identificador da competência
+- `self_assessment` — nota do avaliado (escala 1–5)
+- `received_ratings` — array de notas dos avaliadores (pares, subordinados, superiores)
 
-**TERMINAL_CONDITION:**  
-- `EXECUTE_ALL_MODULES_SEQUENTIALLY`  
+---
 
-**END_PROTOCOL**
+## 3. Análise Quantitativa
+
+Usar os mesmos limiares calibrados do IMFA-TECH (ver seção 4.2 do IMFA-TECH para a tabela completa com zonas de incerteza):
+
+| Condição | Classificação |
+|---|---|
+| Média ≥ 4.5 **e** σ ≤ 1.2 | **Força** (alta confiança) |
+| Média entre 4.30–4.49 **e** σ ≤ 1.0 **e** n ≥ 5 | **Força** (confiança moderada) |
+| Média ≤ 3.29 | **Oportunidade de desenvolvimento** (alta confiança) |
+| Média entre 3.30–3.50 **e** σ ≤ 1.0 **e** n ≥ 5 | **Oportunidade de desenvolvimento** (confiança moderada) |
+| Delta ≥ 1.0 | **Discrepância auto vs. avaliadores** |
+| σ ≥ 1.2 | **Alta dispersão** |
+| n < 3 avaliadores | **Resultado preliminar** — sinalizar baixa confiança |
+
+Classificações nos limites (zonas de transição 4.30–4.49 e 3.30–3.50) dependem de σ e tamanho amostral. Consultar IMFA-TECH seção 4.2 para regras completas.
+
+---
+
+## 4. Análise Qualitativa (se houver dados)
+
+Se dados qualitativos estiverem presentes:
+1. Identifique os 3–4 temas mais recorrentes nos comentários
+2. Analise o sentimento predominante de cada tema
+3. Cruze os temas qualitativos com os achados quantitativos — sinalize convergências e divergências
+
+---
+
+## 5. Output
+
+### Por competência
+
+| Campo | Conteúdo |
+|---|---|
+| Métricas | Média e desvio padrão |
+| Evidências | Extraídas dos dados quantitativos e qualitativos |
+| Gap analysis | |autoavaliação − média dos avaliadores| com direção |
+| Recomendações | Formato SMART |
+
+### Resumo executivo consolidado
+
+1. **Score de efetividade (IMFA):** Média ponderada geral
+2. **Priorização:** Ordenar achados por delta (maior primeiro) e variância
+3. **Forças:** Competências ≥ 4.5 com σ ≤ 1.2
+4. **Oportunidades:** Competências ≤ 3.5, ordenadas por urgência
+
+---
+
+## 6. Diretrizes de output
+
+- **Formato:** Conciso, objetivo, específico — sem preâmbulos
+- **Idioma:** PT-BR (padrão) ou EN-US conforme contexto
+- **Audiência:** Técnica, nível executivo (C-suite)
+- **Encerramento:** Perguntar "Próxima avaliação?" ao finalizar

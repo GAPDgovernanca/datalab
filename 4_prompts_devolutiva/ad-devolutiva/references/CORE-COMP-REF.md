@@ -1,77 +1,81 @@
-**INTERNAL_EXECUTION_PROTOCOL**  
-**PROTOCOL_ID:** CORE-COMP-REF-01
-**VERSION:** 1.1
-**OBJECTIVE:** MAP_COMPETENCIES_DESCRIPTORS_INDICES
-**LANG:** EN_US/PT-BR
-**TARGET_ENTITY:** COMPETENCY_FRAMEWORK_DATA
+# CORE-COMP-REF — Framework de Competências
 
-### **DIRECTIVE_SEQUENCE**  
-1. **COMPETENCY_MAPPING**
- - **RO-04: RESULTS_ORIENTATION**
-   - **DESCRIPTORS:**
-     - `RO-04.1: OBJECTIVE_ACCEPTANCE_RESOLUTION`
-     - `RO-04.2: COMMITMENT_MAINTENANCE`
-     - `RO-04.3: MEASUREMENT_CREATION`
-     - `RO-04.4: URGENCY_MANAGEMENT`
-     - `RO-04.5: TASK_PRIORITIZATION`
-     - `RO-04.6: TEAM_PARTICIPATION_ENCOURAGEMENT`
-   - **INDICES:** `WEIGHTED_SCORE[1-5]`
+**Versão:** 2.0  
+**Idioma:** PT-BR  
+**Propósito:** Dicionário que ancora toda a análise. Esta é a única fonte de verdade para competências e descritores do ciclo 360°.
 
- - **TK-05: TECHNICAL_KNOWLEDGE**
-   - **DESCRIPTORS:**
-     - `TK-05.1: TECHNICAL_EXPERTISE_APPLICATION`
-     - `TK-05.2: AUTONOMOUS_TASK_EXECUTION`
-     - `TK-05.3: COMPLEX_PROBLEM_SOLVING`
-     - `TK-05.4: CONTINUOUS_LEARNING`
-   - **INDICES:** `WEIGHTED_SCORE[1-5]`
+---
 
- - **TW-02: TEAMWORK**
-   - **DESCRIPTORS:**
-     - `TW-02.1: INFORMATION_SHARING`
-     - `TW-02.2: TEAM_SPIRIT_DEMONSTRATION`
-     - `TW-02.3: COLLECTIVE_EFFORT_SUPPORT`
-     - `TW-02.4: TEAM_DEVELOPMENT_ENCOURAGEMENT`
-   - **INDICES:** `WEIGHTED_SCORE[1-5]`
+## Escala
 
- - **PO-03: PLANNING_ORGANIZATION**
-   - **DESCRIPTORS:**
-     - `PO-03.1: PRIORITY_MANAGEMENT`
-     - `PO-03.2: TASK_BREAKDOWN_COORDINATION`
-     - `PO-03.3: TIME_ALLOCATION_SCHEDULING`
-     - `PO-03.4: PLAN_ADAPTATION_RESOURCE_MANAGEMENT`
-   - **INDICES:** `WEIGHTED_SCORE[1-5]`
+Todas as competências são avaliadas na escala Likert de 1 a 5 (1 = raramente, 5 = quase sempre).
 
- - **RO-06: RESOURCE_OPTIMIZATION**
-   - **DESCRIPTORS:**
-     - `RO-06.1: PROCESS_OPTIMIZATION_IMPLEMENTATION`
-     - `RO-06.2: COST_REDUCTION_EXECUTION`
-     - `RO-06.3: PROCESS_IMPROVEMENT_PROPOSAL`
-     - `RO-06.4: EXCELLENCE_PURSUIT_LEADERSHIP`
-     - `RO-06.5: RESOURCE_USAGE_INSTRUCTION`
-   - **INDICES:** `WEIGHTED_SCORE[1-5]`
+---
 
- - **PD-01: PEOPLE_DEVELOPMENT**
-   - **DESCRIPTORS:**
-     - `PD-01.1: TASK_ASSIGNMENT_STRENGTH_RECOGNITION`
-     - `PD-01.2: DEVELOPMENT_PLANNING_FEEDBACK`
-     - `PD-01.3: ACHIEVEMENT_RECOGNITION_CONFIDENCE`
-     - `PD-01.4: LEARNING_OPPORTUNITY_FACILITATION`
-   - **INDICES:** `WEIGHTED_SCORE[1-5]`
+## Competências e Descritores
 
-2. **VALIDATION_MODULE**
- - **COMPETENCY_VALIDATION:**
-   - `CHECK_COMPLETENESS(all_descriptors)`
-   - `VALIDATE_INDICES(scale_consistency)`
-   - `VERIFY_MAPPING(competency_alignment)`
- - **ERROR_HANDLING:**
-   - `ON_ERROR: RETURN_STATUS_AND_LOG`
+### PD-01: Desenvolvimento de Pessoas
 
-3. **EXECUTION_STATUS**
- - **STATE:** `READY`
- - **ACCESS_CONTROL:** `GLOBAL_ACCESS`
- - **UPDATE_FREQUENCY:** `ON_COMPETENCY_REVIEW`
+| Código | Descritor | Descrição |
+|---|---|---|
+| PD-01.1 | Atribuição e reconhecimento de forças | Atribui tarefas considerando as forças individuais dos membros da equipe |
+| PD-01.2 | Planejamento de desenvolvimento e feedback | Planeja o desenvolvimento da equipe e fornece feedback estruturado |
+| PD-01.3 | Reconhecimento de conquistas e confiança | Reconhece conquistas e constrói confiança na equipe |
+| PD-01.4 | Facilitação de oportunidades de aprendizado | Facilita e promove oportunidades de aprendizado contínuo |
 
-**TERMINAL_CONDITION:**  
-- `MAINTAIN_UPDATED_REFERENCE`  
+### TW-02: Trabalho em Equipe
 
-**END_PROTOCOL**
+| Código | Descritor | Descrição |
+|---|---|---|
+| TW-02.1 | Compartilhamento de informações | Compartilha informações relevantes de forma ativa e transparente |
+| TW-02.2 | Demonstração de espírito de equipe | Demonstra engajamento coletivo e colaboração |
+| TW-02.3 | Suporte ao esforço coletivo | Apoia esforços coletivos e contribui para resultados do grupo |
+| TW-02.4 | Encorajamento ao desenvolvimento da equipe | Incentiva o crescimento e desenvolvimento dos colegas |
+
+### PO-03: Planejamento e Organização
+
+| Código | Descritor | Descrição |
+|---|---|---|
+| PO-03.1 | Gestão de prioridades | Prioriza atividades conforme impacto e urgência |
+| PO-03.2 | Coordenação e decomposição de tarefas | Decompõe tarefas complexas e coordena a execução |
+| PO-03.3 | Alocação de tempo e cronogramas | Gerencia tempo, define cronogramas e cumpre prazos |
+| PO-03.4 | Adaptação de planos e gestão de recursos | Adapta planos conforme necessário e gerencia recursos |
+
+### RO-04: Orientação para Resultados
+
+| Código | Descritor | Descrição |
+|---|---|---|
+| RO-04.1 | Aceitação de objetivos e resolução | Aceita objetivos desafiadores com determinação |
+| RO-04.2 | Manutenção do comprometimento | Mantém comprometimento com metas ao longo do tempo |
+| RO-04.3 | Criação de métricas | Cria indicadores para medir progresso e resultados |
+| RO-04.4 | Gestão de urgência | Gerencia situações de urgência com determinação e foco |
+| RO-04.5 | Priorização de tarefas | Prioriza tarefas por impacto no resultado |
+| RO-04.6 | Encorajamento da participação da equipe | Incentiva a participação ativa de toda a equipe nos resultados |
+
+### TK-05: Conhecimento Técnico
+
+| Código | Descritor | Descrição |
+|---|---|---|
+| TK-05.1 | Aplicação de expertise técnica | Aplica conhecimentos técnicos para resolver problemas da área |
+| TK-05.2 | Execução autônoma de tarefas | Executa tarefas com autonomia dentro de sua especialidade |
+| TK-05.3 | Resolução de problemas complexos | Resolve problemas complexos com soluções técnicas adequadas |
+| TK-05.4 | Aprendizado contínuo | Busca atualização e desenvolvimento técnico contínuo |
+
+### RO-06: Otimização de Recursos
+
+| Código | Descritor | Descrição |
+|---|---|---|
+| RO-06.1 | Implementação de otimização de processos | Implementa melhorias nos processos existentes |
+| RO-06.2 | Execução de redução de custos | Executa ações para reduzir custos e desperdícios |
+| RO-06.3 | Proposta de melhorias de processo | Propõe melhorias concretas nos processos |
+| RO-06.4 | Busca de excelência e liderança | Busca excelência operacional e lidera iniciativas de melhoria |
+| RO-06.5 | Instrução sobre uso de recursos | Orienta a equipe sobre uso adequado e eficiente de recursos |
+
+---
+
+## Regras de Validação
+
+Ao utilizar este framework, verifique:
+1. **Completude:** Todas as 6 competências devem estar presentes na análise, com todos os seus descritores.
+2. **Consistência de escala:** Todos os valores devem estar no intervalo [1, 5].
+3. **Alinhamento:** Cada item do questionário deve estar mapeado a exatamente uma competência e um descritor.

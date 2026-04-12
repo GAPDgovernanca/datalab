@@ -202,11 +202,34 @@ Três formatos disponíveis. O usuário pode solicitar um ou mais:
 - **Cabeçalho:** "Plano de Desenvolvimento Individual — Ciclo [Ano]" (alinhado à direita, itálico).
 - **Rodapé:** "Documento confidencial — uso exclusivo do avaliado e sua liderança direta" (centralizado, itálico).
 - **Paleta de cores:** Mesma do IMFA-SUMM-AVALIADO — Azul escuro (#1F4E79) para títulos, verde (#2E7D32) para forças, vermelho (#C62828) para pontos de atenção, cinza (#424242) para corpo de texto.
-- **Ferramenta:** `docx-js` via Node.js. Validar com `validate.py`.
+- **Fluxo de geração (ordem de preferência):**
+  1. **Pandoc (preferencial):** Gerar o HTML primeiro (6c), depois converter:
+     ```bash
+     pandoc PDI_AD_2025_Nome.html -o PDI_AD_2025_Nome.docx --reference-doc=template_ad.docx
+     ```
+     Se `template_ad.docx` não estiver disponível, omitir `--reference-doc`.
+  2. **python-docx (alternativa):** Se pandoc não estiver instalado, gerar via Python:
+     ```python
+     from docx import Document
+     doc = Document()
+     # ... montar seções programaticamente
+     doc.save('PDI_AD_2025_Nome.docx')
+     ```
+  3. **Fallback manual:** Entregar apenas o .html e instruir o usuário a abrir no Word e salvar como .docx.
 
 ### 6b. Formato `.pdf`
 - **Uso:** Visualização, distribuição somente-leitura.
-- **Geração:** Conversão a partir do `.docx` via LibreOffice (`soffice.py --headless --convert-to pdf`).
+- **Fluxo de geração (ordem de preferência):**
+  1. **weasyprint (preferencial):** Converter diretamente do HTML (preserva CSS fielmente):
+     ```bash
+     weasyprint PDI_AD_2025_Nome.html PDI_AD_2025_Nome.pdf
+     ```
+  2. **LibreOffice headless (alternativa):** Se weasyprint não estiver disponível:
+     ```bash
+     soffice --headless --convert-to pdf PDI_AD_2025_Nome.html
+     ```
+  3. **Fallback manual:** Instruir o usuário a abrir o .html no navegador e imprimir como PDF (Ctrl+P → Salvar como PDF).
+- **Nota:** O `@media print` do HTML já garante que todas as abas sejam expandidas e o bloco de confirmação seja ocultado na versão impressa/PDF.
 
 ### 6c. Formato `.html` (Intranet)
 - **Uso:** Publicação direta na intranet corporativa.
@@ -241,7 +264,7 @@ Três formatos disponíveis. O usuário pode solicitar um ou mais:
   - **JavaScript:** Função `openTab(tabId, btn)` no final do `<body>`.
   - **Regra de impressão:** `@media print` oculta `.nav-tabs` e força exibição de todos os `.tab-pane`.
 - **Print-friendly:** Inclui `@media print` para impressão limpa, com todas as abas expandidas. O bloco de confirmação é ocultado na impressão.
-- **Confirmação de leitura (obrigatório no HTML):** Mesmo componente do IMFA-SUMM-AVALIADO. Bloco `.read-confirmation` fixo após as tabs, com checkbox + botão + webhook. A variável `DOCUMENTO` é preenchida como `"PDI"` (em vez de `"Síntese Executiva"`). A `WEBHOOK_URL` é a mesma para todos os documentos e gestores.
+- **Confirmação de leitura (obrigatório no HTML):** Mesmo componente do IMFA-SUMM-AVALIADO. Bloco `.read-confirmation` fixo após as tabs, com checkbox + botão + webhook. A variável `DOCUMENTO` é preenchida como `"PDI"` (em vez de `"Síntese Executiva"`). A `WEBHOOK_URL` e o mecanismo de segurança (`DOC_TOKEN` HMAC-SHA256) são idênticos ao IMFA-SUMM-AVALIADO — ver seção de Confirmação de Leitura naquele módulo para especificação completa.
 - **Nomenclatura do arquivo:** `PDI_AD_[ANO]_[NOME].html`
 
 ### Regra de consistência entre formatos
@@ -290,9 +313,100 @@ Os três formatos devem conter **exatamente o mesmo conteúdo textual** — mesm
 - [ ] Bloco `.read-confirmation` presente após as tabs?
 - [ ] Checkbox + botão + 3 estados visuais implementados?
 - [ ] Variável `DOCUMENTO` preenchida como `"PDI"`?
+- [ ] `DOC_TOKEN` preenchido (HMAC-SHA256 gerado na criação do HTML)?
 - [ ] `WEBHOOK_URL` definida (mesma URL para todos os documentos)?
+- [ ] Payload do `fetch()` inclui `token: DOC_TOKEN`?
 - [ ] `@media print` oculta `.read-confirmation`?
 
 ---
+
+## Exemplo de Referência — PDI para Avaliado (Caso 1: Carlos Mendes)
+
+> **Nota:** Este exemplo serve como calibração de formato, tom e nível de detalhe. Use como referência ao gerar PDIs reais. Os dados vêm do `VALIDATION-CASES.md`, Caso 1.
+
+---
+
+### Seção 1 — Cabeçalho
+
+| Campo | Valor |
+|---|---|
+| Nome | Carlos Mendes |
+| Cargo | Gerente de Operações |
+| Ciclo | 2025–2026 |
+| Base | Avaliação de Desempenho 360° — Ciclo 2025 |
+
+### Seção 2 — O que é este plano
+
+> Este é o seu Plano de Desenvolvimento Individual (PDI). Ele foi construído a partir dos resultados da sua Avaliação de Desempenho 360° e representa um compromisso de crescimento entre você e sua liderança.
+>
+> Aqui você vai encontrar os pontos em que pode crescer, as ações concretas para chegar lá e os marcos que vão ajudar a acompanhar o progresso. Não é um documento de cobrança — é um mapa para você se desenvolver com direção e propósito.
+>
+> O plano é vivo: pode e deve ser ajustado ao longo do caminho, nas conversas com seu gestor. O mais importante é dar o primeiro passo.
+
+> *"Um líder técnico se transforma em líder de pessoas quando aprende que o resultado mais duradouro é aquele que a equipe alcança junto."*
+
+### Seção 3 — O que já funciona — e como usar a seu favor
+
+**🟢 Conhecimento Técnico**
+Você é referência técnica para a equipe e para outras áreas. As pessoas recorrem a você quando há dúvidas complexas, e reconhecem que você se mantém atualizado e aplica conhecimentos com precisão.
+
+*Como usar a seu favor:* Essa experiência técnica pode ser transformada em ferramenta de desenvolvimento — ao ensinar e orientar, você desenvolve a equipe enquanto reforça suas próprias competências.
+
+**🟢 Orientação para Resultados**
+Sua determinação e foco em metas são reconhecidos por todos. Você prioriza o que importa e mantém a energia mesmo diante de obstáculos.
+
+*Como usar a seu favor:* Essa disciplina pode ser canalizada para estruturar momentos de feedback e acompanhamento — transformar a entrega de resultados em oportunidade de desenvolvimento da equipe.
+
+### Seção 4 — Onde focar o seu desenvolvimento
+
+**🔴 Desenvolvimento de Pessoas**
+Sua equipe valoriza sua experiência, mas sente falta de mais proximidade no dia a dia. Há espaço para investir em orientações mais frequentes, feedbacks estruturados e acompanhamento do crescimento individual.
+
+*Por que é prioridade:* Este foi o tema com o resultado mais baixo na avaliação, e houve uma diferença importante entre como você se vê e como a equipe te percebe nesse ponto. Investir aqui terá impacto direto no engajamento e no desempenho do time.
+
+### Seção 5 — Seu plano de ação
+
+**Mês 1** — *Conversas de abertura*
+Agende uma conversa individual de 20 minutos com cada membro da equipe. Pergunte o que está funcionando, o que pode melhorar e como você pode apoiar. Apenas escute.
+`Desenvolvimento de Pessoas`
+
+**Mês 2** — *Rotina de feedback*
+Comece a dar pelo menos um feedback breve por semana a um membro da equipe. Não precisa ser formal — pode ser após uma entrega ou reunião. Foque em comportamentos observáveis.
+`Desenvolvimento de Pessoas`
+
+**Mês 3** — *Workshop de delegação*
+Participe de um treinamento sobre delegação e desenvolvimento de equipes. Converse com o RH sobre opções disponíveis.
+`Desenvolvimento de Pessoas`
+
+**Mês 4** — *Mentoria técnica estruturada*
+Escolha 1 membro da equipe para uma mentoria técnica mensal. Use sua força em Conhecimento Técnico como ferramenta de desenvolvimento.
+`Desenvolvimento de Pessoas` `Conhecimento Técnico`
+
+**Mês 6** — *Planejamento de desenvolvimento da equipe*
+Construa com cada liderado um mini-plano de desenvolvimento (3 ações para os próximos 6 meses). Valide com sua liderança.
+`Desenvolvimento de Pessoas` `Planejamento e Organização`
+
+**Mês 8** — *Ampliar a escuta*
+Implemente uma rodada de feedback reverso — peça à equipe que avalie como você evoluiu nos últimos meses. Use o que ouvir para ajustar o plano.
+`Desenvolvimento de Pessoas`
+
+**Mês 10** — *Projeto de integração*
+Lidere um projeto multidisciplinar que exija colaboração com outras áreas. Delegue tarefas e acompanhe o progresso da equipe.
+`Trabalho em Equipe` `Desenvolvimento de Pessoas`
+
+### Seção 6 — Como vamos acompanhar
+
+| Mês | Objetivo | Descrição |
+|---|---|---|
+| 3 | Primeiro check-in | Verificar se as conversas individuais aconteceram e se a rotina de feedback começou. Ajustar o que for necessário. |
+| 6 | Revisão intermediária | Pulso informal com liderados. Avaliar se a equipe percebe mudança na frequência de orientação e feedback. Recalibrar se preciso. |
+| 9 | Avaliação de progresso | Verificar andamento da mentoria técnica e dos mini-planos de desenvolvimento. Preparar-se para o ciclo seguinte. |
+| 12 | Nova Avaliação 360° | Comparar resultados com o ciclo 2025. Celebrar o progresso. Definir próximos desafios. |
+
+### Seção 7 — Uma mensagem final
+
+**O crescimento acontece um passo de cada vez.**
+
+Você tem a capacidade técnica e a determinação — isso é reconhecido por todos. O próximo passo é usar essas forças para se aproximar da equipe e construir um time mais forte. Cada conversa, cada feedback, cada momento de escuta conta. O plano é seu e o caminho está à frente.
 
 **END_PROTOCOL**

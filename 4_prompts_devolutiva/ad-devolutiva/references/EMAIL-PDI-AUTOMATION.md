@@ -155,6 +155,41 @@ As variáveis são substituídas via expressão do Power Automate no passo Compo
 
 ---
 
+### 5.1. Segurança do Webhook de Confirmação de Leitura
+
+O webhook de confirmação de leitura (trigger HTTP nos HTMLs do IMFA-SUMM-AVALIADO e IDP-GEN-AVALIADO) requer validação para evitar envios forjados ou duplicados.
+
+#### Geração do token (lado Claude / criação do HTML)
+Ao gerar cada HTML, Claude deve criar um `DOC_TOKEN` usando HMAC-SHA256:
+```python
+import hmac, hashlib
+payload_str = f"{gestor_email}|{documento}|{ciclo}"
+DOC_TOKEN = hmac.new(CHAVE_SECRETA.encode(), payload_str.encode(), hashlib.sha256).hexdigest()
+```
+A `CHAVE_SECRETA` é definida pelo administrador e compartilhada com o Power Automate (armazenada como variável de ambiente ou no Azure Key Vault). O token é inserido como variável JS no HTML gerado.
+
+#### Validação no Power Automate (trigger HTTP da confirmação)
+O flow de confirmação de leitura (separado do flow de email mensal — seção 5) segue estes passos:
+
+| # | Ação | Detalhe |
+|---|---|---|
+| 1 | **When a HTTP request is received** | Trigger manual via POST. Schema JSON: `{ gestor_nome, gestor_email, documento, ciclo, timestamp, token }` |
+| 2 | **Compose — Recalcular HMAC** | `concat(triggerBody()?['gestor_email'], '|', triggerBody()?['documento'], '|', triggerBody()?['ciclo'])` → HMAC-SHA256 com a mesma `CHAVE_SECRETA` |
+| 3 | **Condition — Token válido?** | Comparar HMAC recalculado com `triggerBody()?['token']`. Se diferente → **Response 403** (Forbidden) e encerrar |
+| 4 | **Get items — Verificar duplicidade** | SharePoint List `PDI_Confirmacoes_Leitura` → filtrar por `gestor_email eq '...' and documento eq '...' and ciclo eq '...'`. Se count > 0 → **Response 409** (Conflict) e encerrar |
+| 5 | **Create item** | SharePoint List `PDI_Confirmacoes_Leitura`: `gestor_nome`, `gestor_email`, `documento`, `ciclo`, `data_confirmacao = utcNow()` |
+| 6 | **Send email (opcional)** | Notificar HRBP sobre a confirmação |
+| 7 | **Response 200** | Retornar sucesso ao HTML |
+
+#### Checklist de segurança do webhook
+- [ ] `DOC_TOKEN` gerado com HMAC-SHA256 na criação de cada HTML?
+- [ ] `CHAVE_SECRETA` armazenada de forma segura (Key Vault ou variável de ambiente do Power Automate)?
+- [ ] Flow valida token antes de gravar no SharePoint?
+- [ ] Flow verifica duplicidade (mesma pessoa + documento + ciclo)?
+- [ ] Response 403 para token inválido, 409 para duplicado, 200 para sucesso?
+
+---
+
 ## 6. Regras de Padronização
 
 1. **Todos os gestores** recebem exatamente os mesmos templates, com conteúdo variável.
@@ -201,5 +236,101 @@ As variáveis são substituídas via expressão do Power Automate no passo Compo
 - [ ] Assuntos dinâmicos por tipo?
 
 ---
+
+## Exemplo de Referência — Emails para Carlos Mendes (Caso 1)
+
+> **Nota:** Exemplos compactos dos 4 tipos de email + 3 linhas da tabela de controle, para calibrar tom, formato e nível de detalhe.
+
+### Template 1 — Boas-vindas (mês 0)
+
+**Assunto:** PDI 2025-2026 | Seu plano de desenvolvimento está pronto, Carlos
+
+**Corpo (resumo do conteúdo):**
+
+Olá Carlos,
+
+Seu Plano de Desenvolvimento Individual está pronto e disponível na intranet.
+
+Ao longo dos próximos 12 meses, você receberá lembretes mensais com as ações programadas e, a cada trimestre, um convite para fazer um balanço do progresso com sua liderança.
+
+**Seus focos prioritários neste ciclo:**
+
+- **Desenvolvimento de Pessoas** — Investir em orientação, feedback e acompanhamento da equipe
+- **Trabalho em Equipe** — Ampliar momentos de escuta e troca com o time
+
+> *"Um líder técnico se transforma em líder de pessoas quando aprende que o resultado mais duradouro é aquele que a equipe alcança junto."*
+
+[Acessar meu PDI na intranet →]
+
+### Template 2 — Lembrete mensal (mês 2)
+
+**Assunto:** PDI | Mês 2 de 12 — Suas ações deste mês, Carlos
+
+**Corpo (resumo):**
+
+Olá Carlos,
+
+[████░░░░░░░░] Mês 2 de 12 — 17% do ciclo
+
+**Ação deste mês:**
+
+🔴 *Rotina de feedback* — Comece a dar pelo menos um feedback breve por semana a um membro da equipe. Foque em comportamentos observáveis.
+`Desenvolvimento de Pessoas`
+
+[Acessar meu PDI na intranet →]
+
+### Template 3 — Check-in (mês 3)
+
+**Assunto:** PDI | Mês 3 — Hora de fazer um balanço, Carlos
+
+**Corpo (resumo):**
+
+Olá Carlos,
+
+[████████░░░░] Mês 3 de 12 — 25% do ciclo
+
+É hora do primeiro check-in. Antes da conversa com sua liderança, reflita:
+
+- As conversas individuais com a equipe aconteceram?
+- Você conseguiu dar feedbacks breves com regularidade?
+- O que funcionou? O que precisa ajustar?
+
+**Seus marcos:**
+- ● Mês 3 — Primeiro check-in ← *Você está aqui*
+- ○ Mês 6 — Revisão intermediária
+- ○ Mês 9 — Avaliação de progresso
+- ○ Mês 12 — Nova Avaliação 360°
+
+[Acessar meu PDI na intranet →]
+
+### Template 4 — Encerramento (mês 12)
+
+**Assunto:** PDI | Ciclo completo — Parabéns, Carlos
+
+**Corpo (resumo):**
+
+Olá Carlos,
+
+[████████████] Mês 12 de 12 — 100% do ciclo
+
+🎉 **Você completou o ciclo do PDI 2025-2026.**
+
+Ao longo destes 12 meses, você trabalhou para se aproximar da equipe, construir rotinas de feedback e usar sua expertise técnica como ferramenta de desenvolvimento. Cada passo conta — e o próximo ciclo de Avaliação 360° vai mostrar o progresso.
+
+**Seus marcos:**
+- ✅ Mês 3 — Primeiro check-in
+- ✅ Mês 6 — Revisão intermediária
+- ✅ Mês 9 — Avaliação de progresso
+- ● Mês 12 — Nova Avaliação 360° ← *Agora*
+
+[Acessar meu PDI na intranet →]
+
+### Tabela de controle — 3 linhas de exemplo
+
+| gestor_nome | mes | tipo_email | acao_titulo | acao_detalhe | competencia_tag | perguntas_checkin | status |
+|---|---|---|---|---|---|---|---|
+| Carlos Mendes | 0 | boas-vindas | Desenvolvimento de Pessoas; Trabalho em Equipe | Focos prioritários do ciclo | Desenvolvimento de Pessoas; Trabalho em Equipe | | pendente |
+| Carlos Mendes | 2 | acao | Rotina de feedback | Dar pelo menos um feedback breve por semana a um membro da equipe | Desenvolvimento de Pessoas | | pendente |
+| Carlos Mendes | 3 | checkin | Workshop de delegação | Participar de treinamento sobre delegação e desenvolvimento | Desenvolvimento de Pessoas | As conversas individuais aconteceram?\|Você deu feedbacks com regularidade?\|O que precisa ajustar? | pendente |
 
 **END_PROTOCOL**

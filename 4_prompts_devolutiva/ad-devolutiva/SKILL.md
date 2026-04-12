@@ -53,106 +53,32 @@ As 6 competências do framework são:
 
 ### Fase 1 — Receber, normalizar e validar dados
 
-Os dados podem chegar em formatos diferentes dependendo do ciclo. A skill deve detectar o formato e normalizar antes de qualquer cálculo.
+Os dados podem chegar em formatos diferentes dependendo do ciclo (numérico direto ou rótulos textuais). O módulo IMFA-TECH contém todas as regras de normalização, incluindo:
 
-**Formatos aceitos:**
-- **Numérico direto:** Valores `1`, `2`, `3`, `4`, `5` (escala Likert já convertida). Típico de ciclos mais antigos (ex: 2023).
-- **Textual descritivo:** Rótulos textuais que descrevem a frequência. Típico de ciclos mais recentes (ex: 2024). Requer mapeamento para numérico.
+- **LABEL_MAP:** Mapeamento de rótulos textuais para notas 1–5 (ver `references/IMFA-TECH.md`, seção 2.1)
+- **QUESTION_MAP:** Mapeamento de perguntas a clusters por conteúdo do header, não por posição (ver `references/IMFA-TECH.md`, seção 2.5)
+- **Regras de detecção:** Formato misto, colunas qualitativas invertidas, validação pós-conversão (ver `references/IMFA-TECH.md`, seções 2.2–2.6)
 
-**Mapeamento padrão texto → número (LABEL_MAP):**
-
-| Rótulo textual | Nota |
-|---|---|
-| `Nunca acontece` | 1 |
-| `Quase nunca acontece` | 2 |
-| `Ocorre de vez em quando` | 3 |
-| `Acontece com frequência` | 4 |
-| `Acontece o tempo todo` | 5 |
-
-**Regras de normalização:**
-1. **Detecção automática:** Ao carregar os dados, verificar se as colunas quantitativas contêm valores numéricos ou textuais. Se qualquer célula contiver um dos rótulos do LABEL_MAP, aplicar a conversão em todo o dataset.
-2. **Conversão:** Para cada célula quantitativa, aplicar: se é numérico (int/float), usar diretamente; se é texto presente no LABEL_MAP, converter para o número correspondente; se é vazio/NaN, tratar como ausente (exclusão pairwise, sem imputação).
-3. **Formato misto:** Um mesmo arquivo pode conter ambos os formatos (ex: coluna com `3` e outra com `Acontece com frequência`). A conversão é aplicada célula a célula, não por coluna.
-4. **Validação pós-conversão:** Após normalização, todos os valores devem estar no intervalo [1, 5]. Valores fora desse intervalo → sinalizar como erro.
-5. **Detecção de colunas qualitativas invertidas:** Em alguns ciclos, as colunas "Coisas para manter" e "Coisas para melhorar" podem estar invertidas na ordem (manter primeiro vs. melhorar primeiro). Verificar o nome do header da coluna para identificar qual é qual — não assumir pela posição.
-6. **Mapeamento de perguntas por conteúdo, não por posição (QUESTION_MAP):** A ordem das perguntas dentro de cada bloco de competência pode variar entre ciclos. A skill **nunca assume que o item na posição N é sempre a mesma pergunta**. Em vez disso, lê o texto do header de cada coluna e faz match por palavras-chave para identificar qual descritor aquele item representa. Isso é crítico para:
-   - O heatmap por descritor (clusters precisam conter as perguntas corretas independente da ordem)
-   - Comparativos ano-a-ano no nível de item (se implementado futuramente)
-
-**Tabela QUESTION_MAP — Palavras-chave de identificação por descritor:**
-
-| Competência | Cluster | Palavras-chave no header (match parcial) |
-|---|---|---|
-| PD-01 | Clareza de expectativas | "esclarece as expectativas", "nível de orientação" |
-| PD-01 | Feedback e reconhecimento | "feedback positivo", "valorizados e respeitados" |
-| PD-01 | Ensino e desenvolvimento | "ensina novos procedimentos", "instruções e modelos" |
-| PD-01 | Escuta e suporte | "ouve as preocupações", "suporte aos esforços" |
-| PD-01 | Resolução de problemas | "resolução de problemas", "PDCA" |
-| TW-02 | Confiança e apoio | "relações de confiança", "apoiar as decisões" |
-| TW-02 | Resolução de conflitos | "resolver conflitos", "dar e.*receber feedback" |
-| TW-02 | Perspectivas dos pares | "perspectivas", "humildade e abertura" |
-| TW-02 | Compartilhamento | "compartilhar experiências", "celebrar conquistas" |
-| TW-02 | Responsabilidades | "responsabilidades e papéis", "coordenar.*metas" |
-| PO-03 | Priorização | "priorizar.*atividades", "focando no.*importante" |
-| PO-03 | Planejamento de recursos | "tarefas e recursos", "aproveit.*recursos" |
-| PO-03 | Cronogramas e prazos | "cronogramas", "prazos realistas" |
-| PO-03 | Coordenação interáreas | "coordenar.*atividades.*áreas", "colegas especialistas" |
-| PO-03 | Autonomia e aconselhamento | "planejar.*organizar.*autonomia", "aconselhar.*equipe" |
-| RO-04 | Oportunidades de impacto | "oportunidades.*alto impacto", "metas ambiciosas" |
-| RO-04 | Metas e energia | "energia e vigor", "satisfação ao alcançar" |
-| RO-04 | Proatividade | "tarefas adicionais", "focado.*evitar distrações" |
-| RO-04 | Urgência e conclusão | "urgência e determinação", "correções de rota" |
-| RO-04 | Priorização e disciplina | "priorizar.*impacto.*resultado", "autodisciplina" |
-| TK-05 | Domínio da área | "conhecimento sobre.*departamento", "regras.*processos" |
-| TK-05 | Atualização contínua | "manter-se atualizado", "desenvolvimento contínuo" |
-| TK-05 | Ferramentas e sistemas | "ferramentas e sistemas", "compreender.*aspectos" |
-| TK-05 | Aplicação prática | "aplicar.*conhecimentos técnicos", "resolver problemas.*soluções" |
-| TK-05 | Compartilhamento com equipe | "compartilhar.*conhecimentos.*equipe", "impactos.*áreas.*outros" |
-| RO-06 | Procedimentos e ferramentas | "procedimentos e ferramentas", "melhor aproveitamento" |
-| RO-06 | Redução de custos | "redução de desperdícios", "racionalização.*simplificação" |
-| RO-06 | Orientação da equipe | "orienta.*equipe.*redução", "instrui.*equipe.*bom uso" |
-| RO-06 | Eliminação de desperdícios | "eliminar desperdícios.*retrabalhos", "otimização.*recursos financeiros" |
-| RO-06 | Maximização de resultados | "maximiza resultados", "baixo custo.*sem comprometer" |
-
-**Lógica de matching:**
-- Para cada coluna quantitativa, extrair o texto do header.
-- Comparar (case-insensitive, com regex parcial) contra as palavras-chave da tabela.
-- Atribuir ao cluster correspondente.
-- Se uma coluna não fizer match com nenhum cluster → sinalizar como "não mapeada" e incluir na média geral da competência sem atribuir a um cluster.
-- Se dois ciclos têm perguntas na mesma competência com ordem diferente, o QUESTION_MAP garante que o cluster "Feedback e reconhecimento" sempre contém as perguntas sobre feedback, independente de estarem na posição 3 ou na posição 7.
+**Ação:** Ao receber dados, leia `references/IMFA-TECH.md` e execute o pré-processamento completo (seções 2.1 a 2.6) antes de qualquer cálculo.
 
 **Estrutura esperada por competência (após normalização):**
-- `competency_id` (marcado com `##`) — identificador da competência
-- `self_assessment` — nota do avaliado (escala 1-5, já convertida)
-- `received_ratings` — array de notas recebidas de pares, subordinados e superiores (escala 1-5, já convertidas)
+- `competency_id` — identificador da competência
+- `self_assessment` — nota do avaliado (escala 1–5, já convertida)
+- `received_ratings` — array de notas recebidas de pares, subordinados e superiores (escala 1–5, já convertidas)
 
 Valide que os dados são consistentes com o framework antes de prosseguir.
 
 ### Fase 2 — Análise Técnica (padrão)
 
-Leia `references/IMFA-TECH.md` e execute o pipeline analítico completo:
+Leia `references/IMFA-TECH.md` e execute o pipeline analítico completo.
 
-1. **Análise Quantitativa:**
-   - Calcular média e desvio padrão por competência
-   - Identificar forças (score ≥ 4.5 com σ ≤ 1.2)
-   - Identificar oportunidades de desenvolvimento (score ≤ 3.5)
-   - Calcular gap: |autoavaliação − média dos avaliadores|
-   - Sinalizar discrepâncias significativas (delta ≥ 1.0)
-   - Detectar outliers (σ ≥ 1.2)
+**Regra obrigatória:** Todos os cálculos quantitativos devem ser realizados via execução de código Python (ver IMFA-TECH, seção "Execução Computacional"). O JSON resultante é o artefato de entrada para todas as fases seguintes.
 
-2. **Análise Qualitativa** (se dados qualitativos estiverem presentes):
-   - Codificação temática das narrativas
-   - Análise de sentimento
-   - Cruzamento com dados quantitativos
-   - Extração de temas prioritários
-
-3. **Output por competência:**
-   - Métricas: média, desvio padrão
-   - Evidências extraídas dos dados
-   - Gap analysis: autoavaliação vs. média dos pares
-   - Recomendações em formato SMART
-
-4. **Resumo executivo:** Score de efetividade (IMFA), priorização por delta e variância.
+O pipeline inclui:
+1. **Análise Quantitativa** (via código Python): média, desvio padrão, delta, classificação por faixa
+2. **Análise Qualitativa** (se houver comentários): identificação de temas, sentimento, cruzamento com dados quantitativos
+3. **Output por competência:** métricas + evidências + gap analysis + recomendações SMART
+4. **Resumo executivo:** Score IMFA, priorização por delta e variância
 
 ### Fase 3 — Síntese Executiva (sob demanda)
 
@@ -193,7 +119,9 @@ Quando o usuário solicitar os emails de acompanhamento, templates de lembrete, 
 
 ## Notas Importantes
 
-- Os limiares (≥ 4.5 para forças, ≤ 3.5 para oportunidades, delta ≥ 1.0 para discrepâncias) são calibrados e consistentes entre todos os módulos.
+- Os limiares (≥ 4.5 para forças, ≤ 3.5 para oportunidades, delta ≥ 1.0 para discrepâncias) são calibrados e consistentes entre todos os módulos. Zonas de transição (4.30–4.49 e 3.30–3.50) dependem de σ e tamanho amostral — ver IMFA-TECH seção 4.2 para regras completas.
+- Se o número total de avaliadores (excluindo auto) for < 3, o resultado é **preliminar** com baixa confiança.
 - O framework CORE-COMP-REF é a única fonte de verdade para competências e descritores.
 - Nunca inventar evidências ou inferir dados não presentes no input.
 - Priorizar achados por impacto: delta alto + variância alta = prioridade máxima.
+- **Segurança do webhook:** Ao gerar HTMLs com confirmação de leitura (Fases 3 e 4), incluir a variável `DOC_TOKEN` (HMAC-SHA256 de `gestor_email|documento|ciclo` com chave secreta compartilhada). O token é enviado junto ao payload do webhook e validado no Power Automate antes de gravar no SharePoint. Ver `EMAIL-PDI-AUTOMATION.md` seção 5.1 para o fluxo completo de validação.
