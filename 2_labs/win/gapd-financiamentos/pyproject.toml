@@ -1,0 +1,11 @@
+[project]
+name = "gapd-star-financiamentos"
+version = "0.1.0"
+description = "Camada semântica de governança em star schema para contratos de financiamento do GAPD (ADR-001)."
+requires-python = ">=3.10"
+dependencies = ["pandas>=2.2,<4", "openpyxl>=3.1,<4", "duckdb>=1.0,<2"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q -p no:cacheprovider"

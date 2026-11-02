@@ -1,0 +1,13 @@
+# Artefatos gerados (reproduzíveis a partir das fontes)
+/build/
+*.duckdb
+*.parquet
+
+# Fontes do Financeiro (dados sensíveis — não versionar)
+/data/*.xlsx
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/

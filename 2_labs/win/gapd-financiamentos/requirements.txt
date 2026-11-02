@@ -1,0 +1,6 @@
+# Star schema de contratos de financiamento — GAPD (ADR-001)
+# Dependências mínimas. numpy acompanha pandas.
+pandas>=2.2,<4
+openpyxl>=3.1,<4      # leitura .xlsx
+duckdb>=1.0,<2        # destino físico do star + export parquet (COPY nativo)
+pytest>=8,<10         # testes de aceitação
